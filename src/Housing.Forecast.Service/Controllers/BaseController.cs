@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 
-namespace ServiceHub.Batch.Service.Controllers
+namespace Housing.Forecast.Service.Controllers
 {
   public abstract class BaseController : Controller
   {

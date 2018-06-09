@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub.Batch.Context", "ServiceHub.Batch.Context\ServiceHub.Batch.Context.csproj", "{47B2EEF2-66A2-42D0-868C-260C446D31C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Housing.Forecast.Context", "Housing.Forecast.Context\Housing.Forecast.Context.csproj", "{47B2EEF2-66A2-42D0-868C-260C446D31C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub.Batch.Library", "ServiceHub.Batch.Library\ServiceHub.Batch.Library.csproj", "{AABF1991-CBC4-435C-8BB2-49871F2EAFAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Housing.Forecast.Library", "Housing.Forecast.Library\Housing.Forecast.Library.csproj", "{AABF1991-CBC4-435C-8BB2-49871F2EAFAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub.Batch.Service", "ServiceHub.Batch.Service\ServiceHub.Batch.Service.csproj", "{BA4121EA-D75A-4FC3-B3A4-D8554D10CC9E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Housing.Forecast.Service", "Housing.Forecast.Service\Housing.Forecast.Service.csproj", "{BA4121EA-D75A-4FC3-B3A4-D8554D10CC9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub.Batch.Testing", "ServiceHub.Batch.Testing\ServiceHub.Batch.Testing.csproj", "{F4AD3B29-65AA-44AB-8629-4B8EB488257B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Housing.Forecast.Testing", "Housing.Forecast.Testing\Housing.Forecast.Testing.csproj", "{F4AD3B29-65AA-44AB-8629-4B8EB488257B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
