@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace ServiceHub.Batch.Service
+namespace Housing.Forecast.Service
 {
   public static class Program
   {

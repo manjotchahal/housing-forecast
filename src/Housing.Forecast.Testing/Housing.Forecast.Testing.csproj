@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ServiceHub.Batch.Context\ServiceHub.Batch.Context.csproj" />
-    <ProjectReference Include="..\ServiceHub.Batch.Library\ServiceHub.Batch.Library.csproj" />
-    <ProjectReference Include="..\ServiceHub.Batch.Service\ServiceHub.Batch.Service.csproj" />
+    <ProjectReference Include="..\Housing.Forecast.Context\Housing.Forecast.Context.csproj" />
+    <ProjectReference Include="..\Housing.Forecast.Library\Housing.Forecast.Library.csproj" />
+    <ProjectReference Include="..\Housing.Forecast.Service\Housing.Forecast.Service.csproj" />
   </ItemGroup>
 
 </Project>

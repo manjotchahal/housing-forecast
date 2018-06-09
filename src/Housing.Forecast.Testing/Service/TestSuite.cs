@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace ServiceHub.Batch.Testing.Context
+namespace Housing.Forecast.Testing.Service
 {
   public class TestSuite
   {
