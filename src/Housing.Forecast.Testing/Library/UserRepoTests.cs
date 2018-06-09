@@ -95,7 +95,7 @@ namespace Housing.Forecast.Testing.Library
                 locations = _userRepository.GetLocations();
 
                 // Assert
-                Assert.Equal(locations.Count(), 2);
+                Assert.Equal(2, locations.Count());
             }
         }
 
