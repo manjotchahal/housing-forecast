@@ -16,12 +16,13 @@ namespace Housing.Forecast.Testing.Library
     {
         private ForecastContext _context;
         private IRepo<User> _userRepository;
-        private static DbContextOptions<ForecastContext> options;
+        private static readonly DbContextOptions<ForecastContext> options = new DbContextOptionsBuilder<ForecastContext>()
+            .UseInMemoryDatabase(databaseName: "InMemDb")
+            .Options;
 
         [Fact]
         public void Get_ReturnCollection()
         {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<User> users;
@@ -40,7 +41,6 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void GetByDate_WithValidDate_ReturnNonEmptyCollection()
         {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<User> users;
@@ -59,7 +59,6 @@ namespace Housing.Forecast.Testing.Library
 
         [Fact]
         public void GetByDate_WithInvalidDate_ReturnEmptyCollection() {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<User> users;
@@ -78,7 +77,6 @@ namespace Housing.Forecast.Testing.Library
 
         [Fact]
         public void GetLocations_ReturnCollection() {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<String> locations;
@@ -101,7 +99,6 @@ namespace Housing.Forecast.Testing.Library
 
         [Fact]
         public void GetByLocations_ValidDateValidLocation_ReturnNonEmptyCollection() {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<User> users;
@@ -120,7 +117,6 @@ namespace Housing.Forecast.Testing.Library
 
         [Fact]
         public void GetByLocations_InvalidDateValidLocation_ReturnEmptyCollection() {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<User> users;
@@ -139,7 +135,6 @@ namespace Housing.Forecast.Testing.Library
 
         [Fact]
         public void GetByLocations_ValidDateInvalidLocation_ReturnEmptyCollection() {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<User> users;
@@ -158,7 +153,6 @@ namespace Housing.Forecast.Testing.Library
 
         [Fact]
         public void GetByLocations_InvalidDateInvalidLocation_ReturnEmptyCollection() {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<User> users;
@@ -173,12 +167,6 @@ namespace Housing.Forecast.Testing.Library
                 // Assert
                 Assert.Empty(users);
             }
-        }
-
-        private void init() {
-            options = new DbContextOptionsBuilder<ForecastContext>()
-                .UseInMemoryDatabase(databaseName: "InMemDb")
-                .Options;
         }
 
         private User getTestUser() {
