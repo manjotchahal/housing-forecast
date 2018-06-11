@@ -9,8 +9,17 @@ using Housing.Forecast.Service.Controllers;
 
 namespace Housing.Forecast.Context.ApiAccessors
 {
+    /// <summary>
+    /// An ApiMethods instance is used to request resources from the service hub.
+    /// </summary>
     public class ApiMethods : IApiMethods
     {
+        /// <summary>
+        /// A ForecastContext instance represents a session with the database and is used to query and save instances of the entities.
+        /// </summary>
+        /// <returns>
+        /// A ForecastContext instance contains DbSets of Users, Rooms, Batches, Addresses, and Names.
+        /// </returns>
         public ICollection<T> HttpGetFromApi<T>(string apiString)
         {
             ICollection<T> resultList = null;
