@@ -35,14 +35,6 @@ namespace Housing.Forecast.Context.Repos
             return _context.Users.Where(u => u.Created <= datetime && (u.Deleted == null || u.Deleted > datetime));
         }
 
-        public void AddUser(User user) {
-            _context.Users.Add(user);
-        }
-
-        public void AddRoom(Room room) {
-            _context.Rooms.Add(room);
-        }
-
         public void Dispose()
         {
             ((IDisposable)_context).Dispose();
