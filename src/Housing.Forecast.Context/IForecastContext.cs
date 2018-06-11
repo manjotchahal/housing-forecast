@@ -10,7 +10,7 @@ using Housing.Forecast.Library;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Housing.Forecast.Library
+namespace Housing.Forecast.Context
 {
     public interface IForecastContext
     {

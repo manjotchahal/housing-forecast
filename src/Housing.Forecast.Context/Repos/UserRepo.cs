@@ -5,7 +5,7 @@ using System.Text;
 using Housing.Forecast.Library;
 using Housing.Forecast.Library.Models;
 
-namespace Housing.Forecast.Library.Repos
+namespace Housing.Forecast.Context.Repos
 {
     public class UserRepo : IRepo<User>, IDisposable
     {
@@ -43,6 +43,14 @@ namespace Housing.Forecast.Library.Repos
         public IEnumerable<User> GetByDate(DateTime datetime)
         {
             return _context.Users.Where(u => u.Created <= datetime && (u.Deleted == null || u.Deleted > datetime));
+        }
+
+        public void AddUser(User user) {
+            _context.Users.Add(user);
+        }
+
+        public void AddRoom(Room room) {
+            _context.Rooms.Add(room);
         }
 
         public void Dispose()
