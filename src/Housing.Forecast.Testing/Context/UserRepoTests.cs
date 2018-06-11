@@ -182,6 +182,27 @@ namespace Housing.Forecast.Testing.Library
                 Gender = "M",
                 Type = "test",
                 UserId = Guid.NewGuid(),
+                Batch = new Batch {
+                    Id = Guid.NewGuid(),
+                    BatchId = Guid.NewGuid(),
+                    StartDate = new DateTime(2018, 1, 1),
+                    EndDate = new DateTime(2018, 5, 1),
+                    BatchName = "test batch",
+                    BatchOccupancy = 1,
+                    BatchSkill = "test skill",
+                    Address = new Address{
+                        Id = Guid.NewGuid(),
+                        AddressId = Guid.NewGuid(),
+                        Address1 = "1600 Pennsylvania Ave",
+                        Address2 = "Apt. 110-B",
+                        City = "Reston",
+                        State = "VA",
+                        PostalCode = "12345-1234",
+                        Country = "USA",
+                        Created = new DateTime(2018, 1, 1)
+                    },
+                    Deleted = DateTime.MaxValue
+                },
                 Deleted = DateTime.MaxValue
             };
             return result;
