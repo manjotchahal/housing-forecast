@@ -186,7 +186,7 @@ namespace Housing.Forecast.Testing.Library
                     State = "VA",
                     PostalCode = "12345-1234",
                     Country = "USA",
-                    Created = DateTime.Now
+                    Created = new DateTime(2018, 1, 1)
                 },
                 Deleted = DateTime.MaxValue
             };
