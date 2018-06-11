@@ -25,19 +25,9 @@ namespace Housing.Forecast.Context.Repos
             return _context.Users;
         }
 
-        public IEnumerable<User> GetBetweenDates(DateTime Start, DateTime End)
-        {
-            return _context.Users.Where(u => u.Created <= Start && (u.Deleted > End || u.Deleted == null));
-        }
-
         public IEnumerable<User> GetByLocation(DateTime datetime, string location)
         {
             return _context.Users.Where(r => r.Created <= datetime && (r.Deleted == null || r.Deleted > datetime) && r.Location == location);
-        }
-
-        public IEnumerable<User> GetBetweenDatesAtLocation(DateTime Start, DateTime End, string location)
-        {
-            return _context.Users.Where(u => u.Created <= Start && (u.Deleted > End || u.Deleted == null) && u.Location == location);
         }
 
         public IEnumerable<User> GetByDate(DateTime datetime)
