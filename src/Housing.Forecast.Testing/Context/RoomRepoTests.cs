@@ -25,6 +25,7 @@ namespace Housing.Forecast.Testing.Library
         {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -43,6 +44,7 @@ namespace Housing.Forecast.Testing.Library
         {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -61,6 +63,7 @@ namespace Housing.Forecast.Testing.Library
         public void GetByDate_WithInvalidDate_ReturnEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -79,6 +82,7 @@ namespace Housing.Forecast.Testing.Library
         public void GetLocations_ReturnCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<String> locations;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -101,6 +105,7 @@ namespace Housing.Forecast.Testing.Library
         public void GetByLocations_ValidDateValidLocation_ReturnNonEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -119,6 +124,7 @@ namespace Housing.Forecast.Testing.Library
         public void GetByLocations_InvalidDateValidLocation_ReturnEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -137,6 +143,7 @@ namespace Housing.Forecast.Testing.Library
         public void GetByLocations_ValidDateInvalidLocation_ReturnEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -155,6 +162,7 @@ namespace Housing.Forecast.Testing.Library
         public void GetByLocations_InvalidDateInvalidLocation_ReturnEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -167,6 +175,12 @@ namespace Housing.Forecast.Testing.Library
                 // Assert
                 Assert.Empty(rooms);
             }
+        }
+
+        private void init(ForecastContext context) {
+            if(context.Rooms.Count() > 0)
+                context.Rooms.RemoveRange(context.Rooms);
+            context.SaveChanges();
         }
 
         private Room getTestRoom() {
