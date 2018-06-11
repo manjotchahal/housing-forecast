@@ -61,8 +61,6 @@ namespace Housing.Forecast.Library.Models
             Occupancy = -1;
             Gender = null;
             Address = null;
-            Created = DateTime.MinValue;
-            Deleted = DateTime.MinValue;
         }
 
         /// <summary>Property validation</summary>>
@@ -77,8 +75,6 @@ namespace Housing.Forecast.Library.Models
             if (Occupancy == -1) { return false; }
             if (String.IsNullOrEmpty(Gender)) { return false; }
             if (Address == null) { return false; }
-            if (Created == DateTime.MinValue) { return false; }
-            if (Deleted == DateTime.MinValue) { return false; }
 
             return true;
         }

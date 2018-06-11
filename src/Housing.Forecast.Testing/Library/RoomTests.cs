@@ -120,22 +120,6 @@ namespace Housing.Forecast.Testing.Library
         }
 
         [Fact]
-        public void RoomCreatedInvalidTest()
-        {
-            Room test = getTestRoom();
-            test.Created = DateTime.MinValue;
-            Assert.False(test.Validate());
-        }
-
-        [Fact]
-        public void RoomDeletedInvalidTest()
-        {
-            Room test = getTestRoom();
-            test.Deleted = DateTime.MinValue;
-            Assert.False(test.Validate());
-        }
-
-        [Fact]
         public void RoomAddressInvalidTest()
         {
             Room test = getTestRoom();
