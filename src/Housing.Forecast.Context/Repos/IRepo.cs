@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Housing.Forecast.Library.Models;
 
-namespace Housing.Forecast.Library.Repos
+namespace Housing.Forecast.Context.Repos
 {
     public interface IRepo<T>
     {
