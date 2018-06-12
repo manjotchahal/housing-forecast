@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-using Housing.Forecast.Library;
+using Housing.Forecast.Context;
+using Housing.Forecast.Context.Repos;
 using Housing.Forecast.Library.Models;
-using Housing.Forecast.Library.Repos;
 using Housing.Forecast.Service;
 
 namespace Housing.Forecast.Testing.Library
 {
-    public class UserRepoTests
+    public class RoomRepoTests
     {
         private ForecastContext _context;
-        private IRepo<User> _userRepository;
+        private IRepo<Room> _roomRepository;
         private static DbContextOptions<ForecastContext> options;
 
         [Fact]
@@ -24,16 +24,16 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
 
                 // Act
-                users = _userRepository.Get();
+                rooms = _roomRepository.Get();
 
                 // Assert
-                Assert.NotEmpty(users);
+                Assert.NotEmpty(rooms);
             }
         }
 
@@ -43,17 +43,17 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
-                User user = _context.Users.FirstOrDefault();
+                Room room = _context.Rooms.FirstOrDefault();
 
                 // Act
-                users = _userRepository.GetByDate(user.Created);
+                rooms = _roomRepository.GetByDate(room.Created);
 
                 // Assert
-                Assert.Equal(users.FirstOrDefault().Id, user.Id);
+                Assert.Equal(rooms.FirstOrDefault().Id, room.Id);
             }
         }
 
@@ -62,17 +62,17 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
-                User user = _context.Users.FirstOrDefault();
+                Room room = _context.Rooms.FirstOrDefault();
 
                 // Act
-                users = _userRepository.GetByDate(DateTime.MinValue);
+                rooms = _roomRepository.GetByDate(DateTime.MinValue);
 
                 // Assert
-                Assert.Empty(users);
+                Assert.Empty(rooms);
             }
         }
 
@@ -82,17 +82,17 @@ namespace Housing.Forecast.Testing.Library
             using(_context = new ForecastContext(options)) {
                 // Arrange
                 IEnumerable<String> locations;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
 
-                User user = getTestUser();
-                user.Location = "Tampa";
-                _context.Users.Add(user);
+                Room room = getTestRoom();
+                room.Location = "Tampa";
+                _context.Rooms.Add(room);
 
                 _context.SaveChanges();
 
                 // Act
-                locations = _userRepository.GetLocations();
+                locations = _roomRepository.GetLocations();
 
                 // Assert
                 Assert.Equal(2, locations.Count());
@@ -104,16 +104,16 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
 
                 // Act
-                users = _userRepository.GetBetweenDates(DateTime.Now, DateTime.Now);
+                rooms = _roomRepository.GetBetweenDates(DateTime.Now, DateTime.Now);
 
                 // Assert
-                Assert.NotEmpty(users);
+                Assert.NotEmpty(rooms);
             }
         }
 
@@ -122,16 +122,16 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
 
                 // Act
-                users = _userRepository.GetBetweenDates(DateTime.MinValue, DateTime.MinValue);
+                rooms = _roomRepository.GetBetweenDates(DateTime.MinValue, DateTime.MinValue);
 
                 // Assert
-                Assert.Empty(users);
+                Assert.Empty(rooms);
             }
         }
 
@@ -140,16 +140,16 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
 
                 // Act
-                users = _userRepository.GetBetweenDatesAtLocation(DateTime.Now, DateTime.Now, "Reston");
+                rooms = _roomRepository.GetBetweenDatesAtLocation(DateTime.Now, DateTime.Now, "Reston");
 
                 // Assert
-                Assert.NotEmpty(users);
+                Assert.NotEmpty(rooms);
             }
         }
 
@@ -158,16 +158,16 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
 
                 // Act
-                users = _userRepository.GetBetweenDatesAtLocation(DateTime.MinValue, DateTime.MinValue, "Reston");
+                rooms = _roomRepository.GetBetweenDatesAtLocation(DateTime.MinValue, DateTime.MinValue, "Reston");
 
                 // Assert
-                Assert.Empty(users);
+                Assert.Empty(rooms);
             }
         }
 
@@ -176,16 +176,16 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
 
                 // Act
-                users = _userRepository.GetBetweenDatesAtLocation(DateTime.Now, DateTime.Now, "test");
+                rooms = _roomRepository.GetBetweenDatesAtLocation(DateTime.Now, DateTime.Now, "test");
 
                 // Assert
-                Assert.Empty(users);
+                Assert.Empty(rooms);
             }
         }
 
@@ -194,16 +194,16 @@ namespace Housing.Forecast.Testing.Library
             init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
-                IEnumerable<User> users;
-                _userRepository = new UserRepo(_context);
-                _context.Users.Add(getTestUser());
+                IEnumerable<Room> rooms;
+                _roomRepository = new RoomRepo(_context);
+                _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
 
                 // Act
-                users = _userRepository.GetBetweenDatesAtLocation(DateTime.MinValue, DateTime.MinValue, "test");
+                rooms = _roomRepository.GetBetweenDatesAtLocation(DateTime.MinValue, DateTime.MinValue, "test");
 
                 // Assert
-                Assert.Empty(users);
+                Assert.Empty(rooms);
             }
         }
 
@@ -213,19 +213,25 @@ namespace Housing.Forecast.Testing.Library
                 .Options;
         }
 
-        private User getTestUser() {
-            User result = new User{
-                Name = new Name {
-                    NameId = Guid.NewGuid(),
-                    First = "first",
-                    Last = "last"
-                },
+        private Room getTestRoom() {
+            Room result = new Room{
                 Id = Guid.NewGuid(),
+                RoomId = Guid.NewGuid(),
                 Location = "Reston",
-                Email = "test@test.com",
-                Gender = "M",
-                Type = "test",
-                UserId = Guid.NewGuid(),
+                Vacancy = 1,
+                Occupancy = 1,
+                Gender = "F",
+                Address = new Address{
+                    Id = Guid.NewGuid(),
+                    AddressId = Guid.NewGuid(),
+                    Address1 = "1600 Pennsylvania Ave",
+                    Address2 = "Apt. 110-B",
+                    City = "Reston",
+                    State = "VA",
+                    PostalCode = "12345-1234",
+                    Country = "USA",
+                    Created = DateTime.Now
+                },
                 Created = DateTime.Now,
                 Deleted = DateTime.MaxValue
             };
