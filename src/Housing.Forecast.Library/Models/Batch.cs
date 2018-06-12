@@ -32,7 +32,7 @@ namespace Housing.Forecast.Library.Models
             if (Id == Guid.Empty) { return false; }
             if (BatchId == Guid.Empty) { return false; }
             if (String.IsNullOrEmpty(BatchName)) { return false; }
-            if (BatchOccupancy == -1) { return false; }
+            if (BatchOccupancy < 0 ||  BatchOccupancy > 100) { return false; }
             if (String.IsNullOrEmpty(BatchSkill)) { return false; }
             if (Address == null) { return false; }
 

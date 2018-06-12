@@ -133,7 +133,7 @@ namespace Housing.Forecast.Service.Controllers
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
 
-                List<Snapshot> snapshots = _snapshot.GetBetweenDates(startDate, endDate).ToList();
+                List<Snapshot> snapshots = ((SnapshotRepo)_snapshot).GetBetweenDates(start, end).ToList();
 
                 if (snapshots == null)
                 {
@@ -172,7 +172,7 @@ namespace Housing.Forecast.Service.Controllers
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
 
-                List<Snapshot> snapshots = _snapshot.GetBetweenDatesAtLocation(startDate, endDate, location).ToList();
+                List<Snapshot> snapshots = ((SnapshotRepo)_snapshot).GetBetweenDatesAtLocation(start, end, location).ToList();
                 if (snapshots == null)
                 {
                     return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
