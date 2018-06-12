@@ -18,13 +18,13 @@ namespace Housing.Forecast.Library.Models
         [Required]
         [DataType(DataType.DateTime)]
         [Column(TypeName = "datetime2")]
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         [Required]
-        public int RoomCount { get; set; }
+        public int? RoomCount { get; set; }
 
         [Required]
-        public int UserCount { get; set; }
+        public int? UserCount { get; set; }
 
         [Required]
         [DataType(DataType.Text)]
@@ -33,5 +33,22 @@ namespace Housing.Forecast.Library.Models
 
         [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
+
+        public Snapshot() {
+            Id = Guid.Empty;
+            Date = null;
+            Location = null;
+            RoomCount = null;
+            UserCount = null;
+        }
+
+        public bool Validate() {
+            bool result = Id != null &&
+                Date != null &&
+                !string.IsNullOrEmpty(Location) &&
+                RoomCount != null &&
+                UserCount != null;
+            return result;
+        }
     }
 }
