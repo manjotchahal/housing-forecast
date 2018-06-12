@@ -14,9 +14,9 @@ namespace Housing.Forecast.Service.Controllers
     [Route("api/[controller]")]
     public class ForecastController : BaseController
     {
-        private readonly IRepo<Snapshot> _snapshot;
+        private readonly SnapshotRepo _snapshot;
         public ForecastController(ILoggerFactory loggerFactory, IQueueClient queueClientSingleton, IRepo<Snapshot> snapshot)
-          : base(loggerFactory, queueClientSingleton) { _snapshot = snapshot; }
+          : base(loggerFactory, queueClientSingleton) { _snapshot = (SnapshotRepo)snapshot; }
 
         /// <summary>
         /// This endpoint will return all unique locations of snapshots
