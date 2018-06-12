@@ -15,6 +15,7 @@ namespace Housing.Forecast.Testing.Library
         {
             Batch batch = new Batch
             {
+                Id = Guid.NewGuid(),
                 BatchId = Guid.NewGuid(),
                 BatchName = "name",
                 BatchOccupancy = 1,
@@ -66,11 +67,36 @@ namespace Housing.Forecast.Testing.Library
         }
 
         [Fact]
+        public void BatchNameInvalidTest()
+        {
+            Batch test = getTestBatch();
+            test.BatchName = "";
+            Assert.False(test.Validate());
+        }
+
+        [Fact]
         public void BatchOccupancyInvalidTest()
         {
             Batch test = getTestBatch();
             test.BatchOccupancy = -1;
             Assert.False(test.Validate());
         }
-}
+
+        [Fact]
+        public void BatchSkillInvalidTest()
+        {
+            Batch test = getTestBatch();
+            test.BatchSkill = "";
+            Assert.False(test.Validate());
+        }
+
+        [Fact]
+        public void BatchAddressInvalidTest()
+        {
+            Batch test = getTestBatch();
+            test.Address = null;
+            Assert.False(test.Validate());
+        }
+
+    }
 }
