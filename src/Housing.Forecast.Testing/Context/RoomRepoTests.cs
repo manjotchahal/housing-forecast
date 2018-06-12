@@ -16,14 +16,16 @@ namespace Housing.Forecast.Testing.Library
     {
         private ForecastContext _context;
         private IRepo<Room> _roomRepository;
-        private static DbContextOptions<ForecastContext> options;
+        private static readonly DbContextOptions<ForecastContext> options = new DbContextOptionsBuilder<ForecastContext>()
+            .UseInMemoryDatabase(databaseName: "InMemDb")
+            .Options;
 
         [Fact]
         public void Get_ReturnCollection()
         {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -40,9 +42,9 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void GetByDate_WithValidDate_ReturnNonEmptyCollection()
         {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -59,9 +61,9 @@ namespace Housing.Forecast.Testing.Library
 
         [Fact]
         public void GetByDate_WithInvalidDate_ReturnEmptyCollection() {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -78,9 +80,9 @@ namespace Housing.Forecast.Testing.Library
 
         [Fact]
         public void GetLocations_ReturnCollection() {
-            init();
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<String> locations;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
@@ -100,17 +102,18 @@ namespace Housing.Forecast.Testing.Library
         }
 
         [Fact]
-        public void GetBetweenDates_ValidDateRange_ReturnNonEmptyCollection() {
-            init();
+        public void GetByLocations_ValidDateValidLocation_ReturnNonEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
+                Room room = _context.Rooms.FirstOrDefault();
 
                 // Act
-                rooms = _roomRepository.GetBetweenDates(DateTime.Now, DateTime.Now);
+                rooms = _roomRepository.GetByLocation(room.Created, room.Location);
 
                 // Assert
                 Assert.NotEmpty(rooms);
@@ -118,17 +121,18 @@ namespace Housing.Forecast.Testing.Library
         }
 
         [Fact]
-        public void GetBetweenDates_InvalidDateRange_ReturnEmptyCollection() {
-            init();
+        public void GetByLocations_InvalidDateValidLocation_ReturnEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
+                Room room = _context.Rooms.FirstOrDefault();
 
                 // Act
-                rooms = _roomRepository.GetBetweenDates(DateTime.MinValue, DateTime.MinValue);
+                rooms = _roomRepository.GetByLocation(DateTime.MinValue, room.Location);
 
                 // Assert
                 Assert.Empty(rooms);
@@ -136,35 +140,18 @@ namespace Housing.Forecast.Testing.Library
         }
 
         [Fact]
-        public void GetBetweenDatesAtLocation_ValidDateRangeValidLocation_ReturnNonEmptyCollection() {
-            init();
+        public void GetByLocations_ValidDateInvalidLocation_ReturnEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
+                Room room = _context.Rooms.FirstOrDefault();
 
                 // Act
-                rooms = _roomRepository.GetBetweenDatesAtLocation(DateTime.Now, DateTime.Now, "Reston");
-
-                // Assert
-                Assert.NotEmpty(rooms);
-            }
-        }
-
-        [Fact]
-        public void GetBetweenDatesAtLocation_InvalidDateRangeValidLocation_ReturnEmptyCollection() {
-            init();
-            using(_context = new ForecastContext(options)) {
-                // Arrange
-                IEnumerable<Room> rooms;
-                _roomRepository = new RoomRepo(_context);
-                _context.Rooms.Add(getTestRoom());
-                _context.SaveChanges();
-
-                // Act
-                rooms = _roomRepository.GetBetweenDatesAtLocation(DateTime.MinValue, DateTime.MinValue, "Reston");
+                rooms = _roomRepository.GetByLocation(room.Created, "Tampa");
 
                 // Assert
                 Assert.Empty(rooms);
@@ -172,45 +159,28 @@ namespace Housing.Forecast.Testing.Library
         }
 
         [Fact]
-        public void GetBetweenDatesAtLocation_ValidDateRangeInvalidLocation_ReturnEmptyCollection() {
-            init();
+        public void GetByLocations_InvalidDateInvalidLocation_ReturnEmptyCollection() {
             using(_context = new ForecastContext(options)) {
                 // Arrange
+                init(_context);
                 IEnumerable<Room> rooms;
                 _roomRepository = new RoomRepo(_context);
                 _context.Rooms.Add(getTestRoom());
                 _context.SaveChanges();
+                Room room = _context.Rooms.FirstOrDefault();
 
                 // Act
-                rooms = _roomRepository.GetBetweenDatesAtLocation(DateTime.Now, DateTime.Now, "test");
+                rooms = _roomRepository.GetByLocation(DateTime.MinValue, "Tampa");
 
                 // Assert
                 Assert.Empty(rooms);
             }
         }
 
-        [Fact]
-        public void GetBetweenDatesAtLocation_InvalidDateRangeInvalidLocation_ReturnEmptyCollection() {
-            init();
-            using(_context = new ForecastContext(options)) {
-                // Arrange
-                IEnumerable<Room> rooms;
-                _roomRepository = new RoomRepo(_context);
-                _context.Rooms.Add(getTestRoom());
-                _context.SaveChanges();
-
-                // Act
-                rooms = _roomRepository.GetBetweenDatesAtLocation(DateTime.MinValue, DateTime.MinValue, "test");
-
-                // Assert
-                Assert.Empty(rooms);
-            }
-        }
-
-        private void init() {
-            options = new DbContextOptionsBuilder<ForecastContext>()
-                .UseInMemoryDatabase(databaseName: "InMemDb")
-                .Options;
+        private void init(ForecastContext context) {
+            if(context.Rooms.Count() > 0)
+                context.Rooms.RemoveRange(context.Rooms);
+            context.SaveChanges();
         }
 
         private Room getTestRoom() {
@@ -230,9 +200,8 @@ namespace Housing.Forecast.Testing.Library
                     State = "VA",
                     PostalCode = "12345-1234",
                     Country = "USA",
-                    Created = DateTime.Now
+                    Created = new DateTime(2018, 1, 1)
                 },
-                Created = DateTime.Now,
                 Deleted = DateTime.MaxValue
             };
             return result;

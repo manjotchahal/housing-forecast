@@ -33,16 +33,6 @@ namespace Housing.Forecast.Context.Repos
         IEnumerable<T> GetByDate(DateTime datetime);
 
         /// <summary>
-        /// Find all stored type T objects from the database using the range of dates.
-        /// </summary>
-        /// <param name="Start">The starting point for the earliest created date for the objects.</param>
-        /// <param name="End">The objects shouldn't be deleted before this date.</param>
-        /// <returns>
-        /// The method should return a list of all type T objects within the database that are within the range of dates and aren't deleted.
-        /// </returns>
-        IEnumerable<T> GetBetweenDates(DateTime Start, DateTime End);
-
-        /// <summary>
         /// Find all stored type T objects from the database using the starting point.
         /// </summary>
         /// <param name="datetime">The starting point for the earliest created date for the objects.</param>
@@ -52,17 +42,5 @@ namespace Housing.Forecast.Context.Repos
         /// and are located at the location provided.
         /// </returns>
         IEnumerable<T> GetByLocation(DateTime datetime, string location);
-
-        /// <summary>
-        /// Find all stored type T objects from the database using the range of dates.
-        /// </summary>
-        /// <param name="Start">The starting point for the earliest created date for the objects.</param>
-        /// <param name="End">The objects shouldn't be deleted before this date.</param>
-        /// <param name="location">The objects should be located at the specified location.</param>
-        /// <returns>
-        /// The method should return a list of all type T objects within the database that are within
-        /// the range of dates and aren't deleted and are located at the location provided.
-        /// </returns>
-        IEnumerable<T> GetBetweenDatesAtLocation(DateTime Start, DateTime End, string location);
     }
 }
