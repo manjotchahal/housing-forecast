@@ -15,7 +15,6 @@ namespace Housing.Forecast.Library.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [ScaffoldColumn(false)]
         public Guid Id { get; set; }
 
         [Required]
@@ -25,7 +24,6 @@ namespace Housing.Forecast.Library.Models
         public Name Name { get; set; }
 
         [Required]
-        [DataType(DataType.Text)]
         [Column(TypeName = "nvarchar(MAX)")]
         public string Location { get; set; }
 
@@ -33,28 +31,23 @@ namespace Housing.Forecast.Library.Models
         public Address Address { get; set; }
 
         [Required]
-        [DataType(DataType.EmailAddress)]
         [Column(TypeName = "nvarchar(MAX)")]
         public string Email { get; set; }
 
-        [DataType(DataType.Text)]
         [Column(TypeName = "nvarchar(MAX)")]
         [Required]
         public string Gender { get; set; }
 
         [Required]
-        [DataType(DataType.Text)]
         [Column(TypeName = "nvarchar(MAX)")]
         public string Type { get; set; }
 
         [Required]
         public Batch Batch { get; set; }
 
-        [DataType(DataType.DateTime)]
         [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
 
-        [DataType(DataType.DateTime)]
         [Column(TypeName = "datetime2")]
         public DateTime Deleted { get; set; }
 

@@ -18,11 +18,9 @@ namespace Housing.Forecast.Library.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        // Id we get from service hub
         [Required]
         public Guid RoomId { get; set; }
 
-        [DataType(DataType.Text)]
         [Column(TypeName = "nvarchar(MAX)")]
         [Required]
         public string Location { get; set; }
@@ -33,7 +31,6 @@ namespace Housing.Forecast.Library.Models
         [Required]
         public int Occupancy { get; set; }
 
-        [DataType(DataType.Text)]
         [Column(TypeName = "nvarchar(MAX)")]
         [Required]
         public string Gender { get; set; }

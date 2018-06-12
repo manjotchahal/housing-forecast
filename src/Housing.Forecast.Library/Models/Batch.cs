@@ -43,32 +43,24 @@ namespace Housing.Forecast.Library.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [ScaffoldColumn(false)]
         public Guid Id { get; set; }
 
         [Required]
         public Guid BatchId { get; set; }
 
-
-        [DataType(DataType.DateTime)]
         [Column(TypeName = "datetime2")]
         public DateTime StartDate { get; set; }
 
-        [DataType(DataType.DateTime)]
         [Column(TypeName = "datetime2")]
         public DateTime EndDate { get; set; }
 
-
-        [DataType(DataType.Text)]
         [Required]
         [Column(TypeName = "nvarchar(MAX)")]
         public string BatchName { get; set; }
 
-        [Range(0, 100)]
         [Required]
         public int BatchOccupancy { get; set; }
 
-        [DataType(DataType.Text)]
         [Required]
         [Column(TypeName = "nvarchar(MAX)")]
         public string BatchSkill { get; set; }
