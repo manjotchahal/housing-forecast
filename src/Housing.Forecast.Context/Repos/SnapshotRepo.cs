@@ -16,10 +16,10 @@ namespace Housing.Forecast.Context.Repos
         }
 
         /// <summary>
-        /// Find all of the distinct snapshots for every location.
+        /// Find all of the distinct locations for every snapshot.
         /// </summary>
         /// <returns>
-        /// This method will return a list of all snapshots for every location.
+        /// This method will return a list of all distinct locations for the snapshots within the database.
         /// </returns>
         public IEnumerable<string> GetLocations()
         {
