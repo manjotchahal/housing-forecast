@@ -10,39 +10,27 @@ namespace Housing.Forecast.Library.Models
     ///<remarks>    
     ///Each User object will have its own uniquely generated Guid Id and retain the primary key Guid that was generated for it in the previous database into UserId.
     ///</remarks>
-    [Table("Users")]
     public class User
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Required]
         public Guid UserId { get; set; }
 
-        [Required]
         public Name Name { get; set; }
 
-        [Required]
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Location { get; set; }
 
         public Room Room { get; set; }
         public Address Address { get; set; }
 
-        [Required]
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Email { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
-        [Required]
         public string Gender { get; set; }
 
-        [Required]
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Type { get; set; }
 
-        [Required]
         public Batch Batch { get; set; }
 
         [Column(TypeName = "datetime2")]
