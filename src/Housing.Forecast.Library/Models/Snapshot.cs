@@ -12,11 +12,9 @@ namespace Housing.Forecast.Library.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [ScaffoldColumn(false)]
         public Guid Id { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
         [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }
 
@@ -27,7 +25,6 @@ namespace Housing.Forecast.Library.Models
         public int UserCount { get; set; }
 
         [Required]
-        [DataType(DataType.Text)]
         [Column(TypeName = "nvarchar(MAX)")]
         public string Location { get; set; }
 
