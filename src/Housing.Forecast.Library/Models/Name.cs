@@ -19,13 +19,10 @@ namespace Housing.Forecast.Library.Models
 
         public Guid NameId { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string First { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Middle { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Last { get; set; }
 
         [Column(TypeName = "datetime2")]

@@ -48,22 +48,16 @@ namespace Housing.Forecast.Library.Models
 
         public Guid AddressId { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Address1 { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Address2 { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string City { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string State { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string PostalCode { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Country { get; set; }
 
         [Column(TypeName = "datetime2")]

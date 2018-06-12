@@ -19,14 +19,12 @@ namespace Housing.Forecast.Library.Models
 
         public Guid RoomId { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Location { get; set; }
 
         public int Vacancy { get; set; }
 
         public int Occupancy { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Gender { get; set; }
 
         public Address Address { get; set; }

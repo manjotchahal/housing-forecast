@@ -20,7 +20,6 @@ namespace Housing.Forecast.Library.Models
 
         public int UserCount { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Location { get; set; }
 
         [Column(TypeName = "datetime2")]

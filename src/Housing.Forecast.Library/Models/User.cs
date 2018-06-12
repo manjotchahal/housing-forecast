@@ -20,19 +20,15 @@ namespace Housing.Forecast.Library.Models
 
         public Name Name { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Location { get; set; }
 
         public Room Room { get; set; }
         public Address Address { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Email { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Gender { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Type { get; set; }
 
         public Batch Batch { get; set; }

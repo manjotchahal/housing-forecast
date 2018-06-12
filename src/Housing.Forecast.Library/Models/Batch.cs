@@ -51,12 +51,10 @@ namespace Housing.Forecast.Library.Models
         [Column(TypeName = "datetime2")]
         public DateTime EndDate { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string BatchName { get; set; }
 
         public int BatchOccupancy { get; set; }
 
-        [Column(TypeName = "nvarchar(MAX)")]
         public string BatchSkill { get; set; }
 
         public Address Address { get; set; }
