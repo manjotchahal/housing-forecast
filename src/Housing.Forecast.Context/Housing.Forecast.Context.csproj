@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Housing.Forecast.Library\Housing.Forecast.Library.csproj" />
-    <ProjectReference Include="..\Housing.Forecast.Service\Housing.Forecast.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
