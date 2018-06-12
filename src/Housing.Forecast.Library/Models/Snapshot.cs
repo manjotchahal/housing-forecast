@@ -7,24 +7,19 @@ using System.Text;
 namespace Housing.Forecast.Library.Models
 {
     ///<summary>The Snapshot class is used to represent the supply and demand of Rooms and Users on any given date.</summary>
-    [Table("Snapshots")]
     public class Snapshot
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Required]
         [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }
 
-        [Required]
         public int RoomCount { get; set; }
 
-        [Required]
         public int UserCount { get; set; }
 
-        [Required]
         [Column(TypeName = "nvarchar(MAX)")]
         public string Location { get; set; }
 

@@ -11,24 +11,20 @@ namespace Housing.Forecast.Library.Models
     ///Each Name will have a uniquely generated Guid Id as well as retain the primary key Guid of the previous database, which is stored in NameId.
     ///Each Name object will have a collection of Users in the case that multiple users share the same name.
     ///</remarks>
-    [Table("Names")]
     public class Name
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Required]
         public Guid NameId { get; set; }
 
-        [Required]
         [Column(TypeName = "nvarchar(MAX)")]
         public string First { get; set; }
 
         [Column(TypeName = "nvarchar(MAX)")]
         public string Middle { get; set; }
 
-        [Required]
         [Column(TypeName = "nvarchar(MAX)")]
         public string Last { get; set; }
 
