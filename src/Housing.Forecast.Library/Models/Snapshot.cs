@@ -43,7 +43,7 @@ namespace Housing.Forecast.Library.Models
         }
 
         public bool Validate() {
-            bool result = Id != null &&
+            bool result = Id != Guid.Empty &&
                 Date != null &&
                 !string.IsNullOrEmpty(Location) &&
                 RoomCount != null &&
