@@ -40,5 +40,29 @@ namespace Housing.Forecast.Library.Models
         public DateTime Created { get; set; }
 
         public ICollection<User> Users { get; set; }
+
+        /// <summary>Default Constructor</summary>>
+        /// <remarks>Sets all properties to empty, null, or impossible values that correspond 
+        /// to invalid models that should be invalid if not replaced.</remarks>
+        public Name()
+        {
+            Id = Guid.Empty;
+            NameId = Guid.Empty;
+            First = null;
+            Last = null;
+        }
+
+        /// <summary>Property validation</summary>>
+        /// <remarks>Returns true if all properties are valid
+        /// By default (through constructor), the model is invalid, properties to be filled in</remarks>
+        public bool Validate()
+        {
+            if (Id == Guid.Empty) { return false; }
+            if (NameId == Guid.Empty) { return false; }
+            if (String.IsNullOrEmpty(First)) { return false; }
+            if (String.IsNullOrEmpty(Last)) { return false; }
+        
+            return true;
+        }
     }
 }
