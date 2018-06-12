@@ -30,7 +30,7 @@ namespace Housing.Forecast.Service
             services.AddDbContext<ForecastContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ForecastDB")));
             services.AddTransient<IRepo<User>, UserRepo>();
             services.AddTransient<IRepo<Room>, RoomRepo>();
-            services.AddTransient<SnapshotRepo, SnapshotRepo>();
+            services.AddTransient<IRepo<Snapshot>, SnapshotRepo>();
             services.AddMvc();
             services.AddSingleton<IQueueClient>(qc =>
               new QueueClient(
