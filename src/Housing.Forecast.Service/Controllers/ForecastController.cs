@@ -75,18 +75,18 @@ namespace Housing.Forecast.Service.Controllers
         }
 
         /// <summary>
-        /// This endpoint will return all snapshots that were created on the provided date
+        /// Return the snapshot that was created on the provided date.
         /// </summary>
         /// <remarks>
-        /// The format for createdDate is yyyy-mm-dd
+        /// The format for date is yyyy-mm-dd
         /// </remarks>
-        /// <param name="createdDate">The date the snapshots should be created on.</param>
+        /// <param name="date">The date of the snapshot.</param>
         /// <return>
-        /// Return all of the snapshots that were created on the provided date.
+        /// Return the snapshot that was created on the provided date.
         /// </return>
         // GET: api/forecast/Snapshots/createdDate
-        [HttpGet("Snapshots/{createdDate:datetime}")]
-        public async Task<IActionResult> Get(DateTime createdDate)
+        [HttpGet("Snapshots/{date:datetime}")]
+        public async Task<IActionResult> Get(DateTime date)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace Housing.Forecast.Service.Controllers
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
 
-                List<Snapshot> snapshots = _snapshot.GetByDate(createdDate).ToList();
+                List<Snapshot> snapshots = _snapshot.GetByDate(date).ToList();
                 if (snapshots == null)
                 {
                     return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
@@ -116,14 +116,14 @@ namespace Housing.Forecast.Service.Controllers
         /// This endpoint will find and return all snapshots were cover the provided date range.
         /// </summary>
         /// <format>The format for the dates is yyyy-mm-dd.</format>
-        /// <param name="start">The starting point of the search.</param>
-        /// <param name="end">The ending point of the saerch.</param>
+        /// <param name="startDate">The starting point of the search.</param>
+        /// <param name="endDate">The ending point of the saerch.</param>
         /// <returns>
         /// Return a list of all snapshots that created between the two provided dates.
         /// </returns>
         // GET: api/forecast/Snapshots/start/end
-        [HttpGet("Snapshots/{start:datetime}/{end:datetime}")]
-        public async Task<IActionResult> Get(DateTime start, DateTime end)
+        [HttpGet("SnapshotsRange/{startDate:datetime}/{endDate:datetime}")]
+        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace Housing.Forecast.Service.Controllers
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
 
-                List<Snapshot> snapshots = _snapshot.GetBetweenDates(start, end).ToList();
+                List<Snapshot> snapshots = _snapshot.GetBetweenDates(startDate, endDate).ToList();
 
                 if (snapshots == null)
                 {
@@ -154,15 +154,15 @@ namespace Housing.Forecast.Service.Controllers
         /// This endpoint will find and return all snapshots for the provided location and cover the provided date range.
         /// </summary>
         /// <format>The format for the dates is yyyy-mm-dd and the format for location is a string of aplhabet characters.</format>
-        /// <param name="start">The starting point of the search date range.</param>
-        /// <param name="end">The ending point of the search date range.</param>
+        /// <param name="startDate">The starting point of the search date range.</param>
+        /// <param name="endDate">The ending point of the search date range.</param>
         /// <param name="location">The City name the snapshots should cover.</param>
         /// <returns>
         /// Returns a list of all snapshots for the specified city location that cover the provided search dates.
         /// </returns>
         // GET: api/forecast/Snapshots/start/end/location
-        [HttpGet("Snapshots/{start:datetime}/{end:datetime}/{location:alpha}")]
-        public async Task<IActionResult> Get(DateTime start, DateTime end, string location)
+        [HttpGet("SnapshotsByLocation/{startDate:datetime}/{endDate:datetime}/{location:alpha}")]
+        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate, string location)
         {
             try
             {
@@ -172,7 +172,7 @@ namespace Housing.Forecast.Service.Controllers
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
 
-                List<Snapshot> snapshots = _snapshot.GetBetweenDatesAtLocation(start, end, location).ToList();
+                List<Snapshot> snapshots = _snapshot.GetBetweenDatesAtLocation(startDate, endDate, location).ToList();
                 if (snapshots == null)
                 {
                     return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
