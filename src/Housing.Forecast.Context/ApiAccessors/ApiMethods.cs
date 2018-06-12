@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Web;
 using Newtonsoft.Json;
 
-
 namespace Housing.Forecast.Context.ApiAccessors
 {
     /// <summary>
