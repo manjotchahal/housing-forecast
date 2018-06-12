@@ -12,6 +12,35 @@ namespace Housing.Forecast.Library.Models
     [Table("Batches")]
     public class Batch
     {
+        /// <summary>Default Constructor</summary>>
+        /// <remarks>Sets all properties to empty, null, or impossible values that correspond 
+        /// to invalid models that should be invalid if not replaced.</remarks>
+        public Batch()
+        {
+            Id = Guid.Empty;
+            BatchId = Guid.Empty;
+            BatchName = "";
+            BatchOccupancy = -1;
+            BatchSkill = "";
+            Address = null;
+        }
+
+        /// <summary>Property validation</summary>>
+        /// <remarks>Returns true if all properties are valid
+        /// By default (through constructor), the model is invalid, properties to be filled in</remarks>
+        public bool Validate()
+        {
+            if (Id == Guid.Empty) { return false; }
+            if (BatchId == Guid.Empty) { return false; }
+            if (String.IsNullOrEmpty(BatchName)) { return false; }
+            if (BatchOccupancy == -1) { return false; }
+            if (String.IsNullOrEmpty(BatchSkill)) { return false; }
+            if (Address == null) { return false; }
+
+            return true;
+        }
+
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [ScaffoldColumn(false)]
