@@ -13,19 +13,12 @@ namespace Housing.Forecast.Library.Models
     ///</remarks>
     public class Name
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
         public Guid Id { get; set; }
-
         public Guid NameId { get; set; }
-
         public string First { get; set; }
-
         public string Middle { get; set; }
-
         public string Last { get; set; }
-
-        [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
 
         public ICollection<User> Users { get; set; }
