@@ -10,7 +10,7 @@ using Housing.Forecast.Service;
 
 namespace Housing.Forecast.Testing.Library
 {
-  public class SnapshotTest
+  public class SnapshotTests
   {
     private Snapshot getTestSnapshot() {
       Snapshot result = new Snapshot{

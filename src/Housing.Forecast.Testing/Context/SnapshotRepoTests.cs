@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
-using Housing.Forecast.Library.Models;
+using Housing.Forecast.Context.Models;
 using Housing.Forecast.Service;
 
-namespace Housing.Forecast.Testing.Library
+namespace Housing.Forecast.Testing.Context
 {
     public class SnapshotRepoTests
     {
@@ -52,7 +52,7 @@ namespace Housing.Forecast.Testing.Library
                 Snapshot snapshot = _context.Snapshots.FirstOrDefault();
 
                 // Act
-                snapshots = _snapshotRepository.GetByDate(snapshot.Date);
+                snapshots = _snapshotRepository.GetByDate(snapshot.Date.Value);
 
                 // Assert
                 Assert.Equal(snapshots.FirstOrDefault().Id, snapshot.Id);
@@ -113,7 +113,7 @@ namespace Housing.Forecast.Testing.Library
                 Snapshot snapshot = _context.Snapshots.FirstOrDefault();
 
                 // Act
-                snapshots = _snapshotRepository.GetByLocation(snapshot.Date, snapshot.Location);
+                snapshots = _snapshotRepository.GetByLocation(snapshot.Date.Value, snapshot.Location);
 
                 // Assert
                 Assert.NotEmpty(snapshots);
@@ -151,7 +151,7 @@ namespace Housing.Forecast.Testing.Library
                 Snapshot snapshot = _context.Snapshots.FirstOrDefault();
 
                 // Act
-                snapshots = _snapshotRepository.GetByLocation(snapshot.Date, "Tampa");
+                snapshots = _snapshotRepository.GetByLocation(snapshot.Date.Value, "Tampa");
 
                 // Assert
                 Assert.Empty(snapshots);
