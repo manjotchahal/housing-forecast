@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
-using Housing.Forecast.Library.Models;
+using Housing.Forecast.Context.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.ServiceBus;
