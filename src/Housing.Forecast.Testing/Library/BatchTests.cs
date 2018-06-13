@@ -75,10 +75,18 @@ namespace Housing.Forecast.Testing.Library
         }
 
         [Fact]
-        public void BatchOccupancyInvalidTest()
+        public void BatchOccupancyLessInvalidTest()
         {
             Batch test = getTestBatch();
             test.BatchOccupancy = -1;
+            Assert.False(test.Validate());
+        }
+
+        [Fact]
+        public void BatchOccupancyOverInvalidTest()
+        {
+            Batch test = getTestBatch();
+            test.BatchOccupancy = 101;
             Assert.False(test.Validate());
         }
 
