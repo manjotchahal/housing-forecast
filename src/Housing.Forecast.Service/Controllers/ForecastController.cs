@@ -106,11 +106,6 @@ namespace Housing.Forecast.Service.Controllers
                     {
                         return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
                     }
-
-                    foreach (var snap in snapshots)
-                    {
-                        // Added the new snapshots to the database here.
-                    }
                 }
 
                 return await Task.Run(() => Ok(snapshots));
@@ -153,11 +148,6 @@ namespace Housing.Forecast.Service.Controllers
                     if (snapshots == null)
                     {
                         return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
-                    }
-
-                    foreach (var snap in snapshots)
-                    {
-                        // Added the new snapshots to the database here.
                     }
                 }
 
@@ -212,11 +202,6 @@ namespace Housing.Forecast.Service.Controllers
                     snapshots = CreateSnapshot(startDate, endDate, location);
                     if (snapshots == null)
                         return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
-
-                    foreach (var snap in snapshots)
-                    {
-                        // Added the new snapshots to the database here.
-                    }
                 }
 
                 return await Task.Run(() => Ok(snapshots));
@@ -346,6 +331,16 @@ namespace Housing.Forecast.Service.Controllers
 
                         snapshots.Add(snapshot);
                     }
+                }
+
+                using (ForecastContext db = new ForecastContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ForecastContext>()))
+                {
+                    foreach (var snap in snapshots)
+                    {
+                        // Added the new snapshots to the database here.
+                        db.Snapshots.Add(snap);
+                    }
+                    db.SaveChanges(); // Save the changes to the database
                 }
 
                 return snapshots;
