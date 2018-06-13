@@ -231,7 +231,10 @@ namespace Housing.Forecast.Service.Controllers
                 var earlist = _snapshot.Get().Min(x => x.Date);
 
                 // The City locations that are supported for the search
-                var cities = new List<string>() { "reston", "tampa", "new york" };
+                var cities = _snapshot.GetLocations().Distinct().ToList();
+
+                // Remove 'All' from the cities list
+                cities.Remove("All");
 
                 if (end == null)
                 {
