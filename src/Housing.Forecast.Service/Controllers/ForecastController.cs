@@ -153,6 +153,32 @@ namespace Housing.Forecast.Service.Controllers
                     }
                 }
 
+                // Find which dates are missing a snapshot so we can make a new one for it
+                List<DateTime> missingDates = new List<DateTime>();
+                for (var i = startDate; i < endDate; i.AddDays(1))
+                {
+                    // Check if a snapshot was found for date i
+                    if (!FoundSnapshot(i, snapshots))
+                    {
+                        missingDates.Add(i);
+                    }
+                }
+
+                // Lets add the missing snapshots
+                if (missingDates.Count > 0)
+                {
+                    var missingSnapshots = CreateSnapshot(DateTime.MinValue, null, null, missingDates);
+                    
+                    if (missingSnapshots == null)
+                        return await Task.Run(() => BadRequest("Something went wrong while creating new snapshots for the missing dates."));
+
+                    foreach (var snap in missingSnapshots)
+                    {
+                        snapshots.Add(snap);
+                    }
+                    snapshots.OrderBy(s => s.Date); // Order the list by the date
+                }
+
                 return await Task.Run(() => Ok(snapshots));
 
             }
@@ -204,6 +230,32 @@ namespace Housing.Forecast.Service.Controllers
                     snapshots = CreateSnapshot(startDate, endDate, location);
                     if (snapshots == null)
                         return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
+                }
+
+                // Find which dates are missing a snapshot so we can make a new one for it
+                List<DateTime> missingDates = new List<DateTime>();
+                for (var i = startDate; i < endDate; i.AddDays(1))
+                {
+                    // Check if a snapshot was found for date i
+                    if (!FoundSnapshot(i, snapshots))
+                    {
+                        missingDates.Add(i);
+                    }
+                }
+
+                // Let's add the missing snapshots
+                if (missingDates.Count > 0)
+                {
+                    var missingSnapshots = CreateSnapshot(DateTime.MinValue, null, location, missingDates);
+
+                    if (missingSnapshots == null)
+                        return await Task.Run(() => BadRequest("Something went wrong while creating new snapshots for the missing dates."));
+
+                    foreach (var snap in missingSnapshots)
+                    {
+                        snapshots.Add(snap);
+                    }
+                    snapshots.OrderBy(s => s.Date); // Order the list by the date
                 }
 
                 return await Task.Run(() => Ok(snapshots));
@@ -277,7 +329,16 @@ namespace Housing.Forecast.Service.Controllers
             }
         }
 
-        private List<Snapshot> CreateSnapshot(DateTime start, DateTime? end = null, string location = null)
+        /// <summary>
+        /// Create new snapshots for dates that weren't found
+        /// </summary>
+        /// <param name="start">The first date date the snapshots should be creatd. If it's the only input then make one for that date.</param>
+        /// <param name="end">The last date the snapshots should be made for.</param>
+        /// <param name="location">The location for which the snapshot is for.</param>
+        /// <returns>
+        /// Returns a list of the newly created snapshots.
+        /// </returns>
+        private List<Snapshot> CreateSnapshot(DateTime start, DateTime? end = null, string location = null, List<DateTime> missingDates = null)
         {
             try
             {
@@ -286,8 +347,37 @@ namespace Housing.Forecast.Service.Controllers
                 TextInfo text = new CultureInfo("en-US", false).TextInfo;
                 List<Snapshot> snapshots = new List<Snapshot>();
 
-                if (end == null)
+                if (start == DateTime.MinValue && missingDates != null)
                 {
+                    // Make the snapshots for the missing dates
+                    foreach (var date in missingDates)
+                    {
+                        if (String.IsNullOrEmpty(location))
+                        {
+                            rooms = _room.GetByDate(date).ToList();
+                            users = _user.GetByDate(date).ToList();
+                        }
+                        else
+                        {
+                            rooms = _room.GetByLocation(date, location).ToList();
+                            users = _user.GetByLocation(date, location).ToList();
+                        }                        
+
+                        var snapshot = new Snapshot()
+                        {
+                            Date = start,
+                            RoomCount = rooms.Count,
+                            UserCount = users.Count,
+                            Location = (String.IsNullOrEmpty(location)) ? "All":text.ToTitleCase(location),
+                            Created = DateTime.Now
+                        };
+
+                        snapshots.Add(snapshot);
+                    }
+                }
+                else if (end == null)
+                {
+                    // Create the only missing snapshot
                     rooms = _room.GetByDate(start).ToList();
                     users = _user.GetByDate(start).ToList();
 
@@ -296,44 +386,34 @@ namespace Housing.Forecast.Service.Controllers
                         Date = start,
                         RoomCount = rooms.Count,
                         UserCount = users.Count,
-                        Location = "All",
+                        Location = (String.IsNullOrEmpty(location)) ? "All" : text.ToTitleCase(location),
                         Created = DateTime.Now
                     };
 
                     snapshots.Add(snapshot);
                 }
-                else if (location == null)
-                {
-                    for (DateTime i = start; i <= end; i.AddDays(1))
-                    {
-                        rooms = _room.GetByDate(i).ToList();
-                        users = _user.GetByDate(i).ToList();
-
-                        var snapshot = new Snapshot()
-                        {
-                            Date = start,
-                            RoomCount = rooms.Count,
-                            UserCount = users.Count,
-                            Location = "All",
-                            Created = DateTime.Now
-                        };
-
-                        snapshots.Add(snapshot);
-                    }
-                }
                 else
                 {
+                    // Create all snapshots within the range
                     for (DateTime i = start; i <= end; i.AddDays(1))
                     {
-                        rooms = _room.GetByLocation(i, location).ToList();
-                        users = _user.GetByLocation(i, location).ToList();
+                        if (!String.IsNullOrEmpty(location))
+                        {
+                            rooms = _room.GetByDate(i).ToList();
+                            users = _user.GetByDate(i).ToList();
+                        }
+                        else
+                        {
+                            rooms = _room.GetByLocation(i, location).ToList();
+                            users = _user.GetByLocation(i, location).ToList();
+                        }
 
                         var snapshot = new Snapshot()
                         {
                             Date = start,
                             RoomCount = rooms.Count,
                             UserCount = users.Count,
-                            Location = text.ToTitleCase(location),
+                            Location = (String.IsNullOrEmpty(location)) ? "All" : text.ToTitleCase(location),
                             Created = DateTime.Now
                         };
 
@@ -357,6 +437,33 @@ namespace Housing.Forecast.Service.Controllers
             {
                 logger.LogError(ex.Message);
                 return null; // return null
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if a snapshot was found the provided date
+        /// </summary>
+        /// <param name="date">Verify a snapshot was found for this date.</param>
+        /// <param name="snapshots">List of Snapshots that were found.</param>
+        /// <returns>
+        /// Returns true if the snapshot for the provided date was found otherwise returns false.
+        /// </returns>
+        private bool FoundSnapshot(DateTime date, List<Snapshot> snapshots)
+        {
+            try
+            {
+                foreach (var snap in snapshots)
+                {
+                    if (snap.Date == date)
+                        return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return false;
             }
         }
 
