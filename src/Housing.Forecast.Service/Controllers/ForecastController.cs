@@ -7,8 +7,8 @@ using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
 using System.Collections.Generic;
 using System.Linq;
-using Housing.Forecast.Library.Models;
 using System.Globalization;
+using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Service.Controllers
 {
