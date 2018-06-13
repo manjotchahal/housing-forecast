@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
+using Newtonsoft.Json;
+
 namespace Housing.Forecast.Context.Models
 {
     public class Batch
@@ -62,6 +64,7 @@ namespace Housing.Forecast.Context.Models
         [Column(TypeName = "datetime2")]
         public DateTime Deleted { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<User> Users { get; set; }
 
     }

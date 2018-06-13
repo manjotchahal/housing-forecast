@@ -12,7 +12,6 @@ namespace Housing.Forecast.Library.Models
     ///</remarks>
     public class User
     {
-        
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public Name Name { get; set; }
