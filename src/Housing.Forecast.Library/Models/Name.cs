@@ -13,7 +13,6 @@ namespace Housing.Forecast.Library.Models
     ///</remarks>
     public class Name
     {
-        
         public Guid Id { get; set; }
         public Guid NameId { get; set; }
         public string First { get; set; }

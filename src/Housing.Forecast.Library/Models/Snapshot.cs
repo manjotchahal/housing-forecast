@@ -9,7 +9,6 @@ namespace Housing.Forecast.Library.Models
     ///<summary>The Snapshot class is used to represent the supply and demand of Rooms and Users on any given date.</summary>
     public class Snapshot
     {
-       
         public Guid Id { get; set; }
         public DateTime Date { get; set; }
         public int RoomCount { get; set; }

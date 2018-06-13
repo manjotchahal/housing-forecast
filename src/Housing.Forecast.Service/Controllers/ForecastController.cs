@@ -91,7 +91,7 @@ namespace Housing.Forecast.Service.Controllers
             try
             {
                 // check if the models are correct?
-                if (!ModelState.IsValid)
+                if (!Validate(date))
                 {
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
@@ -128,7 +128,7 @@ namespace Housing.Forecast.Service.Controllers
             try
             {
                 // check if the models are correct?
-                if (!ModelState.IsValid)
+                if (!Validate(startDate, endDate))
                 {
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
@@ -166,8 +166,19 @@ namespace Housing.Forecast.Service.Controllers
         {
             try
             {
+                if (!String.IsNullOrEmpty(location))
+                {
+                    location.ToLower(); // make location to be lowercase
+                }
+
+                if (location == "all")
+                {
+                    // Redirect the call to another endpoint
+                    return RedirectToAction("Get", new { startDate, endDate });
+                }
+
                 // check if the models are correct?
-                if (!ModelState.IsValid)
+                if (!Validate(startDate, endDate, location))
                 {
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
@@ -185,6 +196,59 @@ namespace Housing.Forecast.Service.Controllers
             {
                 logger.LogError(ex.Message);
                 return await Task.Run(() => BadRequest("Something went wrong while processing the request."));
+            }
+        }
+
+        /// <summary>
+        /// validate the user's input
+        /// </summary>
+        /// <param name="start">The earliest date the snapshot should have been created on.</param>
+        /// <param name="end">The lastest date the snapshot shold have beed created on.</param>
+        /// <param name="location">The city name the snapshot is tied to.</param>
+        /// <returns>
+        /// Returns true if all inputs are valid otherwise returns false if any input fails
+        /// </returns>
+        private bool Validate(DateTime start, DateTime? end = null, string location = null)
+        {
+            try
+            {
+                // First let's find the earlist snapshot date
+                var earlist = _snapshot.Get().Min(x => x.Date);
+
+                // The City locations that are supported for the search
+                var cities = new List<string>() { "Reston", "Tampa", "New York"};
+
+                if (end == null)
+                {
+                    // Only need to validate start to see that it's on/after the earliest snapshot date.
+                    if (start < earlist)
+                    {
+                        return false; // Failed
+                    }
+                }
+                else if (location == null)
+                {
+                    // Need to make sure that start is on/after the earlist snapshot date and that end is after start.
+                    if (start < earlist || start > end)
+                    {
+                        return false; // failed
+                    }
+                }
+                else
+                {
+                    // Validate all three inputs
+                    if (start < earlist || start > end || cities.IndexOf(location) < 0)
+                    {
+                        return false; // Failed
+                    }
+                }
+                return true; // Passed all validation checks
+            }
+            catch (Exception ex)
+            {
+                // There was an erro while trying to validate the user's input so log the error return false
+                logger.LogError(ex.Message);
+                return false;
             }
         }
 
