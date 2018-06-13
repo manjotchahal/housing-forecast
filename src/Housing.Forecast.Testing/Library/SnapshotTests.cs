@@ -10,7 +10,7 @@ using Housing.Forecast.Service;
 
 namespace Housing.Forecast.Testing.Library
 {
-  public class SnapshotTest
+  public class SnapshotTests
   {
     private Snapshot getTestSnapshot() {
       Snapshot result = new Snapshot{
@@ -61,7 +61,7 @@ namespace Housing.Forecast.Testing.Library
       Snapshot snap = getTestSnapshot();
 
       // Act
-      snap.Date = null;
+      snap.Date = DateTime.MinValue;
 
       // Assert
       Assert.False(snap.Validate());
@@ -85,7 +85,7 @@ namespace Housing.Forecast.Testing.Library
       Snapshot snap = getTestSnapshot();
 
       // Act
-      snap.UserCount = null;
+      snap.UserCount = -1;
 
       // Assert
       Assert.False(snap.Validate());
@@ -97,7 +97,7 @@ namespace Housing.Forecast.Testing.Library
       Snapshot snap = getTestSnapshot();
 
       // Act
-      snap.RoomCount = null;
+      snap.RoomCount = -1;
 
       // Assert
       Assert.False(snap.Validate());

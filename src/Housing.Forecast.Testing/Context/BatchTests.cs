@@ -1,13 +1,10 @@
-﻿using System;
-using Xunit;
-using Moq;
+﻿using Housing.Forecast.Context.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Housing.Forecast.Library.Models;
-using Housing.Forecast.Service;
+using System.Text;
+using Xunit;
 
-namespace Housing.Forecast.Testing.Library
+namespace Housing.Forecast.Testing.Context
 {
     public class BatchTests
     {
@@ -35,7 +32,6 @@ namespace Housing.Forecast.Testing.Library
             };
             return batch;
         }
-
         [Fact]
         public void DefaultBatchInvalidTest()
         {
@@ -105,6 +101,5 @@ namespace Housing.Forecast.Testing.Library
             test.Address = null;
             Assert.False(test.Validate());
         }
-
     }
 }
