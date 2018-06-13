@@ -199,6 +199,15 @@ namespace Housing.Forecast.Service.Controllers
             }
         }
 
+        /// <summary>
+        /// validate the user's input
+        /// </summary>
+        /// <param name="start">The earliest date the snapshot should have been created on.</param>
+        /// <param name="end">The lastest date the snapshot shold have beed created on.</param>
+        /// <param name="location">The city name the snapshot is tied to.</param>
+        /// <returns>
+        /// Returns true if all inputs are valid otherwise returns false if any input fails
+        /// </returns>
         private bool Validate(DateTime start, DateTime? end = null, string location = null)
         {
             try

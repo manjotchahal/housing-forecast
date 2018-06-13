@@ -14,7 +14,7 @@ namespace Housing.Forecast.Library.Models
         public Guid Id { get; set; }
 
         [Column(TypeName = "datetime2")]
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         public int RoomCount { get; set; }
 
