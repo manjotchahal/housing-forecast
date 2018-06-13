@@ -16,8 +16,10 @@ namespace Housing.Forecast.Service.Controllers
     public class ForecastController : BaseController
     {
         private readonly SnapshotRepo _snapshot;
-        public ForecastController(ILoggerFactory loggerFactory, IQueueClient queueClientSingleton, IRepo<Snapshot> snapshot)
-          : base(loggerFactory, queueClientSingleton) { _snapshot = (SnapshotRepo)snapshot; }
+        private readonly IRepo<Room> _room;
+        private readonly IRepo<User> _user;
+        public ForecastController(ILoggerFactory loggerFactory, IQueueClient queueClientSingleton, IRepo<Snapshot> snapshot, IRepo<Room> rooms, IRepo<User> users)
+          : base(loggerFactory, queueClientSingleton) { _snapshot = (SnapshotRepo)snapshot; _room = rooms; _user = users; }
 
         /// <summary>
         /// This endpoint will return all unique locations of snapshots
@@ -231,7 +233,7 @@ namespace Housing.Forecast.Service.Controllers
                 var earlist = _snapshot.Get().Min(x => x.Date);
 
                 // The City locations that are supported for the search
-                var cities = _snapshot.GetLocations().Distinct().ToList();
+                var cities = _room.GetLocations().ToList();
 
                 // Remove 'All' from the cities list
                 cities.Remove("All");
@@ -279,8 +281,6 @@ namespace Housing.Forecast.Service.Controllers
         {
             try
             {
-                var _room = new RoomRepo(new ForecastContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ForecastContext>()));
-                var _user = new UserRepo(new ForecastContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ForecastContext>()));
                 List<Room> rooms = new List<Room>();
                 List<User> users = new List<User>();
                 TextInfo text = new CultureInfo("en-US", false).TextInfo;
