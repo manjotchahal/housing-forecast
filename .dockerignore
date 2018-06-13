@@ -20,4 +20,11 @@ README*
 ubuntu*
 vagrant*
 
+# DIRECTORY - SRC
+# exclude - filepath
+src/*.Testing
+
+# exclude - filename
+src/*.sln
+
 **/appsettings.*.json

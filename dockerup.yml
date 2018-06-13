@@ -5,7 +5,7 @@ networks:
 
 services:
   web:
-    image: revaturecloud/housing-forecast:latest
+    image: revaturecloud/housing-selection:latest
     deploy:
       replicas: 1
       resources:
@@ -24,6 +24,10 @@ services:
       - appnet
     ports:
       - "9000:80"
+  db:
+    image: postgres
+    networks:
+      - appnet
 
 volumes:
   appdata:
