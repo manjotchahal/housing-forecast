@@ -235,6 +235,11 @@ namespace Housing.Forecast.Service.Controllers
 
                 // Remove 'All' from the cities list
                 cities.Remove("All");
+                
+                foreach (var city in cities)
+                {
+                    city.ToLower();
+                }
 
                 if (end == null)
                 {
