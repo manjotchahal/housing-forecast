@@ -13,26 +13,15 @@ namespace Housing.Forecast.Library.Models
     ///</remarks>
     public class Room
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+       
         public Guid Id { get; set; }
-
         public Guid RoomId { get; set; }
-
         public string Location { get; set; }
-
         public int Vacancy { get; set; }
-
         public int Occupancy { get; set; }
-
         public string Gender { get; set; }
-
         public Address Address { get; set; }
-
-        [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
-
-        [Column(TypeName = "datetime2")]
         public DateTime Deleted { get; set; }
 
         public ICollection<User> Users { get; set; }

@@ -12,31 +12,18 @@ namespace Housing.Forecast.Library.Models
     ///</remarks>
     public class User
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
         public Guid Id { get; set; }
-
         public Guid UserId { get; set; }
-
         public Name Name { get; set; }
-
         public string Location { get; set; }
-
         public Room Room { get; set; }
         public Address Address { get; set; }
-
         public string Email { get; set; }
-
         public string Gender { get; set; }
-
         public string Type { get; set; }
-
         public Batch Batch { get; set; }
-
-        [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
-
-        [Column(TypeName = "datetime2")]
         public DateTime Deleted { get; set; }
 
         /// <summary>Default Constructor</summary>>
