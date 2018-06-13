@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Housing.Forecast.Library.Models
+namespace Housing.Forecast.Context.Models
 {
     ///<summary>The Name Class contains standard information regarding a User's name including first name, middle name, and last name.</summary>
     ///<remarks>
@@ -13,16 +13,6 @@ namespace Housing.Forecast.Library.Models
     ///</remarks>
     public class Name
     {
-        
-        public Guid Id { get; set; }
-        public Guid NameId { get; set; }
-        public string First { get; set; }
-        public string Middle { get; set; }
-        public string Last { get; set; }
-        public DateTime Created { get; set; }
-
-        public ICollection<User> Users { get; set; }
-
         /// <summary>Default Constructor</summary>>
         /// <remarks>Sets all properties to empty, null, or impossible values that correspond 
         /// to invalid models that should be invalid if not replaced.</remarks>
@@ -43,8 +33,25 @@ namespace Housing.Forecast.Library.Models
             if (NameId == Guid.Empty) { return false; }
             if (String.IsNullOrEmpty(First)) { return false; }
             if (String.IsNullOrEmpty(Last)) { return false; }
-        
+
             return true;
         }
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+
+        public Guid NameId { get; set; }
+
+        public string First { get; set; }
+
+        public string Middle { get; set; }
+
+        public string Last { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime Created { get; set; }
+
+        public ICollection<User> Users { get; set; }
     }
 }
