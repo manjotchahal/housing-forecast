@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
-using Housing.Forecast.Library.Models;
+using Housing.Forecast.Context.Models;
 using Housing.Forecast.Service;
 
 namespace Housing.Forecast.Testing.Library
