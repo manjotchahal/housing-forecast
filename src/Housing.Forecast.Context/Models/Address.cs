@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
+using Newtonsoft.Json;
+
 namespace Housing.Forecast.Context.Models
 {
     ///<summary>The Address class contains standard address information that will be used for Users, Batches, and Rooms</summary>
@@ -63,8 +65,13 @@ namespace Housing.Forecast.Context.Models
         [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
 
+        [JsonIgnore]
         public ICollection<Batch> Batches { get; set; }
+
+        [JsonIgnore]
         public ICollection<User> Users { get; set; }
+
+        [JsonIgnore]
         public ICollection<Room> Rooms { get; set; }
     }
 }

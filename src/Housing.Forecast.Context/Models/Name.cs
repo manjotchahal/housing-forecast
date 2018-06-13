@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
+using Newtonsoft.Json;
+
 namespace Housing.Forecast.Context.Models
 {
     ///<summary>The Name Class contains standard information regarding a User's name including first name, middle name, and last name.</summary>
@@ -52,6 +54,7 @@ namespace Housing.Forecast.Context.Models
         [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
 
+        [JsonIgnore]
         public ICollection<User> Users { get; set; }
     }
 }
