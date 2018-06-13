@@ -8,6 +8,7 @@ using Housing.Forecast.Context.Repos;
 using System.Collections.Generic;
 using System.Linq;
 using Housing.Forecast.Library.Models;
+using System.Globalization;
 
 namespace Housing.Forecast.Service.Controllers
 {
@@ -138,7 +139,7 @@ namespace Housing.Forecast.Service.Controllers
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
 
-                List<Snapshot> snapshots = ((SnapshotRepo)_snapshot).GetBetweenDates(startDate, endDate).ToList();
+                List<Snapshot> snapshots = _snapshot.GetBetweenDates(startDate, endDate).ToList();
 
                 if (snapshots == null)
                 {
@@ -193,7 +194,8 @@ namespace Housing.Forecast.Service.Controllers
                     return await Task.Run(() => BadRequest("Not valid input"));
                 }
 
-                List<Snapshot> snapshots = ((SnapshotRepo)_snapshot).GetBetweenDatesAtLocation(startDate, endDate, location).ToList();
+                TextInfo text = new CultureInfo("en-US", false).TextInfo;
+                List<Snapshot> snapshots = _snapshot.GetBetweenDatesAtLocation(startDate, endDate, text.ToTitleCase(location)).ToList();
                 if (snapshots == null)
                 {
                     // Let's create a new snapshot for the requested date
@@ -229,7 +231,7 @@ namespace Housing.Forecast.Service.Controllers
                 var earlist = _snapshot.Get().Min(x => x.Date);
 
                 // The City locations that are supported for the search
-                var cities = new List<string>() { "Reston", "Tampa", "New York" };
+                var cities = new List<string>() { "reston", "tampa", "new york" };
 
                 if (end == null)
                 {
@@ -273,7 +275,7 @@ namespace Housing.Forecast.Service.Controllers
                 var _user = new UserRepo(new ForecastContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ForecastContext>()));
                 List<Room> rooms = new List<Room>();
                 List<User> users = new List<User>();
-
+                TextInfo text = new CultureInfo("en-US", false).TextInfo;
                 List<Snapshot> snapshots = new List<Snapshot>();
 
                 if (end == null)
@@ -286,7 +288,7 @@ namespace Housing.Forecast.Service.Controllers
                         Date = start,
                         RoomCount = rooms.Count,
                         UserCount = users.Count,
-                        Location = (String.IsNullOrEmpty(location)) ? "all" : location,
+                        Location = "All",
                         Created = DateTime.Now
                     };
 
@@ -304,7 +306,7 @@ namespace Housing.Forecast.Service.Controllers
                             Date = start,
                             RoomCount = rooms.Count,
                             UserCount = users.Count,
-                            Location = (String.IsNullOrEmpty(location)) ? "all" : location,
+                            Location = "All",
                             Created = DateTime.Now
                         };
 
@@ -323,7 +325,7 @@ namespace Housing.Forecast.Service.Controllers
                             Date = start,
                             RoomCount = rooms.Count,
                             UserCount = users.Count,
-                            Location = (String.IsNullOrEmpty(location)) ? "all" : location,
+                            Location = text.ToTitleCase(location),
                             Created = DateTime.Now
                         };
 
