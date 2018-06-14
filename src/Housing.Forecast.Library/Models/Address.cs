@@ -52,7 +52,6 @@ namespace Housing.Forecast.Library.Models
         public string Country { get; set; }
         public DateTime Created { get; set; }
 
-        public ICollection<Batch> Batches { get; set; }
         public ICollection<User> Users { get; set; }
         public ICollection<Room> Rooms { get; set; }
     }
