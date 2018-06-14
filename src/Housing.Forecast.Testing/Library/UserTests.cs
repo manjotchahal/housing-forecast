@@ -32,7 +32,7 @@ namespace Housing.Forecast.Testing.Library
                     BatchSkill = "fakeskill",
                     StartDate = DateTime.Today,
                     EndDate = DateTime.MaxValue,
-                    Address = null,
+                    State = "VA",
                     Created = DateTime.Now,
                     Deleted = DateTime.Now
                 },

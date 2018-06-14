@@ -21,7 +21,7 @@ namespace Housing.Forecast.Library.Models
             BatchName = "";
             BatchOccupancy = -1;
             BatchSkill = "";
-            Address = null;
+            State = "";
         }
 
         /// <summary>Property validation</summary>>
@@ -34,7 +34,7 @@ namespace Housing.Forecast.Library.Models
             if (String.IsNullOrEmpty(BatchName)) { return false; }
             if (BatchOccupancy < 0 ||  BatchOccupancy > 100) { return false; }
             if (String.IsNullOrEmpty(BatchSkill)) { return false; }
-            if (Address == null) { return false; }
+            if (String.IsNullOrEmpty(State)) { return false; }
 
             return true;
         }
@@ -46,7 +46,7 @@ namespace Housing.Forecast.Library.Models
         public string BatchName { get; set; }
         public int BatchOccupancy { get; set; }
         public string BatchSkill { get; set; }
-        public Address Address { get; set; }
+        public string State { get; set; }
         public DateTime Created { get; set; }
         public DateTime Deleted { get; set; }
 
