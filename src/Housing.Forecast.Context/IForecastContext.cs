@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace Housing.Forecast.Context
 {
-    public interface IForecastContext
+    public interface IForecastContext: IDisposable
     {
         DbSet<Address> Addresses { get; set; }
         DbSet<Batch> Batches { get; set; }
