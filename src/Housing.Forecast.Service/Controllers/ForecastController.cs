@@ -421,7 +421,7 @@ namespace Housing.Forecast.Service.Controllers
                     }
                 }
 
-                using (ForecastContext db = new ForecastContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ForecastContext>()))
+                using (IForecastContext db = new ForecastContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ForecastContext>()))
                 {
                     foreach (var snap in snapshots)
                     {
