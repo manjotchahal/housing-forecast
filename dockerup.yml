@@ -5,7 +5,7 @@ networks:
 
 services:
   web:
-    image: revaturecloud/housing-selection:latest
+    image: revaturecloud/housing-forecast:latest
     deploy:
       replicas: 1
       resources:
