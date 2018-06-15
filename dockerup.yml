@@ -23,7 +23,7 @@ services:
     networks:
       - appnet
     ports:
-      - "9000:80"
+      - "9020:80"
 
 volumes:
   appdata:
