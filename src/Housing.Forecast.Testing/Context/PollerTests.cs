@@ -42,13 +42,30 @@ namespace Housing.Forecast.Testing.Context
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
                 Name insertTest = getNewName();
-                _output.WriteLine(insertTest.NameId.ToString());
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
         }
+
+        [Fact]
+        public void UpdateModFirstName()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Name insertTest = getNewName();
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                insertTest.First = "testChanged";
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
 
     }
 }
