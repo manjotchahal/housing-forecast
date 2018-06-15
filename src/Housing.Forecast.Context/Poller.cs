@@ -39,10 +39,20 @@ namespace Housing.Forecast.Context
             mainTask.Wait();
         }
 
+        public void UpdateAddress(Address check)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateName(Name check)
+        {
+            throw new NotImplementedException();
+        }
+
         public void UpdateBatches(ApiMethods api)
         {
+            //insert proper endpoint when we get it
             var Batch = api.HttpGetFromApi<Batch>("");
-
             var dbBatches = _context.Batches;
 
             var joinBatchDelete = from New in Batch
@@ -91,8 +101,10 @@ namespace Housing.Forecast.Context
 
         public void UpdateUsers(ApiMethods api)
         {
+            //insert proper endpoint when we get it
             var Users = api.HttpGetFromApi<User>("");
             var dbUsers = _context.Users;
+
             var joinUserDelete = from New in Users
                                  join Old in dbUsers
                                  on New.UserId equals Old.UserId
@@ -127,12 +139,16 @@ namespace Housing.Forecast.Context
                 }
                 if (joinUserDiff.Contains(x))
                 {
+                    UpdateName(x.Name);
+                    UpdateAddress(x.Address);
                     var modify = _context.Users.Find(x.UserId);
                     _context.Entry(modify).CurrentValues.SetValues(x);
                 }
             }
             foreach (var x in joinUserNew)
             {
+                UpdateName(x.Name);
+                UpdateAddress(x.Address);
                 x.Created = DateTime.Today;
                 _context.Users.Add(x);
             }
@@ -141,24 +157,24 @@ namespace Housing.Forecast.Context
         }
         public void UpdateRooms(ApiMethods api)
         {
+            //insert proper endpoint when we get it
             var Rooms = api.HttpGetFromApi<Room>("");
-
             var dbRooms = _context.Rooms;
 
             var joinRoomDelete = from New in Rooms
                                  join Old in dbRooms
-               on New.RoomId equals Old.RoomId
+                                 on New.RoomId equals Old.RoomId
                                  where Old.Deleted == null &&
                                  New.RoomId == null
                                  select Old;
             var joinRoomNew = from New in Rooms
                               join Old in dbRooms
-            on New.RoomId equals Old.RoomId
+                              on New.RoomId equals Old.RoomId
                               where Old.RoomId == null
                               select New;
             var joinRoomDiff = from New in Rooms
                                join Old in dbRooms
-             on New.RoomId equals Old.RoomId
+                               on New.RoomId equals Old.RoomId
                                where New.Address.AddressId != Old.Address.AddressId ||
                                New.Location != Old.Location ||
                                New.Occupancy != Old.Occupancy ||
@@ -176,12 +192,14 @@ namespace Housing.Forecast.Context
                 }
                 if (joinRoomDiff.Contains(x))
                 {
+                    UpdateAddress(x.Address);
                     var modify = _context.Rooms.Find(x.RoomId);
                     _context.Entry(modify).CurrentValues.SetValues(x);
                 }
             }
             foreach (var x in joinRoomNew)
             {
+                UpdateAddress(x.Address);
                 x.Created = DateTime.Today;
                 _context.Rooms.Add(x);
             }
