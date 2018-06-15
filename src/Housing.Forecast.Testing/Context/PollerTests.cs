@@ -34,11 +34,25 @@ namespace Housing.Forecast.Testing.Context
             return New;
         }
 
+        public Address getNewAddress()
+        {
+            Address result = new Address()
+            {
+                Address1 = "123 test street",
+                AddressId = Guid.NewGuid(),
+                City = "Tampa",
+                State = "FL",
+                PostalCode = "33617",
+                Country = "US"
+            };
+            return result;
+        }
+
         public Room getNewRoom()
         {
             Room New = new Room();
             New.RoomId = Guid.NewGuid();
-            New.Address = new Address();
+            New.Address = getNewAddress();
             New.Gender = "M";
             New.Location = "Tampa";
             New.Occupancy = 10;
@@ -121,7 +135,9 @@ namespace Housing.Forecast.Testing.Context
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
                 Room insertRoom = getNewRoom();
                 _output.WriteLine(insertRoom.RoomId.ToString());
-                testPoller.UpdateRooms(insertRoom);
+                ICollection<Room> rooms = new List<Room>();
+                rooms.Add(insertRoom);
+                testPoller.UpdateRooms(rooms);
                 _context.SaveChanges();
                 Room afterInsertTest = _context.Rooms.Where(p => p.RoomId == insertRoom.RoomId).FirstOrDefault();
                 Assert.Equal(insertRoom, afterInsertTest);
