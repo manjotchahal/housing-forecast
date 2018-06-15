@@ -22,28 +22,21 @@ namespace Housing.Forecast.Testing.Context
         {
             this._output = output;
         }
-        
-        public Name getNewName()
-        {
-            Name New = new Name();
-            New.First = "testFirst";
-            New.Last = "testLast";
-            New.Middle = "testMiddle";
-            New.NameId = Guid.NewGuid();
-
-            return New;
-        }
-
 
         [Fact]
         public void UpdateNewName()
         {
             using (_context = new ForecastContext(options))
             {
+                // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
+                Name insertTest = TestDataGenerator.getTestName();
+
+                // Act
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
+
+                // Assert
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
@@ -54,13 +47,18 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
+                // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
-                testPoller.UpdateName(insertTest);
+                Name insertTest = TestDataGenerator.getTestName();
+                _context.Names.Add(insertTest);
                 _context.SaveChanges();
+
+                // Act
                 insertTest.First = "testChanged";
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
+
+                // Assert
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
@@ -71,13 +69,18 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
+                // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
-                testPoller.UpdateName(insertTest);
+                Name insertTest = TestDataGenerator.getTestName();
+                _context.Names.Add(insertTest);
                 _context.SaveChanges();
+
+                // Act
                 insertTest.Middle = "testChanged";
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
+
+                // Assert
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
@@ -88,13 +91,18 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
+                // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
-                testPoller.UpdateName(insertTest);
+                Name insertTest = TestDataGenerator.getTestName();
+                _context.Names.Add(insertTest);
                 _context.SaveChanges();
+
+                // Act
                 insertTest.Last = "testChanged";
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
+
+                // Assert
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
