@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Housing.Forecast.Library.Models
@@ -52,7 +50,6 @@ namespace Housing.Forecast.Library.Models
         public string Country { get; set; }
         public DateTime Created { get; set; }
 
-        public ICollection<Batch> Batches { get; set; }
         public ICollection<User> Users { get; set; }
         public ICollection<Room> Rooms { get; set; }
     }

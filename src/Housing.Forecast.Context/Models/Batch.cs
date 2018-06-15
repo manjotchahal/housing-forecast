@@ -20,7 +20,7 @@ namespace Housing.Forecast.Context.Models
             BatchName = "";
             BatchOccupancy = -1;
             BatchSkill = "";
-            Address = null;
+            State = "";
         }
 
         /// <summary>Property validation</summary>>
@@ -33,7 +33,7 @@ namespace Housing.Forecast.Context.Models
             if (String.IsNullOrEmpty(BatchName)) { return false; }
             if (BatchOccupancy < 0 || BatchOccupancy > 100) { return false; }
             if (String.IsNullOrEmpty(BatchSkill)) { return false; }
-            if (Address == null) { return false; }
+            if (String.IsNullOrEmpty(State)) { return false; }
 
             return true;
         }
@@ -56,7 +56,7 @@ namespace Housing.Forecast.Context.Models
 
         public string BatchSkill { get; set; }
 
-        public Address Address { get; set; }
+        public string State { get; set; }
 
         [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }

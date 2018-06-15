@@ -1,6 +1,5 @@
 using System;
 using Xunit;
-using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
 using Housing.Forecast.Context.Models;
-using Housing.Forecast.Service;
 
 namespace Housing.Forecast.Testing.Library
 {
