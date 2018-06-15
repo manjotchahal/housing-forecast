@@ -41,12 +41,41 @@ namespace Housing.Forecast.Context
 
         public void UpdateAddress(Address check)
         {
-            throw new NotImplementedException();
+            var mod = _context.Addresses.Find(check.AddressId);
+            if (mod == null)
+            {
+                check.Id = Guid.NewGuid();
+                check.Created = DateTime.Today;
+                _context.Addresses.Attach(check);
+            }
+            else if (mod.Address1 != check.Address1 ||
+                    mod.Address2 != check.Address2 ||
+                    mod.City != check.City ||
+                    mod.Country != check.Country ||
+                    mod.PostalCode != check.PostalCode ||
+                    mod.State != check.State)
+            {
+                check.Id = mod.Id;
+                _context.Entry(mod).CurrentValues.SetValues(check);                
+            }
         }
 
         public void UpdateName(Name check)
         {
-            throw new NotImplementedException();
+            var mod = _context.Names.Find(check.NameId);
+            if (mod == null)
+            {
+                check.Id = Guid.NewGuid();
+                check.Created = DateTime.Today;
+                _context.Names.Attach(check);
+            }
+            else if (mod.First != check.First ||
+                    mod.Last != check.Last ||
+                    mod.Middle != check.Middle)
+            {
+                check.Id = mod.Id;
+                _context.Entry(mod).CurrentValues.SetValues(check);
+            }
         }
 
         public void UpdateBatches(ApiMethods api)
@@ -69,7 +98,7 @@ namespace Housing.Forecast.Context
             var joinBatchDiff = from New in Batch
                                 join Old in dbBatches
                                 on New.BatchId equals Old.BatchId
-                                where New.Address.AddressId != Old.Address.AddressId ||
+                                where New.State != Old.State ||
                                 New.BatchName != Old.BatchName ||
                                 New.BatchOccupancy != Old.BatchOccupancy ||
                                 New.BatchSkill != Old.BatchSkill ||
@@ -83,17 +112,20 @@ namespace Housing.Forecast.Context
                 {
                     x.Deleted = DateTime.Today;
                     var modify = _context.Batches.Find(x.BatchId);
-                    _context.Entry(modify).CurrentValues.SetValues(x);
+                    _context.Entry(x).CurrentValues.SetValues(modify);
                 }
-                if (joinBatchDiff.Contains(x))
-                {
-                    var modify = _context.Batches.Find(x.BatchId);
-                    _context.Entry(modify).CurrentValues.SetValues(x);
-                }
+            }
+            foreach (var x in joinBatchDiff)
+            {
+                var modify = _context.Batches.Find(x.BatchId);
+                x.Id = modify.Id;
+                _context.Entry(x).CurrentValues.SetValues(modify);
+
             }
             foreach (var x in joinBatchNew)
             {
                 x.Created = DateTime.Today;
+                x.Id = Guid.NewGuid();
                 _context.Batches.Add(x);
             }
             _context.SaveChanges();
@@ -135,21 +167,21 @@ namespace Housing.Forecast.Context
                 {
                     x.Deleted = DateTime.Today;
                     var modify = _context.Users.Find(x.UserId);
-                    _context.Entry(modify).CurrentValues.SetValues(x);
+                    _context.Entry(x).CurrentValues.SetValues(modify);
                 }
-                if (joinUserDiff.Contains(x))
-                {
-                    UpdateName(x.Name);
-                    UpdateAddress(x.Address);
-                    var modify = _context.Users.Find(x.UserId);
-                    _context.Entry(modify).CurrentValues.SetValues(x);
-                }
+            }
+            foreach (var x in joinUserDiff)
+            {
+                var modify = _context.Users.Find(x.UserId);
+                x.Id = modify.Id;
+                _context.Entry(x).CurrentValues.SetValues(modify);
             }
             foreach (var x in joinUserNew)
             {
                 UpdateName(x.Name);
                 UpdateAddress(x.Address);
                 x.Created = DateTime.Today;
+                x.Id = Guid.NewGuid();
                 _context.Users.Add(x);
             }
             _context.SaveChanges();
@@ -188,19 +220,20 @@ namespace Housing.Forecast.Context
                 {
                     x.Deleted = DateTime.Today;
                     var modify = _context.Rooms.Find(x.RoomId);
-                    _context.Entry(modify).CurrentValues.SetValues(x);
+                    _context.Entry(x).CurrentValues.SetValues(modify);
                 }
-                if (joinRoomDiff.Contains(x))
-                {
-                    UpdateAddress(x.Address);
-                    var modify = _context.Rooms.Find(x.RoomId);
-                    _context.Entry(modify).CurrentValues.SetValues(x);
-                }
+            }
+            foreach (var x in joinRoomDiff)
+            {
+                var modify = _context.Rooms.Find(x.RoomId);
+                x.Id = modify.Id;
+                _context.Entry(x).CurrentValues.SetValues(modify);
             }
             foreach (var x in joinRoomNew)
             {
                 UpdateAddress(x.Address);
                 x.Created = DateTime.Today;
+                x.Id = Guid.NewGuid();
                 _context.Rooms.Add(x);
             }
             _context.SaveChanges();
