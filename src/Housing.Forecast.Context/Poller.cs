@@ -193,11 +193,11 @@ namespace Housing.Forecast.Context
             //insert proper endpoint when we get it
             var dbRooms = _context.Rooms;
 
-            var joinRoomDelete = from New in Rooms
-                                 join Old in dbRooms
-                                 on New.RoomId equals Old.RoomId
-                                 where Old.Deleted == null &&
-                                 New.RoomId == null
+            var joinRoomDelete = from Old in dbRooms
+                                 join New in Rooms
+                                 on Old.RoomId equals New.RoomId into temp
+                                 from New in temp.DefaultIfEmpty()
+                                 where New == null && Old.Deleted == null
                                  select Old;
             var joinRoomNew = from New in Rooms
                               join Old in dbRooms
