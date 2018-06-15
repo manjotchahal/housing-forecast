@@ -108,6 +108,21 @@ namespace Housing.Forecast.Testing.Context
             }
         }
 
+        [Fact]
+        public void UpdateNewUsers() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                ICollection<User> list = new List<User>();
+                list.Add(TestDataGenerator.getTestUser());
 
+                // Act
+                testPoller.UpdateUsers(list);
+
+                // Assert
+                list = _context.Users.ToList();
+                Assert.NotEmpty(list);
+            }
+        }
     }
 }
