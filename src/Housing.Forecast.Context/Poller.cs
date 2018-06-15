@@ -92,8 +92,9 @@ namespace Housing.Forecast.Context
                                   select Old;
             var joinBatchNew = from New in Batch
                                join Old in dbBatches
-                               on New.BatchId equals Old.BatchId
-                               where Old.BatchId == null
+                               on New.BatchId equals Old.BatchId into temp
+                               from Old in temp.DefaultIfEmpty()
+                               where Old == null
                                select New;
             var joinBatchDiff = from New in Batch
                                 join Old in dbBatches
@@ -144,8 +145,9 @@ namespace Housing.Forecast.Context
                                  select Old;
             var joinUserNew = from New in Users
                               join Old in dbUsers
-                              on New.UserId equals Old.UserId
-                              where Old.UserId == null
+                              on New.UserId equals Old.UserId into temp
+                               from Old in temp.DefaultIfEmpty()
+                              where Old == null
                               select New;
             var joinUserDiff = from New in Users
                                join Old in dbUsers
@@ -199,8 +201,9 @@ namespace Housing.Forecast.Context
                                  select Old;
             var joinRoomNew = from New in Rooms
                               join Old in dbRooms
-                              on New.RoomId equals Old.RoomId
-                              where Old.RoomId == null
+                              on New.RoomId equals Old.RoomId into temp
+                              from Old in temp.DefaultIfEmpty()
+                              where Old == null
                               select New;
             var joinRoomDiff = from New in Rooms
                                join Old in dbRooms
