@@ -45,18 +45,18 @@ namespace Housing.Forecast.Context
 
             var joinBatchDelete = from New in Batch
                                   join Old in dbBatches
-               on New.BatchId equals Old.BatchId
+                                  on New.BatchId equals Old.BatchId
                                   where Old.Deleted == null &&
                                   New.BatchId == null
                                   select Old;
             var joinBatchNew = from New in Batch
                                join Old in dbBatches
-            on New.BatchId equals Old.BatchId
+                               on New.BatchId equals Old.BatchId
                                where Old.BatchId == null
                                select New;
             var joinBatchDiff = from New in Batch
                                 join Old in dbBatches
-             on New.BatchId equals Old.BatchId
+                                on New.BatchId equals Old.BatchId
                                 where New.Address.AddressId != Old.Address.AddressId ||
                                 New.BatchName != Old.BatchName ||
                                 New.BatchOccupancy != Old.BatchOccupancy ||
@@ -93,18 +93,18 @@ namespace Housing.Forecast.Context
             var dbUsers = _context.Users;
             var joinUserDelete = from New in Users
                                  join Old in dbUsers
-               on New.UserId equals Old.UserId
+                                 on New.UserId equals Old.UserId
                                  where Old.Deleted == null &&
                                  New.UserId == null
                                  select Old;
             var joinUserNew = from New in Users
                               join Old in dbUsers
-            on New.UserId equals Old.UserId
+                              on New.UserId equals Old.UserId
                               where Old.UserId == null
                               select New;
             var joinUserDiff = from New in Users
                                join Old in dbUsers
-             on New.UserId equals Old.UserId
+                               on New.UserId equals Old.UserId
                                where New.Address.AddressId != Old.Address.AddressId ||
                                New.Batch.BatchId != Old.Batch.BatchId ||
                                New.Email != Old.Email ||
