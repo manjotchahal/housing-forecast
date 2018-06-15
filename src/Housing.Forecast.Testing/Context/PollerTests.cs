@@ -50,5 +50,19 @@ namespace Housing.Forecast.Testing.Context
             }
         }
 
+        [Fact]
+        public void UpdateNewRoom()
+        {
+            using(_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Room insertRoom = getNewRoom();
+                _output.WriteLine(insertRoom.RoomId.ToString());
+                testPoller.UpdateRooms(insertRoom);
+                _context.SaveChanges();
+                Room afterInsertTest = _context.Rooms.Where(p => p.RoomId == insertRoom.RoomId).FirstOrDefault();
+                Assert.Equal(insertRoom, afterInsertTest);
+            }
+        }
     }
 }
