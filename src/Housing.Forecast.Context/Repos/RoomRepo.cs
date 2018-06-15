@@ -27,12 +27,12 @@ namespace Housing.Forecast.Context.Repos
 
         public IEnumerable<Room> GetByLocation(DateTime datetime, string location)
         {
-            return _context.Rooms.Where(r => r.Created <= datetime && (r.Deleted == null || r.Deleted > datetime) && r.Location == location);
+            return _context.Rooms.Where(r => r.Created.Date >= datetime.Date && (r.Deleted == null || r.Deleted.Date > datetime.Date) && r.Location == location);
         }
 
         public IEnumerable<Room> GetByDate(DateTime datetime)
         {
-            return _context.Rooms.Where(r => r.Created <= datetime && (r.Deleted == null || r.Deleted > datetime));
+            return _context.Rooms.Where(r => r.Created.Date >= datetime.Date && (r.Deleted == null || r.Deleted.Date > datetime.Date));
         }
 
         public void Dispose()
