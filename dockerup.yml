@@ -24,6 +24,10 @@ services:
       - appnet
     ports:
       - "9020:80"
+  db:
+    image: postgres
+    networks:
+      - appnet
 
 volumes:
   appdata:
