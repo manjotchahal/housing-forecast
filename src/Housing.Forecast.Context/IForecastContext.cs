@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Logging;
 using Housing.Forecast.Context.Models;
 using Housing.Forecast.Context;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
 
 namespace Housing.Forecast.Context
 {
