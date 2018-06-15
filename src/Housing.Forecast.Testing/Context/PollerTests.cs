@@ -100,6 +100,22 @@ namespace Housing.Forecast.Testing.Context
             }
         }
 
+        [Fact]
+        public void UpdateNameNoChange()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Name insertTest = getNewName();
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
 
     }
 }

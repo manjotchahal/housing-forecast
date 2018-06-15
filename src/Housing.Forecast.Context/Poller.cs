@@ -41,12 +41,12 @@ namespace Housing.Forecast.Context
 
         public void UpdateAddress(Address check)
         {
-            var mod = _context.Addresses.Find(check.AddressId);
+            var mod = _context.Addresses.Where(p => p.AddressId == check.AddressId).FirstOrDefault();
             if (mod == null)
             {
                 check.Id = Guid.NewGuid();
                 check.Created = DateTime.Today;
-                _context.Addresses.Attach(check);
+                _context.Addresses.Add(check);
             }
             else if (mod.Address1 != check.Address1 ||
                     mod.Address2 != check.Address2 ||
