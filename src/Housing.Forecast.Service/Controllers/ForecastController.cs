@@ -218,7 +218,7 @@ namespace Housing.Forecast.Service.Controllers
                 if (location == "all")
                 {
                     // Redirect the call to another endpoint
-                    return RedirectToAction("Get", new { startDate, endDate });
+                    return await Get(startDate, endDate);
                 }
 
                 // check if the models are correct?
