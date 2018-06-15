@@ -91,7 +91,7 @@ namespace Housing.Forecast.Context.Repos
         }
 
         /// <summary>
-        /// Map the Context's Snapshot model to Library's Snapshot model
+        /// Convert a list of Context's Snapshot objects to Library's Snapshot objects
         /// </summary>
         /// <param name="snapshots">List of Snapshots that need to be mapped.</param>
         /// <returns>
