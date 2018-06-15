@@ -38,14 +38,6 @@ namespace Housing.Forecast.Testing.Context
         }
 
         [Fact]
-        public void UserAddressInvalidTest()
-        {
-            User test = TestDataGenerator.getTestUser();
-            test.Address = null;
-            Assert.False(test.Validate());
-        }
-
-        [Fact]
         public void UserGenderNullInvalidTest()
         {
             User test = TestDataGenerator.getTestUser();
