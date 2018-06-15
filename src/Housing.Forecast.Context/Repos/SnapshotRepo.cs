@@ -47,7 +47,7 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetBetweenDates(DateTime Start, DateTime End)
         {
-            return _context.Snapshots.Where(s => s.Date <= Start && s.Date >= End);
+            return _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetByLocation(DateTime datetime, string location)
         {
-            return _context.Snapshots.Where(s => s.Date == datetime && s.Location.Equals(location));
+            return _context.Snapshots.Where(s => s.Date.Date == datetime.Date && s.Location.Equals(location));
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetBetweenDatesAtLocation(DateTime Start, DateTime End, string location)
         {
-            return _context.Snapshots.Where(s => s.Date <= Start && s.Date >= End && s.Location.Equals(location));
+            return _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date && s.Location.Equals(location));
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetByDate(DateTime datetime)
         {
-            return _context.Snapshots.Where(s => s.Date == datetime);
+            return _context.Snapshots.Where(s => s.Date.Date == datetime.Date);
         }
 
         /// <summary>
