@@ -168,9 +168,45 @@ namespace Housing.Forecast.Testing.Context
                 ICollection<Room> rooms = new List<Room>();
                 rooms.Add(insertRoom);
                 testPoller.UpdateRooms(rooms);
-                _context.SaveChanges();
                 Room afterInsertTest = _context.Rooms.Where(p => p.RoomId == insertRoom.RoomId).FirstOrDefault();
                 Assert.Equal(insertRoom, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateModRoomVacancy()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Room insertRoom = getNewRoom();
+                _output.WriteLine(insertRoom.RoomId.ToString());
+                ICollection<Room> rooms = new List<Room>();
+                rooms.Add(insertRoom);
+                testPoller.UpdateRooms(rooms);
+                insertRoom.Vacancy = 5;
+                testPoller.UpdateRooms(rooms);
+                Room afterInsertTest = _context.Rooms.Where(p => p.RoomId == insertRoom.RoomId).FirstOrDefault();
+                Assert.Equal(insertRoom, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void DeleteRoom()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Room insertRoom = getNewRoom();
+                _output.WriteLine(insertRoom.RoomId.ToString());
+                ICollection<Room> rooms = new List<Room>();
+                rooms.Add(insertRoom);
+                testPoller.UpdateRooms(rooms);
+                rooms.Remove(insertRoom);
+                testPoller.UpdateRooms(rooms);
+                var actual = _context.Rooms.Where(p => p.RoomId == insertRoom.RoomId).FirstOrDefault().Deleted;
+                var expected = DateTime.Today;
+                Assert.Equal(expected, actual);
             }
         }
     }
