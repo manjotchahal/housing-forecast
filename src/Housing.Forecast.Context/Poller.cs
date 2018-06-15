@@ -62,7 +62,7 @@ namespace Housing.Forecast.Context
 
         public void UpdateName(Name check)
         {
-            var mod = _context.Names.Find(check.NameId);
+            var mod = _context.Names.Where(p => p.NameId == check.NameId).FirstOrDefault();
             if (mod == null)
             {
                 check.Id = Guid.NewGuid();
@@ -78,10 +78,10 @@ namespace Housing.Forecast.Context
             }
         }
 
-        public void UpdateBatches(ApiMethods api)
+        public void UpdateBatches(ICollection<Batch> Batch)
         {
             //insert proper endpoint when we get it
-            var Batch = api.HttpGetFromApi<Batch>("");
+            
             var dbBatches = _context.Batches;
 
             var joinBatchDelete = from New in Batch
@@ -131,10 +131,9 @@ namespace Housing.Forecast.Context
             _context.SaveChanges();
         }
 
-        public void UpdateUsers(ApiMethods api)
+        public void UpdateUsers(ICollection<User> Users)
         {
             //insert proper endpoint when we get it
-            var Users = api.HttpGetFromApi<User>("");
             var dbUsers = _context.Users;
 
             var joinUserDelete = from New in Users
@@ -187,10 +186,9 @@ namespace Housing.Forecast.Context
             _context.SaveChanges();
 
         }
-        public void UpdateRooms(ApiMethods api)
+        public void UpdateRooms(ICollection<Room> Rooms)
         {
             //insert proper endpoint when we get it
-            var Rooms = api.HttpGetFromApi<Room>("");
             var dbRooms = _context.Rooms;
 
             var joinRoomDelete = from New in Rooms
@@ -242,10 +240,14 @@ namespace Housing.Forecast.Context
         public void Update()
         {
             ApiMethods api = new ApiMethods();
+            var Batch = api.HttpGetFromApi<Batch>("");
+            var Users = api.HttpGetFromApi<User>("");
+            var Rooms = api.HttpGetFromApi<Room>("");
 
-            UpdateUsers(api);
-            UpdateRooms(api);
-            UpdateBatches(api);
+
+            UpdateUsers(Users);
+            UpdateRooms(Rooms);
+            UpdateBatches(Batch);
         }
 
         public void Poll()
