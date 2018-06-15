@@ -67,7 +67,7 @@ namespace Housing.Forecast.Context
             {
                 check.Id = Guid.NewGuid();
                 check.Created = DateTime.Today;
-                _context.Names.Attach(check);
+                _context.Names.Add(check);
             }
             else if (mod.First != check.First ||
                     mod.Last != check.Last ||
