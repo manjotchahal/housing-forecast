@@ -101,5 +101,34 @@ namespace Housing.Forecast.Testing.Context
         }
 
 
+        public Batch getNewBatch()
+        {
+            Batch New = new Batch();
+            New.BatchName = "testName";
+            New.BatchOccupancy = 3;
+            New.BatchSkill = "testSkill";
+            New.State = "VA";
+            New.BatchId = Guid.NewGuid();
+
+            return New;
+        }
+
+
+        [Fact]
+        public void UpdateNewBatch()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                ICollection<Batch> Batches = new List<Batch>();
+                Batch insertTest = getNewBatch();
+                Batches.Add(insertTest);
+                testPoller.UpdateBatches(Batches);
+                Batch afterInsertTest = _context.Batches.Where(p => p.BatchId == insertTest.BatchId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+
     }
 }
