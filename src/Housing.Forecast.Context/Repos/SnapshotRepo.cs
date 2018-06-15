@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Models;
+using l = Housing.Forecast.Library.Models;
 
 namespace Housing.Forecast.Context.Repos
 {
@@ -87,6 +88,46 @@ namespace Housing.Forecast.Context.Repos
         public IEnumerable<Snapshot> GetByDate(DateTime datetime)
         {
             return _context.Snapshots.Where(s => s.Date == datetime);
+        }
+
+        /// <summary>
+        /// Convert a list of Context's Snapshot objects to Library's Snapshot objects
+        /// </summary>
+        /// <param name="snapshots">List of Snapshots that need to be mapped.</param>
+        /// <returns>
+        /// Returns a new of the mapped Snapshots.
+        /// </returns>
+        private IEnumerable<l.Snapshot> Map(IEnumerable<Snapshot> snapshots)
+        {
+            var snaps = new List<l.Snapshot>();
+            foreach (var snap in snapshots)
+            {
+                snaps.Add(Map(snap));
+            }
+
+            return snaps;
+        }
+
+        /// <summary>
+        /// Map the Context's Snapshot model to Library's Snapshot model
+        /// </summary>
+        /// <param name="snapshot">Snapshot that needs to be mapped.</param>
+        /// <returns>
+        /// Return the mapped Snapshot model.
+        /// </returns>
+        private l.Snapshot Map(Snapshot snapshot)
+        {
+            var snap = new l.Snapshot()
+            {
+                Id = Guid.Empty,
+                Date = snapshot.Date,
+                Created = snapshot.Created,
+                Location = snapshot.Location,
+                RoomCount = snapshot.RoomCount,
+                UserCount = snapshot.UserCount
+            };
+
+            return snap;
         }
 
         /// <summary>

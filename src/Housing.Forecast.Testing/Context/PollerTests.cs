@@ -22,6 +22,18 @@ namespace Housing.Forecast.Testing.Context
         {
             this._output = output;
         }
+        
+        public Name getNewName()
+        {
+            Name New = new Name();
+            New.First = "testFirst";
+            New.Last = "testLast";
+            New.Middle = "testMiddle";
+            New.NameId = Guid.NewGuid();
+
+            return New;
+        }
+
 
         [Fact]
         public void UpdateNewName()
@@ -29,13 +41,65 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = TestDataGenerator.getTestName();
-                _output.WriteLine(insertTest.NameId.ToString());
+                Name insertTest = getNewName();
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
         }
+
+        [Fact]
+        public void UpdateModFirstName()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Name insertTest = getNewName();
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                insertTest.First = "testChanged";
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateModMiddleName()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Name insertTest = getNewName();
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                insertTest.Middle = "testChanged";
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateModLastName()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Name insertTest = getNewName();
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                insertTest.Last = "testChanged";
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+
     }
 }

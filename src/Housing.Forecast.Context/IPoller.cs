@@ -1,5 +1,6 @@
 ﻿using Housing.Forecast.Context.ApiAccessors;
 using Housing.Forecast.Context.Models;
+using System.Collections.Generic;
 
 namespace Housing.Forecast.Context
 {
@@ -10,9 +11,9 @@ namespace Housing.Forecast.Context
         void Update();
         void Poll();
         void UpdateAddress(Address check);
-        void UpdateBatches(ApiMethods api);
+        void UpdateBatches(ICollection<Batch> Batch);
         void UpdateName(Name check);
-        void UpdateRooms(ApiMethods api);
-        void UpdateUsers(ApiMethods api);
+        void UpdateRooms(ICollection<Room> Rooms);
+        void UpdateUsers(ICollection<User> Users);
     }
 }
