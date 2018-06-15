@@ -19,10 +19,12 @@ namespace Housing.Forecast.Context
         private readonly ForecastContext _context;
         private CancellationTokenSource cts = new CancellationTokenSource();
         private Task mainTask = null;
+        private readonly TimeSpan _interval;
 
-        public Poller(ForecastContext context)
+        public Poller(ForecastContext context, TimeSpan interval)
         {
             _context = context;
+            _interval = interval;
         }
 
         public void OnStart()
@@ -198,7 +200,7 @@ namespace Housing.Forecast.Context
         public void Poll()
         {
             CancellationToken cancellation = cts.Token;
-            TimeSpan interval = TimeSpan.FromDays(1);
+            TimeSpan interval = _interval;
             while (!cancellation.WaitHandle.WaitOne(interval))
             {
                 try
