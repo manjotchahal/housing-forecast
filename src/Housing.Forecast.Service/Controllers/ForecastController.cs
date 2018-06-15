@@ -34,7 +34,7 @@ namespace Housing.Forecast.Service.Controllers
             try
             {
                 List<string> locations = _snapshot.GetLocations().ToList();
-                if (locations.Count == 0)
+                if (locations.Count == 0 || locations.Count == 0)
                 {
                     return await Task.Run(() => NotFound("No locations found.")); // No snapshots found in the DB.
                 }
@@ -63,7 +63,7 @@ namespace Housing.Forecast.Service.Controllers
             {
                 List<Snapshot> snapshots = _snapshot.Get().ToList();
 
-                if (snapshots == null)
+                if (snapshots == null || snapshots.Count == 0)
                 {
                     return await Task.Run(() => NotFound("There are no snapshots in the database."));
                 }
@@ -100,7 +100,7 @@ namespace Housing.Forecast.Service.Controllers
                 }
 
                 List<Snapshot> snapshots = _snapshot.GetByDate(date).ToList();
-                if (snapshots == null)
+                if (snapshots == null || snapshots.Count == 0)
                 {
                     // Let's create a new snapshot for the requested date
                     snapshots = CreateSnapshots(date);
@@ -143,7 +143,7 @@ namespace Housing.Forecast.Service.Controllers
 
                 List<Snapshot> snapshots = _snapshot.GetBetweenDates(startDate, endDate).ToList();
 
-                if (snapshots == null)
+                if (snapshots == null || snapshots.Count == 0)
                 {
                     // Let's create a new snapshot for the requested date
                     var missing = new List<DateTime>();
@@ -229,7 +229,7 @@ namespace Housing.Forecast.Service.Controllers
 
                 TextInfo text = new CultureInfo("en-US", false).TextInfo;
                 List<Snapshot> snapshots = _snapshot.GetBetweenDatesAtLocation(startDate, endDate, text.ToTitleCase(location)).ToList();
-                if (snapshots == null)
+                if (snapshots == null || snapshots.Count == 0)
                 {
                     // Let's create a new snapshot for the requested dates
                     var missing = new List<DateTime>();
