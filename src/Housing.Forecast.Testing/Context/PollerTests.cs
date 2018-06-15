@@ -34,6 +34,19 @@ namespace Housing.Forecast.Testing.Context
             return New;
         }
 
+        public Address getNewAddress()
+        {
+            Address New = new Address();
+            New.Address1 = "testAddress1";
+            New.Address2 = "testAddress2";
+            New.City = "testCity";
+            New.Country = "testCountry";
+            New.PostalCode = "testPostal";
+            New.State = "TX";
+            New.AddressId = Guid.NewGuid();
+
+            return New;
+        }
 
         [Fact]
         public void UpdateNewName()
@@ -100,6 +113,137 @@ namespace Housing.Forecast.Testing.Context
             }
         }
 
+        [Fact]
+        public void UpdateNameNoChange()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Name insertTest = getNewName();
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                testPoller.UpdateName(insertTest);
+                _context.SaveChanges();
+                Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateNewAddress()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Address insertTest = getNewAddress();
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateModAddress1()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Address insertTest = getNewAddress();
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                insertTest.Address1 = "changed";
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateModAddress2()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Address insertTest = getNewAddress();
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                insertTest.Address2 = "changed";
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateModAddressCity()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Address insertTest = getNewAddress();
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                insertTest.City = "changed";
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateModAddressCountry()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Address insertTest = getNewAddress();
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                insertTest.Country = "changed";
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateModAddressPostalCode()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Address insertTest = getNewAddress();
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                insertTest.PostalCode = "changed";
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+       
+        [Fact]
+        public void UpdateModAddressState()
+        {
+            using (_context = new ForecastContext(options))
+            {
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Address insertTest = getNewAddress();
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                insertTest.State = "changed";
+                testPoller.UpdateAddress(insertTest);
+                _context.SaveChanges();
+                Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
+                Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
 
         public Batch getNewBatch()
         {
