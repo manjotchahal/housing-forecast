@@ -147,7 +147,7 @@ namespace Housing.Forecast.Service.Controllers
                 {
                     // Let's create a new snapshot for the requested date
                     var missing = new List<DateTime>();
-                    for (var i = startDate; i <= endDate; i.AddDays(1))
+                    for (var i = startDate; i <= endDate; i = i.AddDays(1))
                     {
                         missing.Add(i);
                     }
@@ -160,7 +160,7 @@ namespace Housing.Forecast.Service.Controllers
 
                 // Find which dates are missing a snapshot so we can make a new one for it
                 List<DateTime> missingDates = new List<DateTime>();
-                for (var i = startDate; i <= endDate; i.AddDays(1))
+                for (var i = startDate; i <= endDate; i = i.AddDays(1))
                 {
                     // Check if a snapshot was found for date i
                     if (!FoundSnapshot(i, snapshots))
@@ -233,7 +233,7 @@ namespace Housing.Forecast.Service.Controllers
                 {
                     // Let's create a new snapshot for the requested dates
                     var missing = new List<DateTime>();
-                    for (var i = startDate; i <= endDate; i.AddDays(1))
+                    for (var i = startDate; i <= endDate; i = i.AddDays(1))
                     {
                         missing.Add(i);
                     }
@@ -244,7 +244,7 @@ namespace Housing.Forecast.Service.Controllers
 
                 // Find which dates are missing a snapshot so we can make a new one for it
                 List<DateTime> missingDates = new List<DateTime>();
-                for (var i = startDate; i <= endDate; i.AddDays(1))
+                for (var i = startDate; i <= endDate; i = i.AddDays(1))
                 {
                     // Check if a snapshot was found for date i
                     if (!FoundSnapshot(i, snapshots))
