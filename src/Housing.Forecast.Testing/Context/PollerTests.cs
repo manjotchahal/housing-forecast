@@ -34,6 +34,19 @@ namespace Housing.Forecast.Testing.Context
             return New;
         }
 
+        public Room getNewRoom()
+        {
+            Room New = new Room();
+            New.RoomId = Guid.NewGuid();
+            New.Address = new Address();
+            New.Gender = "M";
+            New.Location = "Tampa";
+            New.Occupancy = 10;
+            New.Vacancy = 10;
+
+            return New;
+        }
+
 
         [Fact]
         public void UpdateNewName()
