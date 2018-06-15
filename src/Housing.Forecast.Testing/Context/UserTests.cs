@@ -8,41 +8,6 @@ namespace Housing.Forecast.Testing.Context
 {
     public class UserTests
     {
-        private User getTestUser()
-        {
-            User result = new User
-            {
-                Name = new Name
-                {
-                    NameId = Guid.NewGuid(),
-                    First = "first",
-                    Last = "last"
-                },
-                Batch = new Batch
-                {
-                    Id = Guid.NewGuid(),
-                    BatchId = Guid.NewGuid(),
-                    BatchName = "fakebatch",
-                    BatchOccupancy = 20,
-                    BatchSkill = "fakeskill",
-                    StartDate = DateTime.Today,
-                    EndDate = DateTime.MaxValue,
-                    State = "VA",
-                    Created = DateTime.Now,
-                    Deleted = DateTime.Now
-                },
-                Address = null,
-                Id = Guid.NewGuid(),
-                Location = "Reston",
-                Email = "test@test.com",
-                Gender = "M",
-                Type = "test",
-                UserId = Guid.NewGuid(),
-                Created = DateTime.Now,
-                Deleted = DateTime.Now
-            };
-            return result;
-        }
         [Fact]
         public void DefaultUserInvalidTest()
         {
@@ -53,21 +18,21 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserValidTest()
         {
-            User test = getTestUser();
+            User test = TestDataGenerator.getTestUser();
             Assert.True(test.Validate());
         }
 
         [Fact]
         public void UserIdInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Id = Guid.Empty;
             Assert.False(test.Validate());
         }
         [Fact]
         public void UserUserIdInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.UserId = Guid.Empty;
             Assert.False(test.Validate());
         }
@@ -75,7 +40,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserAddressInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Address = null;
             Assert.False(test.Validate());
         }
@@ -83,7 +48,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserGenderNullInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Gender = null;
             Assert.False(test.Validate());
         }
@@ -91,7 +56,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserGenderEmptyInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Gender = "";
             Assert.False(test.Validate());
         }
@@ -99,7 +64,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserLocationNullInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Location = null;
             Assert.False(test.Validate());
         }
@@ -107,7 +72,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserLocationEmptyInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Location = "";
             Assert.False(test.Validate());
         }
@@ -115,7 +80,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserNameInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Name = null;
             Assert.False(test.Validate());
         }
@@ -123,7 +88,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserBatchInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Batch = null;
             Assert.False(test.Validate());
         }
@@ -131,7 +96,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserEmailNullInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Email = null;
             Assert.False(test.Validate());
         }
@@ -139,7 +104,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserEmailEmptyInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Email = "";
             Assert.False(test.Validate());
         }
@@ -147,7 +112,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserTypeNullInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Type = null;
             Assert.False(test.Validate());
         }
@@ -155,7 +120,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void UserTypeEmptyInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Type = "";
             Assert.False(test.Validate());
         }

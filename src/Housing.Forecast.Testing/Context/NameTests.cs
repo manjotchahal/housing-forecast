@@ -8,20 +8,6 @@ namespace Housing.Forecast.Testing.Context
 {
     public class NameTests
     {
-        private Name getTestName()
-        {
-            Name result = new Name
-            {
-                Id = Guid.NewGuid(),
-                NameId = Guid.NewGuid(),
-                First = "first",
-                Middle = "middle",
-                Last = "last",
-                Created = DateTime.Now,
-            };
-            return result;
-        }
-
         [Fact]
         public void DefaultNameInvalidTest()
         {
@@ -32,7 +18,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void NameValidTest()
         {
-            Name test = getTestName();
+            Name test = TestDataGenerator.getTestName();
             Assert.True(test.Validate());
         }
 
