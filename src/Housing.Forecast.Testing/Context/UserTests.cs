@@ -27,7 +27,7 @@ namespace Housing.Forecast.Testing.Context
                     BatchSkill = "fakeskill",
                     StartDate = DateTime.Today,
                     EndDate = DateTime.MaxValue,
-                    Address = null,
+                    State = "VA",
                     Created = DateTime.Now,
                     Deleted = DateTime.Now
                 },

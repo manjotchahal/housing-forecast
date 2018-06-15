@@ -17,18 +17,7 @@ namespace Housing.Forecast.Testing.Context
                 BatchName = "name",
                 BatchOccupancy = 1,
                 BatchSkill = ".Net",
-                Address = new Address
-                {
-                    Id = Guid.NewGuid(),
-                    AddressId = Guid.NewGuid(),
-                    Address1 = "1600 Pennsylvania Ave",
-                    Address2 = "Apt. 110-B",
-                    City = "Reston",
-                    State = "VA",
-                    PostalCode = "12345-1234",
-                    Country = "USA",
-                    Created = DateTime.Now
-                }
+                State = "VA"
             };
             return batch;
         }
@@ -95,10 +84,10 @@ namespace Housing.Forecast.Testing.Context
         }
 
         [Fact]
-        public void BatchAddressInvalidTest()
+        public void BatchStateInvalidTest()
         {
             Batch test = getTestBatch();
-            test.Address = null;
+            test.State = null;
             Assert.False(test.Validate());
         }
     }
