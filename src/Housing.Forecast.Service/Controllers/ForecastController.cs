@@ -212,7 +212,7 @@ namespace Housing.Forecast.Service.Controllers
             {
                 if (!String.IsNullOrEmpty(location))
                 {
-                    location.ToLower(); // make location to be lowercase
+                    location = location.ToLower(); // make location to be lowercase
                 }
 
                 if (location == "all")
