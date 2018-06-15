@@ -119,6 +119,7 @@ namespace Housing.Forecast.Context.Repos
         {
             var snap = new l.Snapshot()
             {
+                Id = Guid.Empty,
                 Date = snapshot.Date,
                 Created = snapshot.Created,
                 Location = snapshot.Location,
