@@ -66,9 +66,6 @@ namespace Housing.Forecast.Context.Models
         public DateTime Created { get; set; }
 
         [JsonIgnore]
-        public ICollection<Batch> Batches { get; set; }
-
-        [JsonIgnore]
         public ICollection<User> Users { get; set; }
 
         [JsonIgnore]
