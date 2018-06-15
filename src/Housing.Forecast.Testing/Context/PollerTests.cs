@@ -22,18 +22,6 @@ namespace Housing.Forecast.Testing.Context
         {
             this._output = output;
         }
-        
-        public Name getNewName()
-        {
-            Name New = new Name();
-            New.First = "testFirst";
-            New.Last = "testLast";
-            New.Middle = "testMiddle";
-            New.NameId = Guid.NewGuid();
-
-            return New;
-        }
-
 
         [Fact]
         public void UpdateNewName()
@@ -41,7 +29,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
+                Name insertTest = TestDataGenerator.getTestName();
                 _output.WriteLine(insertTest.NameId.ToString());
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
@@ -49,6 +37,5 @@ namespace Housing.Forecast.Testing.Context
                 Assert.Equal(insertTest, afterInsertTest);
             }
         }
-
     }
 }

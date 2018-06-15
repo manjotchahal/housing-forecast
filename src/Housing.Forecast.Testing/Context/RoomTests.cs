@@ -8,33 +8,6 @@ namespace Housing.Forecast.Testing.Context
 {
     public class RoomTests
     {
-        private Room getTestRoom()
-        {
-            Room result = new Room
-            {
-                Id = Guid.NewGuid(),
-                RoomId = Guid.NewGuid(),
-                Location = "Reston",
-                Vacancy = 1,
-                Occupancy = 1,
-                Gender = "F",
-                Address = new Address
-                {
-                    Id = Guid.NewGuid(),
-                    AddressId = Guid.NewGuid(),
-                    Address1 = "1600 Pennsylvania Ave",
-                    Address2 = "Apt. 110-B",
-                    City = "Reston",
-                    State = "VA",
-                    PostalCode = "12345-1234",
-                    Country = "USA",
-                    Created = DateTime.Now
-                },
-                Created = DateTime.Now,
-                Deleted = DateTime.MaxValue
-            };
-            return result;
-        }
         [Fact]
         public void DefaultRoomInvalidTest()
         {
@@ -45,14 +18,14 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomValidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             Assert.True(test.Validate());
         }
 
         [Fact]
         public void RoomIdInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.Id = Guid.Empty;
             Assert.False(test.Validate());
         }
@@ -60,7 +33,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomRoomIdInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.RoomId = Guid.Empty;
             Assert.False(test.Validate());
         }
@@ -68,7 +41,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomLocationNullInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.Location = null;
             Assert.False(test.Validate());
         }
@@ -76,7 +49,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomLocatioEmptyInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.Location = "";
             Assert.False(test.Validate());
         }
@@ -84,7 +57,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomGenderNullInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.Gender = null;
             Assert.False(test.Validate());
         }
@@ -92,7 +65,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomGenderEmptyInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.Gender = "";
             Assert.False(test.Validate());
         }
@@ -100,7 +73,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomOccupancyInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.Occupancy = -1;
             Assert.False(test.Validate());
         }
@@ -108,7 +81,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomVacancyInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.Vacancy = -1;
             Assert.False(test.Validate());
         }
@@ -116,7 +89,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void RoomAddressInvalidTest()
         {
-            Room test = getTestRoom();
+            Room test = TestDataGenerator.getTestRoom();
             test.Address = null;
             Assert.False(test.Validate());
         }
