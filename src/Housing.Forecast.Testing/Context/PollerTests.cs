@@ -168,7 +168,7 @@ namespace Housing.Forecast.Testing.Context
                 // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
                 User user = TestDataGenerator.getTestUser();
-                DateTime delete = user.Deleted;
+                DateTime delete = user.Deleted.Value;
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
@@ -177,7 +177,7 @@ namespace Housing.Forecast.Testing.Context
 
                 // Assert
                 User updatedUser = _context.Users.Where(x => x.UserId == user.UserId).FirstOrDefault();
-                Assert.NotEqual(delete, updatedUser.Deleted);
+                Assert.NotEqual(delete, updatedUser.Deleted.Value);
             }
         }
 
@@ -239,7 +239,7 @@ namespace Housing.Forecast.Testing.Context
                 // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
                 Room room = TestDataGenerator.getTestRoom();
-                DateTime delete = room.Deleted;
+                DateTime delete = room.Deleted.Value;
                 _context.Rooms.Add(room);
                 _context.SaveChanges();
 
@@ -248,7 +248,7 @@ namespace Housing.Forecast.Testing.Context
 
                 // Assert
                 Room updatedRoom = _context.Rooms.Where(x => x.RoomId == room.RoomId).FirstOrDefault();
-                Assert.NotEqual(delete, updatedRoom.Deleted);
+                Assert.NotEqual(delete, updatedRoom.Deleted.Value);
             }
         }
 
