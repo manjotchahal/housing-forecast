@@ -111,9 +111,9 @@ namespace Housing.Forecast.Context
             }
             foreach (var x in joinBatchDiff)
             {
-                var modify = _context.Batches.Find(x.BatchId);
+                var modify = _context.Batches.Where(y => y.BatchId == x.BatchId).FirstOrDefault();
                 x.Id = modify.Id;
-                _context.Entry(x).CurrentValues.SetValues(modify);
+                _context.Entry(modify).CurrentValues.SetValues(x);
 
             }
             foreach (var x in joinBatchNew)
