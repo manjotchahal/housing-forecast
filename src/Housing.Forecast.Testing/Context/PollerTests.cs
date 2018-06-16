@@ -22,41 +22,21 @@ namespace Housing.Forecast.Testing.Context
         {
             this._output = output;
         }
-        
-        public Name getNewName()
-        {
-            Name New = new Name();
-            New.First = "testFirst";
-            New.Last = "testLast";
-            New.Middle = "testMiddle";
-            New.NameId = Guid.NewGuid();
-
-            return New;
-        }
-
-        public Address getNewAddress()
-        {
-            Address New = new Address();
-            New.Address1 = "testAddress1";
-            New.Address2 = "testAddress2";
-            New.City = "testCity";
-            New.Country = "testCountry";
-            New.PostalCode = "testPostal";
-            New.State = "TX";
-            New.AddressId = Guid.NewGuid();
-
-            return New;
-        }
 
         [Fact]
         public void UpdateNewName()
         {
             using (_context = new ForecastContext(options))
             {
+                // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
+                Name insertTest = TestDataGenerator.getTestName();
+
+                // Act
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
+
+                // Assert
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
@@ -67,13 +47,18 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
+                // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
-                testPoller.UpdateName(insertTest);
+                Name insertTest = TestDataGenerator.getTestName();
+                _context.Names.Add(insertTest);
                 _context.SaveChanges();
+
+                // Act
                 insertTest.First = "testChanged";
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
+
+                // Assert
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
@@ -84,13 +69,18 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
+                // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
-                testPoller.UpdateName(insertTest);
+                Name insertTest = TestDataGenerator.getTestName();
+                _context.Names.Add(insertTest);
                 _context.SaveChanges();
+
+                // Act
                 insertTest.Middle = "testChanged";
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
+
+                // Assert
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
@@ -101,15 +91,93 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
+                // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
-                testPoller.UpdateName(insertTest);
+                Name insertTest = TestDataGenerator.getTestName();
+                _context.Names.Add(insertTest);
                 _context.SaveChanges();
+
+                // Act
                 insertTest.Last = "testChanged";
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
+
+                // Assert
                 Name afterInsertTest = _context.Names.Where(p => p.NameId == insertTest.NameId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
+            }
+        }
+
+        [Fact]
+        public void UpdateNewUsers() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                ICollection<User> list = new List<User>();
+
+                // Act
+                list.Add(TestDataGenerator.getTestUser());
+                testPoller.UpdateUsers(list);
+
+                // Assert
+                list = _context.Users.ToList();
+                Assert.NotEmpty(list);
+            }
+        }
+
+        [Fact]
+        public void UpdateModUsers() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                User user = TestDataGenerator.getTestUser();
+                string oldLocation = user.Location;
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                // Act
+                string newLocation = "Tampa";
+                User newUser = new User {
+                    Name = user.Name,
+                    Batch = user.Batch,
+                    Address = user.Address,
+                    Id = user.Id,
+                    Location = newLocation,
+                    Email = user.Email,
+                    Gender = user.Gender,
+                    Type = user.Type,
+                    UserId = user.UserId,
+                    Created = user.Created,
+                    Deleted = user.Deleted
+                };
+                ICollection<User> list = new List<User>
+                {
+                    newUser
+                };
+                testPoller.UpdateUsers(list);
+
+                // Assert
+                User updatedUser = _context.Users.FirstOrDefault();
+                Assert.True(!updatedUser.Location.Equals(oldLocation) && updatedUser.Location.Equals(newLocation));
+            }
+        }
+
+        [Fact]
+        public void UpdateDeleteUsers() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                User user = TestDataGenerator.getTestUser();
+                DateTime delete = user.Deleted;
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                // Act
+                testPoller.UpdateUsers(new List<User>());
+
+                // Assert
+                User updatedUser = _context.Users.FirstOrDefault();
+                Assert.NotEqual(delete, updatedUser.Deleted);
             }
         }
 
@@ -119,7 +187,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
+                Name insertTest = TestDataGenerator.getTestName();
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
                 testPoller.UpdateName(insertTest);
@@ -135,7 +203,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
@@ -149,7 +217,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.Address1 = "changed";
@@ -166,7 +234,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.Address2 = "changed";
@@ -183,7 +251,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.City = "changed";
@@ -200,7 +268,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.Country = "changed";
@@ -217,7 +285,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.PostalCode = "changed";
@@ -227,14 +295,14 @@ namespace Housing.Forecast.Testing.Context
                 Assert.Equal(insertTest, afterInsertTest);
             }
         }
-       
+
         [Fact]
         public void UpdateModAddressState()
         {
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.State = "changed";
@@ -245,19 +313,6 @@ namespace Housing.Forecast.Testing.Context
             }
         }
 
-        public Batch getNewBatch()
-        {
-            Batch New = new Batch();
-            New.BatchName = "testName";
-            New.BatchOccupancy = 3;
-            New.BatchSkill = "testSkill";
-            New.State = "VA";
-            New.BatchId = Guid.NewGuid();
-
-            return New;
-        }
-
-
         [Fact]
         public void UpdateNewBatch()
         {
@@ -265,14 +320,12 @@ namespace Housing.Forecast.Testing.Context
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
                 ICollection<Batch> Batches = new List<Batch>();
-                Batch insertTest = getNewBatch();
+                Batch insertTest = TestDataGenerator.getTestBatch();
                 Batches.Add(insertTest);
                 testPoller.UpdateBatches(Batches);
                 Batch afterInsertTest = _context.Batches.Where(p => p.BatchId == insertTest.BatchId).FirstOrDefault();
                 Assert.Equal(insertTest, afterInsertTest);
             }
         }
-
-
     }
 }

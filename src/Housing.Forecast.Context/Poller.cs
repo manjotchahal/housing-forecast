@@ -137,12 +137,7 @@ namespace Housing.Forecast.Context
             //insert proper endpoint when we get it
             var dbUsers = _context.Users;
 
-            var joinUserDelete = from New in Users
-                                 join Old in dbUsers
-                                 on New.UserId equals Old.UserId
-                                 where Old.Deleted == null &&
-                                 New.UserId == null
-                                 select Old;
+            var deletedUserIds = dbUsers.Select(p => p.UserId).Except(Users.Select(k => k.UserId));
             var joinUserNew = from New in Users
                               join Old in dbUsers
                               on New.UserId equals Old.UserId into temp
@@ -164,18 +159,16 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Users)
             {
-                if (joinUserDelete.Contains(x))
+                if (deletedUserIds.Contains(x.UserId))
                 {
                     x.Deleted = DateTime.Today;
-                    var modify = _context.Users.Find(x.UserId);
-                    _context.Entry(x).CurrentValues.SetValues(modify);
                 }
             }
             foreach (var x in joinUserDiff)
             {
-                var modify = _context.Users.Find(x.UserId);
+                var modify = _context.Users.Where(y => x.UserId == y.UserId).FirstOrDefault();
                 x.Id = modify.Id;
-                _context.Entry(x).CurrentValues.SetValues(modify);
+                _context.Entry(modify).CurrentValues.SetValues(x);
             }
             foreach (var x in joinUserNew)
             {
