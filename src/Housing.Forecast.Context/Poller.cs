@@ -111,9 +111,9 @@ namespace Housing.Forecast.Context
             }
             foreach (var x in joinBatchDiff)
             {
-                var modify = _context.Batches.Find(x.BatchId);
+                var modify = _context.Batches.Where(y => y.BatchId == x.BatchId).FirstOrDefault();
                 x.Id = modify.Id;
-                _context.Entry(x).CurrentValues.SetValues(modify);
+                _context.Entry(modify).CurrentValues.SetValues(x);
 
             }
             foreach (var x in joinBatchNew)
@@ -152,7 +152,7 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Users)
             {
-                if (deletedUserIds.Contains(x.UserId) && x.Deleted == DateTime.MinValue)
+                if (deletedUserIds.Contains(x.UserId) && x.Deleted == null)
                 {
                     x.Deleted = DateTime.Today;
                 }
@@ -198,7 +198,7 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Rooms)
             {
-                if (deletedRoomIds.Contains(x.RoomId) && x.Deleted == DateTime.MinValue)
+                if (deletedRoomIds.Contains(x.RoomId) && x.Deleted == null)
                 {
                     x.Deleted = DateTime.Today;
                 }
