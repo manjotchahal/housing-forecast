@@ -84,12 +84,7 @@ namespace Housing.Forecast.Context
             
             var dbBatches = _context.Batches;
 
-            var joinBatchDelete = from New in Batch
-                                  join Old in dbBatches
-                                  on New.BatchId equals Old.BatchId
-                                  where Old.Deleted == null &&
-                                  New.BatchId == null
-                                  select Old;
+            var deletedBatchIds = dbBatches.Select(p => p.BatchId).Except(Batch.Select(k => k.BatchId));
             var joinBatchNew = from New in Batch
                                join Old in dbBatches
                                on New.BatchId equals Old.BatchId into temp
@@ -109,11 +104,9 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Batches)
             {
-                if (joinBatchDelete.Contains(x))
+                if (deletedBatchIds.Contains(x.BatchId) && x.Deleted == null)
                 {
                     x.Deleted = DateTime.Today;
-                    var modify = _context.Batches.Find(x.BatchId);
-                    _context.Entry(x).CurrentValues.SetValues(modify);
                 }
             }
             foreach (var x in joinBatchDiff)
