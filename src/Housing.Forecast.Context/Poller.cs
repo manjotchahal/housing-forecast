@@ -152,7 +152,7 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Users)
             {
-                if (deletedUserIds.Contains(x.UserId) && x.Deleted == DateTime.MinValue)
+                if (deletedUserIds.Contains(x.UserId) && x.Deleted == null)
                 {
                     x.Deleted = DateTime.Today;
                 }
@@ -198,7 +198,7 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Rooms)
             {
-                if (deletedRoomIds.Contains(x.RoomId) && x.Deleted == DateTime.MinValue)
+                if (deletedRoomIds.Contains(x.RoomId) && x.Deleted == null)
                 {
                     x.Deleted = DateTime.Today;
                 }
