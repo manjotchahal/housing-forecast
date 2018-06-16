@@ -180,6 +180,78 @@ namespace Housing.Forecast.Testing.Context
             }
         }
 
+
+        [Fact]
+        public void UpdateNewBatches() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                ICollection<Batch> list = new List<Batch>();
+
+                // Act
+                list.Add(TestDataGenerator.getTestBatch());
+                testPoller.UpdateBatches(list);
+
+                // Assert
+                list = _context.Batches.ToList();
+                Assert.NotEmpty(list);
+            }
+        }
+
+        [Fact]
+        public void UpdateModBatches() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Batch batch = TestDataGenerator.getTestBatch();
+                string oldState = batch.State;
+                _context.Batches.Add(batch);
+                _context.SaveChanges();
+
+                // Act
+                string newState = "FL";
+                Batch newBatch = new Batch {
+                    Id = batch.Id,
+                    BatchOccupancy = batch.BatchOccupancy,
+                    BatchId = batch.BatchId,
+                    BatchName = batch.BatchName,
+                    BatchSkill = batch.BatchSkill,
+                    State = newState,
+                    StartDate = batch.StartDate,
+                    EndDate = batch.EndDate,
+                    Created = batch.Created,
+                    Deleted = batch.Deleted
+                };
+                ICollection<Batch> list = new List<Batch>
+                {
+                    newBatch
+                };
+                testPoller.UpdateBatches(list);
+
+                // Assert
+                Batch updatedBatch = _context.Batches.Where(x => x.BatchId == batch.BatchId).FirstOrDefault();
+                Assert.True(!updatedBatch.State.Equals(oldState) && updatedBatch.State.Equals(newState));
+            }
+        }
+
+        [Fact]
+        public void UpdateDeleteBatches() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Batch batch = TestDataGenerator.getTestBatch();
+                _context.Batches.Add(batch);
+                _context.SaveChanges();
+
+                // Act
+                testPoller.UpdateBatches(new List<Batch>());
+
+                // Assert
+                Batch updatedBatch = _context.Batches.Where(x => x.BatchId == batch.BatchId).FirstOrDefault();
+                Assert.NotNull(updatedBatch.Deleted);
+            }
+        }
+
         [Fact]
         public void UpdateNewRooms() {
             using (_context = new ForecastContext(options)) {
