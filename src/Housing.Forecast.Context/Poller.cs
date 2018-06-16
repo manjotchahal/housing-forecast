@@ -159,7 +159,7 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Users)
             {
-                if (deletedUserIds.Contains(x.UserId))
+                if (deletedUserIds.Contains(x.UserId) && x.Deleted == DateTime.MinValue)
                 {
                     x.Deleted = DateTime.Today;
                 }
@@ -186,12 +186,7 @@ namespace Housing.Forecast.Context
             //insert proper endpoint when we get it
             var dbRooms = _context.Rooms;
 
-            var joinRoomDelete = from Old in dbRooms
-                                 join New in Rooms
-                                 on Old.RoomId equals New.RoomId into temp
-                                 from New in temp.DefaultIfEmpty()
-                                 where New == null && Old.Deleted == null
-                                 select Old;
+            var deletedRoomIds = dbRooms.Select(p => p.RoomId).Except(Rooms.Select(k => k.RoomId));
             var joinRoomNew = from New in Rooms
                               join Old in dbRooms
                               on New.RoomId equals Old.RoomId into temp
@@ -210,18 +205,16 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Rooms)
             {
-                if (joinRoomDelete.Contains(x))
+                if (deletedRoomIds.Contains(x.RoomId))
                 {
                     x.Deleted = DateTime.Today;
-                    var modify = _context.Rooms.Find(x.RoomId);
-                    _context.Entry(x).CurrentValues.SetValues(modify);
                 }
             }
             foreach (var x in joinRoomDiff)
             {
-                var modify = _context.Rooms.Find(x.RoomId);
+                var modify = _context.Rooms.Where(y => x.RoomId == y.RoomId).FirstOrDefault();
                 x.Id = modify.Id;
-                _context.Entry(x).CurrentValues.SetValues(modify);
+                _context.Entry(modify).CurrentValues.SetValues(x);
             }
             foreach (var x in joinRoomNew)
             {
