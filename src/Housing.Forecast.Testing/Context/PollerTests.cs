@@ -114,14 +114,51 @@ namespace Housing.Forecast.Testing.Context
                 // Arrange
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
                 ICollection<User> list = new List<User>();
-                list.Add(TestDataGenerator.getTestUser());
 
                 // Act
+                list.Add(TestDataGenerator.getTestUser());
                 testPoller.UpdateUsers(list);
 
                 // Assert
                 list = _context.Users.ToList();
                 Assert.NotEmpty(list);
+            }
+        }
+
+        [Fact]
+        public void UpdateModUsers() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                User user = TestDataGenerator.getTestUser();
+                string oldLocation = user.Location;
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                // Act
+                string newLocation = "Tampa";
+                User newUser = new User {
+                    Name = user.Name,
+                    Batch = user.Batch,
+                    Address = user.Address,
+                    Id = user.Id,
+                    Location = newLocation,
+                    Email = user.Email,
+                    Gender = user.Gender,
+                    Type = user.Type,
+                    UserId = user.UserId,
+                    Created = user.Created,
+                    Deleted = user.Deleted
+                };
+                ICollection<User> list = new List<User>
+                {
+                    newUser
+                };
+                testPoller.UpdateUsers(list);
+
+                // Assert
+                User updatedUser = _context.Users.FirstOrDefault();
+                Assert.True(!updatedUser.Location.Equals(oldLocation) && updatedUser.Location.Equals(newLocation));
             }
         }
 
