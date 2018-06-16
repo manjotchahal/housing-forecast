@@ -163,6 +163,25 @@ namespace Housing.Forecast.Testing.Context
         }
 
         [Fact]
+        public void UpdateDeleteUsers() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                User user = TestDataGenerator.getTestUser();
+                DateTime delete = user.Deleted;
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                // Act
+                testPoller.UpdateUsers(new List<User>());
+
+                // Assert
+                User updatedUser = _context.Users.FirstOrDefault();
+                Assert.NotEqual(delete, updatedUser.Deleted);
+            }
+        }
+
+        [Fact]
         public void UpdateNameNoChange()
         {
             using (_context = new ForecastContext(options))
