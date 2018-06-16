@@ -157,7 +157,7 @@ namespace Housing.Forecast.Testing.Context
                 testPoller.UpdateUsers(list);
 
                 // Assert
-                User updatedUser = _context.Users.FirstOrDefault();
+                User updatedUser = _context.Users.Where(x => x.UserId == user.UserId).FirstOrDefault();
                 Assert.True(!updatedUser.Location.Equals(oldLocation) && updatedUser.Location.Equals(newLocation));
             }
         }
@@ -176,7 +176,7 @@ namespace Housing.Forecast.Testing.Context
                 testPoller.UpdateUsers(new List<User>());
 
                 // Assert
-                User updatedUser = _context.Users.FirstOrDefault();
+                User updatedUser = _context.Users.Where(x => x.UserId == user.UserId).FirstOrDefault();
                 Assert.NotEqual(delete, updatedUser.Deleted);
             }
         }
