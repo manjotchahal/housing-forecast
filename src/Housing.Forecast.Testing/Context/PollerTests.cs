@@ -182,6 +182,77 @@ namespace Housing.Forecast.Testing.Context
         }
 
         [Fact]
+        public void UpdateNewRooms() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                ICollection<Room> list = new List<Room>();
+
+                // Act
+                list.Add(TestDataGenerator.getTestRoom());
+                testPoller.UpdateRooms(list);
+
+                // Assert
+                list = _context.Rooms.ToList();
+                Assert.NotEmpty(list);
+            }
+        }
+
+        [Fact]
+        public void UpdateModRooms() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Room room = TestDataGenerator.getTestRoom();
+                string oldLocation = room.Location;
+                _context.Rooms.Add(room);
+                _context.SaveChanges();
+
+                // Act
+                string newLocation = "Tampa";
+                Room newRoom = new Room {
+                    Address = room.Address,
+                    Id = room.Id,
+                    Location = newLocation,
+                    Gender = room.Gender,
+                    Occupancy = room.Occupancy,
+                    RoomId = room.RoomId,
+                    Vacancy = room.Vacancy,
+                    Created = room.Created,
+                    Deleted = room.Deleted
+                };
+                ICollection<Room> list = new List<Room>
+                {
+                    newRoom
+                };
+                testPoller.UpdateRooms(list);
+
+                // Assert
+                Room updatedRoom = _context.Rooms.Where(x => x.RoomId == room.RoomId).FirstOrDefault();
+                Assert.True(!updatedRoom.Location.Equals(oldLocation) && updatedRoom.Location.Equals(newLocation));
+            }
+        }
+
+        [Fact]
+        public void UpdateDeleteRooms() {
+            using (_context = new ForecastContext(options)) {
+                // Arrange
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Room room = TestDataGenerator.getTestRoom();
+                DateTime delete = room.Deleted;
+                _context.Rooms.Add(room);
+                _context.SaveChanges();
+
+                // Act
+                testPoller.UpdateRooms(new List<Room>());
+
+                // Assert
+                Room updatedRoom = _context.Rooms.Where(x => x.RoomId == room.RoomId).FirstOrDefault();
+                Assert.NotEqual(delete, updatedRoom.Deleted);
+            }
+        }
+
+        [Fact]
         public void UpdateNameNoChange()
         {
             using (_context = new ForecastContext(options))
