@@ -131,7 +131,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Name insertTest = getNewName();
+                Name insertTest = TestDataGenerator.getTestName();
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
                 testPoller.UpdateName(insertTest);
@@ -147,7 +147,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 Address afterInsertTest = _context.Addresses.Where(p => p.AddressId == insertTest.AddressId).FirstOrDefault();
@@ -161,7 +161,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.Address1 = "changed";
@@ -178,7 +178,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.Address2 = "changed";
@@ -195,7 +195,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.City = "changed";
