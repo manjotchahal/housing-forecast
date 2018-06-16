@@ -268,7 +268,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.Country = "changed";
@@ -285,7 +285,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.PostalCode = "changed";
@@ -302,7 +302,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
-                Address insertTest = getNewAddress();
+                Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
                 insertTest.State = "changed";
@@ -320,7 +320,7 @@ namespace Housing.Forecast.Testing.Context
             {
                 Poller testPoller = new Poller(_context, TimeSpan.MinValue);
                 ICollection<Batch> Batches = new List<Batch>();
-                Batch insertTest = getNewBatch();
+                Batch insertTest = TestDataGenerator.getTestBatch();
                 Batches.Add(insertTest);
                 testPoller.UpdateBatches(Batches);
                 Batch afterInsertTest = _context.Batches.Where(p => p.BatchId == insertTest.BatchId).FirstOrDefault();
