@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
@@ -12,9 +11,9 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Service.Controllers
 {
-    [Route("api/[controller]")]
-    public class ForecastController : BaseController
-    {
+  [Route("api/[controller]")]
+  public class ForecastController : BaseController
+  {
         private readonly SnapshotRepo _snapshot;
         private readonly IRepo<Room> _room;
         private readonly IRepo<User> _user;
