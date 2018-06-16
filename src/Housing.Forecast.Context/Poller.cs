@@ -205,7 +205,7 @@ namespace Housing.Forecast.Context
 
             foreach (var x in _context.Rooms)
             {
-                if (deletedRoomIds.Contains(x.RoomId))
+                if (deletedRoomIds.Contains(x.RoomId) && x.Deleted == DateTime.MinValue)
                 {
                     x.Deleted = DateTime.Today;
                 }
