@@ -173,9 +173,9 @@ namespace Housing.Forecast.Context
             }
             foreach (var x in joinUserDiff)
             {
-                var modify = _context.Users.Find(x.UserId);
+                var modify = _context.Users.Where(y => x.UserId == y.UserId).FirstOrDefault();
                 x.Id = modify.Id;
-                _context.Entry(x).CurrentValues.SetValues(modify);
+                _context.Entry(modify).CurrentValues.SetValues(x);
             }
             foreach (var x in joinUserNew)
             {
