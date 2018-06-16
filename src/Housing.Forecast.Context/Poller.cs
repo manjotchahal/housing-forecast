@@ -41,12 +41,12 @@ namespace Housing.Forecast.Context
 
         public void UpdateAddress(Address check)
         {
-            var mod = _context.Addresses.Find(check.AddressId);
+            var mod = _context.Addresses.Where(p => p.AddressId == check.AddressId).FirstOrDefault();
             if (mod == null)
             {
                 check.Id = Guid.NewGuid();
                 check.Created = DateTime.Today;
-                _context.Addresses.Attach(check);
+                _context.Addresses.Add(check);
             }
             else if (mod.Address1 != check.Address1 ||
                     mod.Address2 != check.Address2 ||
@@ -92,8 +92,9 @@ namespace Housing.Forecast.Context
                                   select Old;
             var joinBatchNew = from New in Batch
                                join Old in dbBatches
-                               on New.BatchId equals Old.BatchId
-                               where Old.BatchId == null
+                               on New.BatchId equals Old.BatchId into temp
+                               from Old in temp.DefaultIfEmpty()
+                               where Old == null
                                select New;
             var joinBatchDiff = from New in Batch
                                 join Old in dbBatches
@@ -144,8 +145,9 @@ namespace Housing.Forecast.Context
                                  select Old;
             var joinUserNew = from New in Users
                               join Old in dbUsers
-                              on New.UserId equals Old.UserId
-                              where Old.UserId == null
+                              on New.UserId equals Old.UserId into temp
+                               from Old in temp.DefaultIfEmpty()
+                              where Old == null
                               select New;
             var joinUserDiff = from New in Users
                                join Old in dbUsers
@@ -191,16 +193,17 @@ namespace Housing.Forecast.Context
             //insert proper endpoint when we get it
             var dbRooms = _context.Rooms;
 
-            var joinRoomDelete = from New in Rooms
-                                 join Old in dbRooms
-                                 on New.RoomId equals Old.RoomId
-                                 where Old.Deleted == null &&
-                                 New.RoomId == null
+            var joinRoomDelete = from Old in dbRooms
+                                 join New in Rooms
+                                 on Old.RoomId equals New.RoomId into temp
+                                 from New in temp.DefaultIfEmpty()
+                                 where New == null && Old.Deleted == null
                                  select Old;
             var joinRoomNew = from New in Rooms
                               join Old in dbRooms
-                              on New.RoomId equals Old.RoomId
-                              where Old.RoomId == null
+                              on New.RoomId equals Old.RoomId into temp
+                              from Old in temp.DefaultIfEmpty()
+                              where Old == null
                               select New;
             var joinRoomDiff = from New in Rooms
                                join Old in dbRooms
