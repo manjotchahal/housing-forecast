@@ -21,7 +21,7 @@ namespace Housing.Forecast.Library.Models
         public string Type { get; set; }
         public Batch Batch { get; set; }
         public DateTime Created { get; set; }
-        public DateTime Deleted { get; set; }
+        public DateTime? Deleted { get; set; }
 
         /// <summary>Default Constructor</summary>>
         /// <remarks>Sets all properties to empty, null, or impossible values that correspond 

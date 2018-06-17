@@ -46,7 +46,7 @@ namespace Housing.Forecast.Library.Models
         public string BatchSkill { get; set; }
         public string State { get; set; }
         public DateTime Created { get; set; }
-        public DateTime Deleted { get; set; }
+        public DateTime? Deleted { get; set; }
 
         public virtual ICollection<User> Users { get; set; }
     }
