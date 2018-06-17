@@ -13,7 +13,7 @@ namespace Housing.Forecast.Testing.Context
     public class SnapshotRepoTests
     {
         private ForecastContext _context;
-        private IRepo<Snapshot> _snapshotRepository;
+        private ISnapshotRepo _snapshotRepository;
         private static readonly DbContextOptions<ForecastContext> options = new DbContextOptionsBuilder<ForecastContext>()
             .UseInMemoryDatabase(databaseName: "InMemDb")
             .Options;
