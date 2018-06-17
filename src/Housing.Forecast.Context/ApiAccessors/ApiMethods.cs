@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using Newtonsoft.Json;
+using Housing.Forecast.Library.Models;
+using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Context.ApiAccessors
 {
@@ -19,14 +21,14 @@ namespace Housing.Forecast.Context.ApiAccessors
         /// <returns>
         /// A ForecastContext instance contains DbSets of Users, Rooms, Batches, Addresses, and Names.
         /// </returns>
-        public ICollection<T> HttpGetFromApi<T>(string apiString)
+        public ICollection<T> HttpGetFromApi<T>(string portNumber ,string model)
         {
             ICollection<T> resultList = null;
             using (var client = new HttpClient())
             {
                 // TODO: get actual URI string
-                client.BaseAddress = new Uri(/*ServiceController.serviceUri.ToString() + */$"/api/{apiString}");
-                var responseTask = client.GetAsync($"{apiString}");
+                client.BaseAddress = new Uri("http://ec2-13-57-218-138.us-west-1.compute.amazonaws.com:"+portNumber+ $"/api/{model}");
+                var responseTask = client.GetAsync($"{model}");
                 responseTask.Wait();
                 var result = responseTask.Result;
                 if (result.IsSuccessStatusCode)
