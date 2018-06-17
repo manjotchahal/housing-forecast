@@ -8,7 +8,7 @@ using l = Housing.Forecast.Library.Models;
 
 namespace Housing.Forecast.Context.Repos
 {
-    public class SnapshotRepo : IRepo<Snapshot>, IDisposable
+    public class SnapshotRepo : IRepo<Snapshot>
     {
         private readonly IForecastContext _context;
         public SnapshotRepo(IForecastContext context)
@@ -128,14 +128,6 @@ namespace Housing.Forecast.Context.Repos
             };
 
             return snap;
-        }
-
-        /// <summary>
-        /// Dispose of the context object once it falls out of scope. This is be automatically called once the using statement ends.
-        /// </summary>
-        public void Dispose()
-        {
-            ((IDisposable)_context).Dispose();
         }
     }
 }

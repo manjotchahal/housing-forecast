@@ -7,7 +7,7 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Context.Repos
 {
-    public class UserRepo : IRepo<User>, IDisposable
+    public class UserRepo : IRepo<User>
     {
         private readonly IForecastContext _context;
         public UserRepo(IForecastContext context)
@@ -33,11 +33,6 @@ namespace Housing.Forecast.Context.Repos
         public IEnumerable<User> GetByDate(DateTime datetime)
         {
             return _context.Users.Where(u => u.Created.Date <= datetime.Date && (u.Deleted.Value == null || u.Deleted.Value.Date > datetime.Date));
-        }
-
-        public void Dispose()
-        {
-            ((IDisposable)_context).Dispose();
         }
     }
 }
