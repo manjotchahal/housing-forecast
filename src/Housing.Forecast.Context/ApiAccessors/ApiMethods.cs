@@ -18,6 +18,8 @@ namespace Housing.Forecast.Context.ApiAccessors
         /// <summary>
         /// A ForecastContext instance represents a session with the database and is used to query and save instances of the entities.
         /// </summary>
+        /// <param name="model">Specifies the model type expected to be returned.</param>
+        /// <param name="portNumber">Specifies the port number that the requested Api call is found.</param>
         /// <returns>
         /// A ForecastContext instance contains DbSets of Users, Rooms, Batches, Addresses, and Names.
         /// </returns>
