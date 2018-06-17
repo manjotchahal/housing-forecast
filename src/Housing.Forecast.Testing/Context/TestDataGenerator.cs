@@ -56,8 +56,7 @@ namespace Housing.Forecast.Testing.Context {
                 Occupancy = 1,
                 Gender = "F",
                 Address = getTestAddress(),
-                Created = DateTime.Now,
-                Deleted = DateTime.MaxValue
+                Created = DateTime.Now
             };
             return result;
         }
@@ -86,8 +85,7 @@ namespace Housing.Forecast.Testing.Context {
                 Gender = "M",
                 Type = "test",
                 UserId = Guid.NewGuid(),
-                Created = DateTime.Now,
-                Deleted = DateTime.Now
+                Created = DateTime.Now
             };
             return result;
         }
