@@ -20,7 +20,7 @@ namespace Housing.Forecast.Library.Models
         public string Gender { get; set; }
         public Address Address { get; set; }
         public DateTime Created { get; set; }
-        public DateTime Deleted { get; set; }
+        public DateTime? Deleted { get; set; }
 
         public ICollection<User> Users { get; set; }
 
