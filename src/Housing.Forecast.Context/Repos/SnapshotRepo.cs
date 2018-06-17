@@ -7,7 +7,7 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Context.Repos
 {
-    public class SnapshotRepo : IRepo<Snapshot>
+    public class SnapshotRepo : ISnapshotRepo
     {
         private readonly IForecastContext _context;
         public SnapshotRepo(IForecastContext context)

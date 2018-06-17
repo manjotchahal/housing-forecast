@@ -11,14 +11,14 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Service.Controllers
 {
-  [Route("api/[controller]")]
-  public class ForecastController : BaseController
-  {
-        private readonly SnapshotRepo _snapshot;
+    [Route("api/[controller]")]
+    public class ForecastController : BaseController
+    {
+        private readonly ISnapshotRepo _snapshot;
         private readonly IRepo<Room> _room;
         private readonly IRepo<User> _user;
-        public ForecastController(ILoggerFactory loggerFactory, IRepo<Snapshot> snapshot, IRepo<Room> rooms, IRepo<User> users)
-          : base(loggerFactory) { _snapshot = (SnapshotRepo)snapshot; _room = rooms; _user = users; }
+        public ForecastController(ILoggerFactory loggerFactory, IQueueClient queueClientSingleton, ISnapshotRepo snapshot, IRepo<Room> rooms, IRepo<User> users)
+          : base(loggerFactory, queueClientSingleton) { _snapshot = snapshot; _room = rooms; _user = users; }
 
         /// <summary>
         /// This endpoint will return all unique locations of snapshots
