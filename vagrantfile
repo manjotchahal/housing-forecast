@@ -16,7 +16,12 @@ Vagrant.configure("2") do |co|
   co.vm.synced_folder ".", "/vagrant"
 
 # DEFINITION - NETWORK
-  co.vm.network "forwarded_port", guest: 9000, host: 9000, host_ip: "127.0.0.1"
+  co.vm.network "forwarded_port", guest: 9000, host: 9000, host_ip: "127.0.0.1" # interface-web
+  co.vm.network "forwarded_port", guest: 9010, host: 9010, host_ip: "127.0.0.1" # housing-selection
+  co.vm.network "forwarded_port", guest: 9020, host: 9020, host_ip: "127.0.0.1" # housing-forecast
+  co.vm.network "forwarded_port", guest: 9030, host: 9030, host_ip: "127.0.0.1" # servicehub-room
+  co.vm.network "forwarded_port", guest: 9040, host: 9040, host_ip: "127.0.0.1" # servicehub-batch
+  co.vm.network "forwarded_port", guest: 9050, host: 9050, host_ip: "127.0.0.1" # servicehub-user
 
 # DEFINITION - PROVIDER
   co.vm.provider "virtualbox" do |vb|
