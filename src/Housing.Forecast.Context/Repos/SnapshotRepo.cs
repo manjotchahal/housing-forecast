@@ -88,13 +88,5 @@ namespace Housing.Forecast.Context.Repos
         {
             return _context.Snapshots.Where(s => s.Date.Date == datetime.Date);
         }
-
-        /// <summary>
-        /// Dispose of the context object once it falls out of scope. This is be automatically called once the using statement ends.
-        /// </summary>
-        public void Dispose()
-        {
-            ((IDisposable)_context).Dispose();
-        }
     }
 }
