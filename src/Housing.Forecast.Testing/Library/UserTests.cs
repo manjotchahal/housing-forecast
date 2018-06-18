@@ -7,42 +7,6 @@ namespace Housing.Forecast.Testing.Library
 {
     public class UserTests
     {
-        private User getTestUser()
-        {
-            User result = new User
-            {
-                Name = new Name
-                {
-                    NameId = Guid.NewGuid(),
-                    First = "first",
-                    Last = "last"
-                },
-                Batch = new Batch
-                {
-                    Id = Guid.NewGuid(),
-                    BatchId = Guid.NewGuid(),
-                    BatchName = "fakebatch",
-                    BatchOccupancy = 20,
-                    BatchSkill = "fakeskill",
-                    StartDate = DateTime.Today,
-                    EndDate = DateTime.MaxValue,
-                    State = "VA",
-                    Created = DateTime.Now,
-                    Deleted = DateTime.Now
-                },
-                Address = null,
-                Id = Guid.NewGuid(),
-                Location = "Reston",
-                Email = "test@test.com",
-                Gender = "M",
-                Type = "test",
-                UserId = Guid.NewGuid(),
-                Created = DateTime.Now,
-                Deleted = DateTime.Now
-            };
-            return result;
-        }
-
         [Fact]
         public void DefaultUserInvalidTest()
         {
@@ -53,7 +17,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserValidTest()
         {
-            User test = getTestUser();
+            User test = TestDataGenerator.getTestUser();
             Assert.True(test.Validate());
         }
 
