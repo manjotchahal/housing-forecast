@@ -1,14 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Housing.Forecast.Library\Housing.Forecast.Library.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.3" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
+    <PackageReference Include="NLog.Config" Version="4.5.6" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.2" />
   </ItemGroup>
 
@@ -16,5 +28,7 @@
     <DebugType>full</DebugType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
