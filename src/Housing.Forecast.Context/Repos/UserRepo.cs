@@ -7,7 +7,7 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Context.Repos
 {
-    public class UserRepo : IRepo<User>, IDisposable
+    public class UserRepo : IRepo<User>
     {
         private readonly IForecastContext _context;
         public UserRepo(IForecastContext context)
@@ -27,17 +27,12 @@ namespace Housing.Forecast.Context.Repos
 
         public IEnumerable<User> GetByLocation(DateTime datetime, string location)
         {
-            return _context.Users.Where(r => r.Created.Date <= datetime.Date && (r.Deleted == null || r.Deleted.Date > datetime.Date) && r.Location == location);
+            return _context.Users.Where(r => r.Created.Date <= datetime.Date && (r.Deleted.Value == null || r.Deleted.Value.Date > datetime.Date) && r.Location == location);
         }
 
         public IEnumerable<User> GetByDate(DateTime datetime)
         {
-            return _context.Users.Where(u => u.Created.Date <= datetime.Date && (u.Deleted == null || u.Deleted.Date > datetime.Date));
-        }
-
-        public void Dispose()
-        {
-            ((IDisposable)_context).Dispose();
+            return _context.Users.Where(u => u.Created.Date <= datetime.Date && (u.Deleted.Value == null || u.Deleted.Value.Date > datetime.Date));
         }
     }
 }

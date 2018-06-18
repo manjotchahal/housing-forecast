@@ -7,7 +7,7 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Context.Repos
 {
-    public class RoomRepo : IRepo<Room>, IDisposable
+    public class RoomRepo : IRepo<Room>
     {
         private readonly IForecastContext _context;
         public RoomRepo(IForecastContext context)
@@ -27,17 +27,12 @@ namespace Housing.Forecast.Context.Repos
 
         public IEnumerable<Room> GetByLocation(DateTime datetime, string location)
         {
-            return _context.Rooms.Where(r => r.Created.Date <= datetime.Date && (r.Deleted == null || r.Deleted.Date > datetime.Date) && r.Location == location);
+            return _context.Rooms.Where(r => r.Created.Date <= datetime.Date && (r.Deleted.Value == null || r.Deleted.Value.Date > datetime.Date) && r.Location == location);
         }
 
         public IEnumerable<Room> GetByDate(DateTime datetime)
         {
-            return _context.Rooms.Where(r => r.Created.Date <= datetime.Date && (r.Deleted == null || r.Deleted.Date > datetime.Date));
-        }
-
-        public void Dispose()
-        {
-            ((IDisposable)_context).Dispose();
+            return _context.Rooms.Where(r => r.Created.Date <= datetime.Date && (r.Deleted.Value == null || r.Deleted.Value.Date > datetime.Date));
         }
     }
 }

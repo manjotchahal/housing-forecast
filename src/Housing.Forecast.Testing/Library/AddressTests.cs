@@ -1,13 +1,27 @@
-﻿using Housing.Forecast.Context.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using Xunit;
+using Housing.Forecast.Library.Models;
+using Housing.Forecast.Service;
 
-namespace Housing.Forecast.Testing.Context
+namespace Housing.Forecast.Testing.Library
 {
     public class AddressTests
     {
+        private Address getTestAddress()
+        {
+            Address address = new Address
+            {
+                Id = Guid.NewGuid(),
+                AddressId = Guid.NewGuid(),
+                Address1 = "123 test street",
+                City = "Tampa",
+                State = "Florida",
+                PostalCode = "33617",
+                Country = "US"
+            };
+            return address;
+        }
+
         [Fact]
         public void DefaultAddressInvalidTest()
         {
@@ -18,14 +32,14 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void addressValidTest()
         {
-            Address test = TestDataGenerator.getTestAddress();
+            Address test = getTestAddress();
             Assert.True(test.Validate());
         }
 
         [Fact]
         public void addressIdInvalidTest()
         {
-            Address test = TestDataGenerator.getTestAddress();
+            Address test = getTestAddress();
             test.Id = Guid.Empty;
             Assert.False(test.Validate());
         }
@@ -33,7 +47,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void addressAddressIdInvalidTest()
         {
-            Address test = TestDataGenerator.getTestAddress();
+            Address test = getTestAddress();
             test.AddressId = Guid.Empty;
             Assert.False(test.Validate());
         }
@@ -41,7 +55,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void addressAddress1InvalidTest()
         {
-            Address test = TestDataGenerator.getTestAddress();
+            Address test = getTestAddress();
             test.Address1 = "";
             Assert.False(test.Validate());
         }
@@ -49,7 +63,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void addressCityInvalidTest()
         {
-            Address test = TestDataGenerator.getTestAddress();
+            Address test = getTestAddress();
             test.City = "";
             Assert.False(test.Validate());
         }
@@ -57,7 +71,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void addressStateInvalidTest()
         {
-            Address test = TestDataGenerator.getTestAddress();
+            Address test = getTestAddress();
             test.State = "";
             Assert.False(test.Validate());
         }
@@ -65,7 +79,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void addressPostalCodeInvalidTest()
         {
-            Address test = TestDataGenerator.getTestAddress();
+            Address test = getTestAddress();
             test.PostalCode = "";
             Assert.False(test.Validate());
         }
@@ -73,7 +87,7 @@ namespace Housing.Forecast.Testing.Context
         [Fact]
         public void addressCountryInvalidTest()
         {
-            Address test = TestDataGenerator.getTestAddress();
+            Address test = getTestAddress();
             test.Country = "";
             Assert.False(test.Validate());
         }
