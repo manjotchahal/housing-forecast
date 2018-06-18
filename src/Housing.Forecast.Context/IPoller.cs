@@ -10,9 +10,7 @@ namespace Housing.Forecast.Context
         void OnStop();
         void Update();
         void Poll();
-        void UpdateAddress(Address check);
         void UpdateBatches(ICollection<Batch> Batch);
-        void UpdateName(Name check);
         void UpdateRooms(ICollection<Room> Rooms);
         void UpdateUsers(ICollection<User> Users);
     }

@@ -79,9 +79,10 @@ namespace Housing.Forecast.Context
         /// duplicated in UpdateUsers and UpdateRooms. 
         /// Basically we check to see if the address is new. If so,
         /// we add it. Otherwise we check to see if data is modified
-        /// and then update appropriately.
+        /// and then update appropriately. Changes are saved after this function
+        /// is called, so the changes are not saved directly in the method.
         /// </remarks>
-        public void UpdateAddress(Address check)
+        private void UpdateAddressWithoutSaving(Address check)
         {
             var mod = _context.Addresses.Where(p => p.AddressId == check.AddressId).FirstOrDefault();
             if (mod == null)
@@ -109,8 +110,10 @@ namespace Housing.Forecast.Context
         /// Same as with Addresses in terms of logic. 
         /// Felt neater to separate this out into a separate method,
         /// even though it's only necessary in UpdateUsers.
+        /// Changes are saved after this function is called, so the
+        /// changes are not saved directly in the method.
         /// </remarks>
-        public void UpdateName(Name check)
+        private void UpdateNameWithoutSaving(Name check)
         {
             var mod = _context.Names.Where(p => p.NameId == check.NameId).FirstOrDefault();
             if (mod == null)
@@ -179,7 +182,7 @@ namespace Housing.Forecast.Context
                 x.Id = Guid.NewGuid();
                 _context.Batches.Add(x);
             }
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -230,13 +233,13 @@ namespace Housing.Forecast.Context
             }
             foreach (var x in joinUserNew)
             {
-                UpdateName(x.Name);
-                UpdateAddress(x.Address);
+                UpdateNameWithoutSaving(x.Name);
+                UpdateAddressWithoutSaving(x.Address);
                 x.Created = DateTime.Today;
                 x.Id = Guid.NewGuid();
                 _context.Users.Add(x);
             }
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -281,12 +284,12 @@ namespace Housing.Forecast.Context
             }
             foreach (var x in joinRoomNew)
             {
-                UpdateAddress(x.Address);
+                UpdateAddressWithoutSaving(x.Address);
                 x.Created = DateTime.Today;
                 x.Id = Guid.NewGuid();
                 _context.Rooms.Add(x);
             }
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -369,6 +372,7 @@ namespace Housing.Forecast.Context
                     Created = DateTime.Today
                 }
             );
+            _context.SaveChangesAsync();
         }
 
         /// <summary>
