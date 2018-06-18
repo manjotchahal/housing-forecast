@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Housing.Forecast.Library.Models;
 using Xunit;
+using Housing.Forecast.Library.Models;
+using Housing.Forecast.Service;
 
 namespace Housing.Forecast.Testing.Library
 {
