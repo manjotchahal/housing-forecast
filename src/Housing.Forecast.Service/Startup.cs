@@ -26,7 +26,7 @@ namespace Housing.Forecast.Service
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ForecastContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ForecastDB")));
+            services.AddEntityFrameworkNpgsql().AddDbContext<ForecastContext>(options => options.UseNpgsql((Configuration.GetConnectionString("ForecastDB"))));
             services.AddScoped<IForecastContext>(provider => provider.GetService<ForecastContext>());
             services.AddTransient<IRepo<User>, UserRepo>();
             services.AddTransient<IRepo<Room>, RoomRepo>();
