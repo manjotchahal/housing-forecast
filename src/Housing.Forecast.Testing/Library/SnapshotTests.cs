@@ -7,17 +7,6 @@ namespace Housing.Forecast.Testing.Library
 {
   public class SnapshotTests
   {
-    private Snapshot getTestSnapshot() {
-      Snapshot result = new Snapshot{
-          Id = Guid.NewGuid(),
-          Date = new DateTime(2018, 1, 1),
-          Location = "Reston",
-          RoomCount = 1,
-          UserCount = 1
-      };
-      return result;
-    }
-
     [Fact]
     public void DefaultSnapshotInvalidTest() {
       // Arrange
@@ -32,7 +21,7 @@ namespace Housing.Forecast.Testing.Library
     public void SnapshotValidTest() {
       // Arrange
       // Act
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Assert
       Assert.True(snap.Validate());
@@ -41,7 +30,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotIdInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.Id = Guid.Empty;
@@ -53,7 +42,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotDateInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.Date = DateTime.MinValue;
@@ -65,7 +54,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotLocationInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.Location = null;
@@ -77,7 +66,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotUserCountInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.UserCount = -1;
@@ -89,10 +78,10 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotRoomCountInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
-      snap.RoomCount = -1;
+      snap.RoomOccupancyCount = -1;
 
       // Assert
       Assert.False(snap.Validate());
