@@ -87,7 +87,7 @@ namespace Housing.Forecast.Testing.Library
     }
 
     [Fact]
-    public void SnapshotRoomCountInvalidTest() {
+    public void SnapshotRoomOccupancyCountInvalidTest() {
       // Arrange
       Snapshot snap = TestDataGenerator.getTestSnapshot();
 
