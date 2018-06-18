@@ -289,7 +289,7 @@ namespace Housing.Forecast.Service.Controllers
             try
             {
                 // First let's find the earliest snapshot date
-                var earlist = _snapshot.Get().Min(x => x.Date);
+                var earliest = _snapshot.Get().Min(x => x.Date);
 
                 // The City locations that are supported for the search
                 var cities = _room.GetLocations().ToList();
@@ -305,7 +305,7 @@ namespace Housing.Forecast.Service.Controllers
                 if (end == null)
                 {
                     // Only need to validate start to see that it's on/after the earliest snapshot date.
-                    if (start < earlist)
+                    if (start < earliest)
                     {
                         return false; // Failed
                     }
@@ -313,7 +313,7 @@ namespace Housing.Forecast.Service.Controllers
                 else if (location == null)
                 {
                     // Need to make sure that start is on/after the earlist snapshot date and that end is after start.
-                    if (start < earlist || start > end)
+                    if (start < earliest || start > end)
                     {
                         return false; // failed
                     }
@@ -321,7 +321,7 @@ namespace Housing.Forecast.Service.Controllers
                 else
                 {
                     // Validate all three inputs
-                    if (start < earlist || start > end || cities.IndexOf(location) < 0)
+                    if (start < earliest || start > end || cities.IndexOf(location) < 0)
                     {
                         return false; // Failed
                     }
