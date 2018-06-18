@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Models;
 using l = Housing.Forecast.Library.Models;
@@ -24,7 +25,11 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<string> GetLocations()
         {
-            return _context.Snapshots.Select(s => s.Location).Where(s => s != null).Distinct();
+            var task = Task.Factory.StartNew(() => {
+                return _context.Snapshots.Select(s => s.Location).Where(s => s != null).Distinct();
+            });
+            task.Wait();
+            return task.Result;
         }
 
         /// <summary>
@@ -35,7 +40,11 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> Get()
         {
-            return _context.Snapshots;
+            var task = Task.Factory.StartNew(() => {
+                return _context.Snapshots;
+            });
+            task.Wait();
+            return task.Result;
         }
 
         /// <summary>
@@ -48,7 +57,11 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetBetweenDates(DateTime Start, DateTime End)
         {
-            return _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date);
+            var task = Task.Factory.StartNew(() => {
+                return _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date);
+            });
+            task.Wait();
+            return task.Result;
         }
 
         /// <summary>
@@ -61,7 +74,11 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetByLocation(DateTime datetime, string location)
         {
-            return _context.Snapshots.Where(s => s.Date.Date == datetime.Date && s.Location.Equals(location));
+            var task = Task.Factory.StartNew(() => {
+                return _context.Snapshots.Where(s => s.Date.Date == datetime.Date && s.Location.Equals(location));
+            });
+            task.Wait();
+            return task.Result;
         }
 
         /// <summary>
@@ -75,7 +92,11 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetBetweenDatesAtLocation(DateTime Start, DateTime End, string location)
         {
-            return _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date && s.Location.Equals(location));
+            var task = Task.Factory.StartNew(() => {
+                return _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date && s.Location.Equals(location));
+            });
+            task.Wait();
+            return task.Result;
         }
 
         /// <summary>
@@ -87,7 +108,11 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetByDate(DateTime datetime)
         {
-            return _context.Snapshots.Where(s => s.Date.Date == datetime.Date);
+            var task = Task.Factory.StartNew(() => {
+                return _context.Snapshots.Where(s => s.Date.Date == datetime.Date);
+            });
+            task.Wait();
+            return task.Result;
         }
 
         /// <summary>
