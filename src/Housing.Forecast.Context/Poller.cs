@@ -98,7 +98,7 @@ namespace Housing.Forecast.Context
                     mod.State != check.State)
             {
                 check.Id = mod.Id;
-                _context.Entry(mod).CurrentValues.SetValues(check);                
+                _context.Entry(mod).CurrentValues.SetValues(check);
             }
         }
 
@@ -199,7 +199,7 @@ namespace Housing.Forecast.Context
             var joinUserNew = from New in Users
                               join Old in dbUsers
                               on New.UserId equals Old.UserId into temp
-                               from Old in temp.DefaultIfEmpty()
+                              from Old in temp.DefaultIfEmpty()
                               where Old == null
                               select New;
             var joinUserDiff = from New in Users
@@ -293,9 +293,11 @@ namespace Housing.Forecast.Context
         ///  Function Poller object uses to update database
         /// </summary>
         /// <remarks>
-        /// Calls the endpoints and then uses the collections
-        /// to update users, rooms, and batches
-        /// and by extension names and addresses as well
+        /// Calls the endpoints and then uses the collections,
+        /// and then maps them onto our models to
+        /// then update users, rooms, and batches
+        /// and by extension names and addresses as well.
+        /// Also adds Snapshots now.
         /// </remarks>
         public async void Update()
         {
@@ -304,17 +306,17 @@ namespace Housing.Forecast.Context
             var libRooms = await api.HttpGetFromApi<Library.Models.Room>("9030", "Rooms");
 
             ICollection<Batch> Batch = new List<Batch>();
-            foreach(var x in libBatch)
+            foreach (var x in libBatch)
             {
                 Batch.Add(Mapper.Map<Library.Models.Batch, Batch>(x));
             }
             ICollection<User> Users = new List<User>();
-            foreach(var x in libUsers)
+            foreach (var x in libUsers)
             {
                 Users.Add(Mapper.Map<Library.Models.User, User>(x));
             }
             ICollection<Room> Rooms = new List<Room>();
-            foreach(var x in libRooms)
+            foreach (var x in libRooms)
             {
                 Rooms.Add(Mapper.Map<Library.Models.Room, Room>(x));
             }
@@ -326,13 +328,24 @@ namespace Housing.Forecast.Context
             AddSnapshots(Users, Rooms);
         }
 
-        public void AddSnapshots(ICollection<User> users, ICollection<Room> rooms) {
+        /// <summary>
+        /// Function for the poller to add snapshots to the database
+        /// </summary>
+        /// <remarks>
+        /// Takes in the collections of users and rooms and then
+        /// creates a snapshot for the most recent data to
+        /// put in the database for the current date.
+        /// </remarks>
+        public void AddSnapshots(ICollection<User> users, ICollection<Room> rooms)
+        {
             IEnumerable<string> locations = rooms.Select(x => x.Location).Distinct();
 
             int totalOccupancy = 0;
             int totalUsers = 0;
-            foreach (string location in locations) {
-                Snapshot snap = new Snapshot {
+            foreach (string location in locations)
+            {
+                Snapshot snap = new Snapshot
+                {
                     Date = DateTime.Today,
                     RoomOccupancyCount = rooms.Where(x => x.Location.Equals(location)).Select(x => x.Occupancy).Sum(),
                     UserCount = users.Where(x => x.Location.Equals(location)).Count(),
@@ -347,7 +360,8 @@ namespace Housing.Forecast.Context
             }
 
             _context.Snapshots.Add(
-                new Snapshot {
+                new Snapshot
+                {
                     Date = DateTime.Today,
                     RoomOccupancyCount = totalOccupancy,
                     UserCount = totalUsers,
@@ -389,5 +403,3 @@ namespace Housing.Forecast.Context
 
     }
 }
-
-
