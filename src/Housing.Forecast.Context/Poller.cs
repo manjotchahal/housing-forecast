@@ -302,7 +302,7 @@ namespace Housing.Forecast.Context
         /// and by extension names and addresses as well.
         /// Also adds Snapshots now.
         /// </remarks>
-        public async void Update()
+        public async Task Update()
         {
             var libBatch = await api.HttpGetFromApi<Library.Models.Batch>("9040", "Batches");
             var libUsers = await api.HttpGetFromApi<Library.Models.User>("9050", "Users");
