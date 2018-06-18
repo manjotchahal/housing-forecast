@@ -1,9 +1,5 @@
 ﻿using System;
 using Xunit;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Housing.Forecast.Library.Models;
 using Housing.Forecast.Service;
 
@@ -11,20 +7,6 @@ namespace Housing.Forecast.Testing.Library
 {
     public class BatchTests
     {
-        private Batch getTestBatch()
-        {
-            Batch batch = new Batch
-            {
-                Id = Guid.NewGuid(),
-                BatchId = Guid.NewGuid(),
-                BatchName = "name",
-                BatchOccupancy = 1,
-                BatchSkill = ".Net",
-                State = "VA"
-            };
-            return batch;
-        }
-
         [Fact]
         public void DefaultBatchInvalidTest()
         {
@@ -35,14 +17,14 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void BatchValidTest()
         {
-            Batch test = getTestBatch();
+            Batch test = TestDataGenerator.getTestBatch();
             Assert.True(test.Validate());
         }
 
         [Fact]
         public void BatchIdInvalidTest()
         {
-            Batch test = getTestBatch();
+            Batch test = TestDataGenerator.getTestBatch();
             test.Id = Guid.Empty;
             Assert.False(test.Validate());
         }
@@ -50,7 +32,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void BatchBatchIdInvalidTest()
         {
-            Batch test = getTestBatch();
+            Batch test = TestDataGenerator.getTestBatch();
             test.BatchId = Guid.Empty;
             Assert.False(test.Validate());
         }
@@ -58,7 +40,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void BatchNameInvalidTest()
         {
-            Batch test = getTestBatch();
+            Batch test = TestDataGenerator.getTestBatch();
             test.BatchName = "";
             Assert.False(test.Validate());
         }
@@ -66,7 +48,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void BatchOccupancyLessInvalidTest()
         {
-            Batch test = getTestBatch();
+            Batch test = TestDataGenerator.getTestBatch();
             test.BatchOccupancy = -1;
             Assert.False(test.Validate());
         }
@@ -74,7 +56,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void BatchOccupancyOverInvalidTest()
         {
-            Batch test = getTestBatch();
+            Batch test = TestDataGenerator.getTestBatch();
             test.BatchOccupancy = 101;
             Assert.False(test.Validate());
         }
@@ -82,7 +64,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void BatchSkillInvalidTest()
         {
-            Batch test = getTestBatch();
+            Batch test = TestDataGenerator.getTestBatch();
             test.BatchSkill = "";
             Assert.False(test.Validate());
         }
@@ -90,7 +72,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void BatchStateInvalidTest()
         {
-            Batch test = getTestBatch();
+            Batch test = TestDataGenerator.getTestBatch();
             test.State = null;
             Assert.False(test.Validate());
         }

@@ -1,10 +1,5 @@
 using System;
 using Xunit;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-
 using Housing.Forecast.Library.Models;
 using Housing.Forecast.Service;
 
@@ -37,7 +32,7 @@ namespace Housing.Forecast.Testing.Library
     public void SnapshotValidTest() {
       // Arrange
       // Act
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Assert
       Assert.True(snap.Validate());
@@ -46,7 +41,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotIdInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.Id = Guid.Empty;
@@ -58,7 +53,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotDateInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.Date = DateTime.MinValue;
@@ -70,7 +65,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotLocationInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.Location = null;
@@ -82,7 +77,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotUserCountInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.UserCount = -1;
@@ -94,7 +89,7 @@ namespace Housing.Forecast.Testing.Library
     [Fact]
     public void SnapshotRoomOccupancyCountInvalidTest() {
       // Arrange
-      Snapshot snap = getTestSnapshot();
+      Snapshot snap = TestDataGenerator.getTestSnapshot();
 
       // Act
       snap.RoomOccupancyCount = -1;

@@ -1,12 +1,13 @@
 ﻿using System;
 using Xunit;
-using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Models;
 using Xunit.Abstractions;
+using System.Net.Http;
+using Housing.Forecast.Context.ApiAccessors;
 
 namespace Housing.Forecast.Testing.Context
 {
@@ -17,10 +18,13 @@ namespace Housing.Forecast.Testing.Context
             .UseInMemoryDatabase(databaseName: "InMemDb")
             .Options;
         private readonly ITestOutputHelper _output;
+        private HttpClient testClient = new HttpClient();
+        private ApiMethods testApi;
 
         public PollerTests(ITestOutputHelper output)
         {
             this._output = output;
+            testApi = new ApiMethods(testClient);
         }
 
         [Fact]
@@ -29,7 +33,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Name insertTest = TestDataGenerator.getTestName();
 
                 // Act
@@ -48,7 +52,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Name insertTest = TestDataGenerator.getTestName();
                 _context.Names.Add(insertTest);
                 _context.SaveChanges();
@@ -70,7 +74,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Name insertTest = TestDataGenerator.getTestName();
                 _context.Names.Add(insertTest);
                 _context.SaveChanges();
@@ -92,7 +96,7 @@ namespace Housing.Forecast.Testing.Context
             using (_context = new ForecastContext(options))
             {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Name insertTest = TestDataGenerator.getTestName();
                 _context.Names.Add(insertTest);
                 _context.SaveChanges();
@@ -112,7 +116,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateNewUsers() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 ICollection<User> list = new List<User>();
 
                 // Act
@@ -129,7 +133,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateModUsers() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 User user = TestDataGenerator.getTestUser();
                 string oldLocation = user.Location;
                 _context.Users.Add(user);
@@ -166,7 +170,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateDeleteUsers() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 User user = TestDataGenerator.getTestUser();
                 _context.Users.Add(user);
                 _context.SaveChanges();
@@ -185,7 +189,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateNewBatches() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 ICollection<Batch> list = new List<Batch>();
 
                 // Act
@@ -202,7 +206,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateModBatches() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Batch batch = TestDataGenerator.getTestBatch();
                 string oldState = batch.State;
                 _context.Batches.Add(batch);
@@ -238,7 +242,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateDeleteBatches() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Batch batch = TestDataGenerator.getTestBatch();
                 _context.Batches.Add(batch);
                 _context.SaveChanges();
@@ -256,7 +260,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateNewRooms() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 ICollection<Room> list = new List<Room>();
 
                 // Act
@@ -273,7 +277,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateModRooms() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Room room = TestDataGenerator.getTestRoom();
                 string oldLocation = room.Location;
                 _context.Rooms.Add(room);
@@ -308,7 +312,7 @@ namespace Housing.Forecast.Testing.Context
         public void UpdateDeleteRooms() {
             using (_context = new ForecastContext(options)) {
                 // Arrange
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Room room = TestDataGenerator.getTestRoom();
                 _context.Rooms.Add(room);
                 _context.SaveChanges();
@@ -327,7 +331,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Name insertTest = TestDataGenerator.getTestName();
                 testPoller.UpdateName(insertTest);
                 _context.SaveChanges();
@@ -343,7 +347,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
@@ -357,7 +361,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
@@ -374,7 +378,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
@@ -391,7 +395,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
@@ -408,7 +412,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
@@ -425,7 +429,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
@@ -442,7 +446,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 Address insertTest = TestDataGenerator.getTestAddress();
                 testPoller.UpdateAddress(insertTest);
                 _context.SaveChanges();
@@ -459,7 +463,7 @@ namespace Housing.Forecast.Testing.Context
         {
             using (_context = new ForecastContext(options))
             {
-                Poller testPoller = new Poller(_context, TimeSpan.MinValue);
+                Poller testPoller = new Poller(_context, TimeSpan.MinValue, testApi);
                 ICollection<Batch> Batches = new List<Batch>();
                 Batch insertTest = TestDataGenerator.getTestBatch();
                 Batches.Add(insertTest);

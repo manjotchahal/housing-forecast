@@ -14,6 +14,13 @@ using AutoMapper;
 
 namespace Housing.Forecast.Context
 {
+    /// <summary>
+    /// This class is used to update the database using the service endpoints.
+    /// </summary>
+    /// <remarks>
+    /// This class is used to update the database independently of the service
+    /// allowing us to poll the service endpoints on a regular interval.
+    /// </remarks>
     public class Poller : IPoller
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
@@ -21,25 +28,59 @@ namespace Housing.Forecast.Context
         private CancellationTokenSource cts = new CancellationTokenSource();
         private Task mainTask = null;
         private readonly TimeSpan _interval;
+        private ApiMethods api;
 
-        public Poller(ForecastContext context, TimeSpan interval)
+        /// <summary>
+        /// Constructor for the Poller
+        /// </summary>
+        /// <remarks>
+        /// Passes in the forecast context and the interval. 
+        /// Not sure how to inject the context from this project, 
+        /// since it's not running in the Service Project where
+        /// we can register it with startup.
+        /// </remarks>
+        public Poller(ForecastContext context, TimeSpan interval, ApiMethods API)
         {
             _context = context;
             _interval = interval;
+            api = API;
         }
 
+        /// <summary>
+        /// Starts the Poller object's task
+        /// </summary>
+        /// <remarks>
+        /// Setting up a task to run asynchronously in the background. 
+        /// </remarks>
         public void OnStart()
         {
             mainTask = new Task(Poll, cts.Token, TaskCreationOptions.LongRunning);
             mainTask.Start();
         }
 
+        /// <summary>
+        /// Stops the Poller object's task
+        /// </summary>
+        /// <remarks>
+        /// Tell the cancellation token to cancel,
+        /// then wait for the task to cancel.
+        /// </remarks>
         public void OnStop()
         {
             cts.Cancel();
             mainTask.Wait();
         }
 
+        /// <summary>
+        /// Update individual addresses
+        /// </summary>
+        /// <remarks>
+        /// Separated out the logic for this since it'd be
+        /// duplicated in UpdateUsers and UpdateRooms. 
+        /// Basically we check to see if the address is new. If so,
+        /// we add it. Otherwise we check to see if data is modified
+        /// and then update appropriately.
+        /// </remarks>
         public void UpdateAddress(Address check)
         {
             var mod = _context.Addresses.Where(p => p.AddressId == check.AddressId).FirstOrDefault();
@@ -57,10 +98,18 @@ namespace Housing.Forecast.Context
                     mod.State != check.State)
             {
                 check.Id = mod.Id;
-                _context.Entry(mod).CurrentValues.SetValues(check);                
+                _context.Entry(mod).CurrentValues.SetValues(check);
             }
         }
 
+        /// <summary>
+        /// Update individual names
+        /// </summary>
+        /// <remarks>
+        /// Same as with Addresses in terms of logic. 
+        /// Felt neater to separate this out into a separate method,
+        /// even though it's only necessary in UpdateUsers.
+        /// </remarks>
         public void UpdateName(Name check)
         {
             var mod = _context.Names.Where(p => p.NameId == check.NameId).FirstOrDefault();
@@ -79,10 +128,17 @@ namespace Housing.Forecast.Context
             }
         }
 
+        /// <summary>
+        /// Updates Batches using the batch servicehub endpoint 
+        /// </summary>
+        /// <remarks>
+        /// An except for the deleted entries, and a couple joins 
+        /// for the new and different entries. Deleted sets datetime
+        /// equal to today if it's not already set. New adds the new entry completely
+        /// and diff changes values if there are any modified values.
+        /// </remarks>
         public void UpdateBatches(ICollection<Batch> Batch)
         {
-            //insert proper endpoint when we get it
-            
             var dbBatches = _context.Batches;
 
             var deletedBatchIds = dbBatches.Select(p => p.BatchId).Except(Batch.Select(k => k.BatchId));
@@ -126,16 +182,24 @@ namespace Housing.Forecast.Context
             _context.SaveChanges();
         }
 
+        /// <summary>
+        /// Update Users using the Users servicehub endpoint
+        /// </summary>
+        /// <remarks>
+        /// Same logic as UpdateBatch, except we also need to update 
+        /// address and name before adding a new user to insure
+        /// that those are in the tables that the User will have
+        /// a relation to.
+        /// </remarks>
         public void UpdateUsers(ICollection<User> Users)
         {
-            //insert proper endpoint when we get it
             var dbUsers = _context.Users;
 
             var deletedUserIds = dbUsers.Select(p => p.UserId).Except(Users.Select(k => k.UserId));
             var joinUserNew = from New in Users
                               join Old in dbUsers
                               on New.UserId equals Old.UserId into temp
-                               from Old in temp.DefaultIfEmpty()
+                              from Old in temp.DefaultIfEmpty()
                               where Old == null
                               select New;
             var joinUserDiff = from New in Users
@@ -173,11 +237,16 @@ namespace Housing.Forecast.Context
                 _context.Users.Add(x);
             }
             _context.SaveChanges();
-
         }
+
+        /// <summary>
+        /// Update Rooms using the Rooms servicehub endpoint
+        /// </summary>
+        /// <remarks>
+        /// Same logic as UpdateUsers, minus Name
+        /// </remarks>
         public void UpdateRooms(ICollection<Room> Rooms)
         {
-            //insert proper endpoint when we get it
             var dbRooms = _context.Rooms;
 
             var deletedRoomIds = dbRooms.Select(p => p.RoomId).Except(Rooms.Select(k => k.RoomId));
@@ -220,25 +289,34 @@ namespace Housing.Forecast.Context
             _context.SaveChanges();
         }
 
-        public void Update()
+        /// <summary>
+        ///  Function Poller object uses to update database
+        /// </summary>
+        /// <remarks>
+        /// Calls the endpoints and then uses the collections,
+        /// and then maps them onto our models to
+        /// then update users, rooms, and batches
+        /// and by extension names and addresses as well.
+        /// Also adds Snapshots now.
+        /// </remarks>
+        public async void Update()
         {
-            ApiMethods api = new ApiMethods();
-            var libBatch = api.HttpGetFromApi<Library.Models.Batch>("9040", "Batches");
-            var libUsers = api.HttpGetFromApi<Library.Models.User>("9050", "Users");
-            var libRooms = api.HttpGetFromApi<Library.Models.Room>("9030", "Rooms");
+            var libBatch = await api.HttpGetFromApi<Library.Models.Batch>("9040", "Batches");
+            var libUsers = await api.HttpGetFromApi<Library.Models.User>("9050", "Users");
+            var libRooms = await api.HttpGetFromApi<Library.Models.Room>("9030", "Rooms");
 
             ICollection<Batch> Batch = new List<Batch>();
-            foreach(var x in libBatch)
+            foreach (var x in libBatch)
             {
                 Batch.Add(Mapper.Map<Library.Models.Batch, Batch>(x));
             }
             ICollection<User> Users = new List<User>();
-            foreach(var x in libUsers)
+            foreach (var x in libUsers)
             {
                 Users.Add(Mapper.Map<Library.Models.User, User>(x));
             }
             ICollection<Room> Rooms = new List<Room>();
-            foreach(var x in libRooms)
+            foreach (var x in libRooms)
             {
                 Rooms.Add(Mapper.Map<Library.Models.Room, Room>(x));
             }
@@ -250,13 +328,24 @@ namespace Housing.Forecast.Context
             AddSnapshots(Users, Rooms);
         }
 
-        public void AddSnapshots(ICollection<User> users, ICollection<Room> rooms) {
+        /// <summary>
+        /// Function for the poller to add snapshots to the database
+        /// </summary>
+        /// <remarks>
+        /// Takes in the collections of users and rooms and then
+        /// creates a snapshot for the most recent data to
+        /// put in the database for the current date.
+        /// </remarks>
+        public void AddSnapshots(ICollection<User> users, ICollection<Room> rooms)
+        {
             IEnumerable<string> locations = rooms.Select(x => x.Location).Distinct();
 
             int totalOccupancy = 0;
             int totalUsers = 0;
-            foreach (string location in locations) {
-                Snapshot snap = new Snapshot {
+            foreach (string location in locations)
+            {
+                Snapshot snap = new Snapshot
+                {
                     Date = DateTime.Today,
                     RoomOccupancyCount = rooms.Where(x => x.Location.Equals(location)).Select(x => x.Occupancy).Sum(),
                     UserCount = users.Where(x => x.Location.Equals(location)).Count(),
@@ -271,7 +360,8 @@ namespace Housing.Forecast.Context
             }
 
             _context.Snapshots.Add(
-                new Snapshot {
+                new Snapshot
+                {
                     Date = DateTime.Today,
                     RoomOccupancyCount = totalOccupancy,
                     UserCount = totalUsers,
@@ -281,6 +371,15 @@ namespace Housing.Forecast.Context
             );
         }
 
+        /// <summary>
+        /// Poll function set by Task
+        /// </summary>
+        /// <remarks>
+        /// Waits for an interval and then attempts to update the
+        /// database using Update(), and cancels if cancellation
+        /// is requested. Exception for some logging.
+        /// Potentially add retry pattern if db connection failed.
+        /// </remarks>
         public void Poll()
         {
             CancellationToken cancellation = cts.Token;
@@ -298,16 +397,9 @@ namespace Housing.Forecast.Context
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
-                    //string fromTimeString = result.ToString(“hh’:’mm”);
-                    //interval = Convert.ToDouble(ConfigurationSettings.AppSettings[“WaitAfterSuccessInterval”]);
-                    //interval = TimeSpan.FromMinutes((ConfigurationSettings.AppSettings[“WaitAfterSuccessInterval”]));
-                    //interval = TimeSpan.FromMinutes((Convert.ToDouble(ConfigurationSettings.AppSettings[“WaitAfterSuccessInterval”])));
-                    //TimeSpan result = TimeSpan.FromMinutes(interval);
                 }
             }
         }
 
     }
 }
-
-

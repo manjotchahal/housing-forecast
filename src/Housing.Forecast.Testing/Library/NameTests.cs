@@ -1,27 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Housing.Forecast.Library.Models;
 using Xunit;
+using Housing.Forecast.Library.Models;
+using Housing.Forecast.Service;
 
 namespace Housing.Forecast.Testing.Library
 {
     public class NameTests
     {
-        private Name getTestName()
-        {
-            Name result = new Name
-            {
-                Id = Guid.NewGuid(),
-                NameId = Guid.NewGuid(),
-                First = "first",
-                Middle = "middle",
-                Last = "last",
-                Created = DateTime.Now,
-            };
-            return result;
-        }
-
         [Fact]
         public void DefaultNameInvalidTest()
         {
@@ -32,7 +17,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void NameValidTest()
         {
-            Name test = getTestName();
+            Name test = TestDataGenerator.getTestName();
             Assert.True(test.Validate());
         }
 
