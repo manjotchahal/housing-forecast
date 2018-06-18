@@ -10,14 +10,22 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Service.Controllers
 {
-  [Route("api/[controller]")]
-  public class ForecastController : BaseController
-  {
-    private readonly ISnapshotRepo _snapshot;
+    [Route("api/[controller]")]
+    public class ForecastController : BaseController
+    {
+        private readonly ISnapshotRepo _snapshot;
         private readonly IRepo<Room> _room;
         private readonly IRepo<User> _user;
-        public ForecastController(ILoggerFactory loggerFactory, ISnapshotRepo snapshot, IRepo<Room> rooms, IRepo<User> users)
-          : base(loggerFactory) { _snapshot = snapshot; _room = rooms; _user = users; }
+        public ForecastController(ILoggerFactory loggerFactory, 
+            ISnapshotRepo snapshot, 
+            IRepo<Room> rooms, 
+            IRepo<User> users)
+          : base(loggerFactory)
+        {
+            _snapshot = snapshot;
+            _room = rooms;
+            _user = users;
+        }
 
         /// <summary>
         /// This endpoint will return all unique locations of snapshots
@@ -170,7 +178,7 @@ namespace Housing.Forecast.Service.Controllers
                 if (missingDates.Count > 0)
                 {
                     var missingSnapshots = CreateSnapshots(null, null, missingDates);
-                    
+
                     if (missingSnapshots == null)
                         return BadRequest("Something went wrong while creating new snapshots for the missing dates.");
 
@@ -262,7 +270,7 @@ namespace Housing.Forecast.Service.Controllers
                     {
                         snapshots.Add(snap);
                     }
-                    snapshots.OrderBy(s => s.Date); // Order the list by the date
+                    snapshots = snapshots.OrderBy(s => s.Date).ToList(); // Order the list by the date
                 }
 
                 return Ok(snapshots);
@@ -296,7 +304,7 @@ namespace Housing.Forecast.Service.Controllers
 
                 // Remove 'All' from the cities list
                 cities.Remove("All");
-                
+
                 foreach (var city in cities)
                 {
                     city.ToLower();
@@ -385,14 +393,15 @@ namespace Housing.Forecast.Service.Controllers
                     }
                 }
 
-                using (IForecastContext db = new ForecastContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ForecastContext>()))
+                try
                 {
-                    foreach (var snap in snapshots)
-                    {
-                        // Added the new snapshots to the database here.
-                        db.Snapshots.Add(snap);
-                    }
-                    db.SaveChanges(); // Save the changes to the database
+                    _snapshot.AddSnapshots(snapshots);
+                }
+                catch (Exception ex)
+                {
+                    // Failed to add the newly created snapshots to the database.
+                    logger.LogError(ex.Message);
+                    return null;
                 }
 
                 return snapshots;

@@ -133,6 +133,32 @@ namespace Housing.Forecast.Context.Repos
             return snaps;
         }
 
+
+        /// <summary>
+        /// Add the newly created snapshots to the database
+        /// </summary>
+        /// <param name="snapshots">Snapshots that need to be added to the database.</param>
+        /// <returns>
+        /// Returns true if the snapshots are added succuessfully else return false.
+        /// </returns>
+        public bool AddSnapshots(IEnumerable<Snapshot> snapshots)
+        {
+            try
+            {
+                foreach (var snap in snapshots)
+                {
+                    _context.Snapshots.Add(snap);
+                }
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Map the Context's Snapshot model to Library's Snapshot model
         /// </summary>
