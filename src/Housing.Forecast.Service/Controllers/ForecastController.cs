@@ -262,7 +262,7 @@ namespace Housing.Forecast.Service.Controllers
                     {
                         snapshots.Add(snap);
                     }
-                    snapshots.OrderBy(s => s.Date); // Order the list by the date
+                    snapshots = snapshots.OrderBy(s => s.Date).ToList(); // Order the list by the date
                 }
 
                 return Ok(snapshots);
@@ -385,14 +385,15 @@ namespace Housing.Forecast.Service.Controllers
                     }
                 }
 
-                using (IForecastContext db = new ForecastContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ForecastContext>()))
+                try
                 {
-                    foreach (var snap in snapshots)
-                    {
-                        // Added the new snapshots to the database here.
-                        db.Snapshots.Add(snap);
-                    }
-                    db.SaveChanges(); // Save the changes to the database
+                    _snapshot.AddSnapshots(snapshots);
+                }
+                catch (Exception ex)
+                {
+                    // Failed to add the newly created snapshots to the database.
+                    logger.LogError(ex.Message);
+                    return null;
                 }
 
                 return snapshots;
