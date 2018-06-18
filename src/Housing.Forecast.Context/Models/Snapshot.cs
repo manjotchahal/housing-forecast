@@ -17,7 +17,7 @@ namespace Housing.Forecast.Context.Models
             Id = Guid.Empty;
             Date = DateTime.MinValue;
             Location = null;
-            RoomCount = -1;
+            RoomOccupancyCount = -1;
             UserCount = -1;
         }
         /// <summary>Property validation</summary>>
@@ -28,7 +28,7 @@ namespace Housing.Forecast.Context.Models
             bool result = Id != Guid.Empty &&
                 Date > DateTime.MinValue &&
                 !string.IsNullOrEmpty(Location) &&
-                RoomCount >= 0 &&
+                RoomOccupancyCount >= 0 &&
                 UserCount >= 0;
             return result;
         }
@@ -40,7 +40,7 @@ namespace Housing.Forecast.Context.Models
         [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }
 
-        public int RoomCount { get; set; }
+        public int RoomOccupancyCount { get; set; }
 
         public int UserCount { get; set; }
 

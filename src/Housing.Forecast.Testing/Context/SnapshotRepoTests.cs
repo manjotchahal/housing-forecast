@@ -13,7 +13,7 @@ namespace Housing.Forecast.Testing.Context
     public class SnapshotRepoTests
     {
         private ForecastContext _context;
-        private IRepo<Snapshot> _snapshotRepository;
+        private ISnapshotRepo _snapshotRepository;
         private static readonly DbContextOptions<ForecastContext> options = new DbContextOptionsBuilder<ForecastContext>()
             .UseInMemoryDatabase(databaseName: "InMemDb")
             .Options;
@@ -186,7 +186,7 @@ namespace Housing.Forecast.Testing.Context
                 Id = Guid.NewGuid(),
                 Date = new DateTime(2018, 1, 1),
                 Location = "Reston",
-                RoomCount = 1,
+                RoomOccupancyCount = 1,
                 UserCount = 1
             };
             return result;

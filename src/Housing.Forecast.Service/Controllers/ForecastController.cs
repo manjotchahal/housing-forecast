@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
@@ -12,14 +11,14 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Service.Controllers
 {
-    [Route("api/[controller]")]
-    public class ForecastController : BaseController
+  [Route("api/[controller]")]
+  public class ForecastController : BaseController
     {
         private readonly SnapshotRepo _snapshot;
         private readonly IRepo<Room> _room;
         private readonly IRepo<User> _user;
-        public ForecastController(ILoggerFactory loggerFactory, IQueueClient queueClientSingleton, IRepo<Snapshot> snapshot, IRepo<Room> rooms, IRepo<User> users)
-          : base(loggerFactory, queueClientSingleton) { _snapshot = (SnapshotRepo)snapshot; _room = rooms; _user = users; }
+        public ForecastController(ILoggerFactory loggerFactory, IRepo<Snapshot> snapshot, IRepo<Room> rooms, IRepo<User> users)
+          : base(loggerFactory) { _snapshot = (SnapshotRepo)snapshot; _room = rooms; _user = users; }
 
         /// <summary>
         /// This endpoint will return all unique locations of snapshots
@@ -361,12 +360,12 @@ namespace Housing.Forecast.Service.Controllers
                         {
                             rooms = _room.GetByLocation(date, location).ToList();
                             users = _user.GetByLocation(date, location).ToList();
-                        }                        
+                        }
 
                         var snapshot = new Snapshot()
                         {
                             Date = start,
-                            RoomCount = rooms.Count,
+                            RoomOccupancyCount = rooms.Select(x => x.Occupancy).Sum(),
                             UserCount = users.Count,
                             Location = (String.IsNullOrEmpty(location)) ? "All":text.ToTitleCase(location),
                             Created = DateTime.Now
@@ -384,7 +383,7 @@ namespace Housing.Forecast.Service.Controllers
                     var snapshot = new Snapshot()
                     {
                         Date = start,
-                        RoomCount = rooms.Count,
+                        RoomOccupancyCount = rooms.Count,
                         UserCount = users.Count,
                         Location = (String.IsNullOrEmpty(location)) ? "All" : text.ToTitleCase(location),
                         Created = DateTime.Now
@@ -411,7 +410,7 @@ namespace Housing.Forecast.Service.Controllers
                         var snapshot = new Snapshot()
                         {
                             Date = start,
-                            RoomCount = rooms.Count,
+                            RoomOccupancyCount = rooms.Count,
                             UserCount = users.Count,
                             Location = (String.IsNullOrEmpty(location)) ? "All" : text.ToTitleCase(location),
                             Created = DateTime.Now
@@ -465,23 +464,6 @@ namespace Housing.Forecast.Service.Controllers
                 logger.LogError(ex.Message);
                 return false;
             }
-        }
-
-        protected override void UseReceiver()
-        {
-            var messageHandlerOptions = new MessageHandlerOptions(ReceiverExceptionHandler)
-            {
-                AutoComplete = false
-            };
-
-            queueClient.RegisterMessageHandler(ReceiverMessageProcessAsync, messageHandlerOptions);
-        }
-
-        protected override void UseSender(Message message)
-        {
-            Task.Run(() =>
-              SenderMessageProcessAsync(message)
-            );
         }
     }
 }

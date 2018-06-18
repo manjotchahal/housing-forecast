@@ -10,6 +10,7 @@ using Housing.Forecast.Context.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Internal;
 using NLog;
+using AutoMapper;
 
 namespace Housing.Forecast.Context
 {
@@ -297,14 +298,62 @@ namespace Housing.Forecast.Context
         public void Update()
         {
             ApiMethods api = new ApiMethods();
-            var Batch = api.HttpGetFromApi<Batch>("");
-            var Users = api.HttpGetFromApi<User>("");
-            var Rooms = api.HttpGetFromApi<Room>("");
+            var libBatch = api.HttpGetFromApi<Library.Models.Batch>("9040", "Batches");
+            var libUsers = api.HttpGetFromApi<Library.Models.User>("9050", "Users");
+            var libRooms = api.HttpGetFromApi<Library.Models.Room>("9030", "Rooms");
 
+            ICollection<Batch> Batch = new List<Batch>();
+            foreach(var x in libBatch)
+            {
+                Batch.Add(Mapper.Map<Library.Models.Batch, Batch>(x));
+            }
+            ICollection<User> Users = new List<User>();
+            foreach(var x in libUsers)
+            {
+                Users.Add(Mapper.Map<Library.Models.User, User>(x));
+            }
+            ICollection<Room> Rooms = new List<Room>();
+            foreach(var x in libRooms)
+            {
+                Rooms.Add(Mapper.Map<Library.Models.Room, Room>(x));
+            }
 
             UpdateUsers(Users);
             UpdateRooms(Rooms);
             UpdateBatches(Batch);
+
+            AddSnapshots(Users, Rooms);
+        }
+
+        public void AddSnapshots(ICollection<User> users, ICollection<Room> rooms) {
+            IEnumerable<string> locations = rooms.Select(x => x.Location).Distinct();
+
+            int totalOccupancy = 0;
+            int totalUsers = 0;
+            foreach (string location in locations) {
+                Snapshot snap = new Snapshot {
+                    Date = DateTime.Today,
+                    RoomOccupancyCount = rooms.Where(x => x.Location.Equals(location)).Select(x => x.Occupancy).Sum(),
+                    UserCount = users.Where(x => x.Location.Equals(location)).Count(),
+                    Location = location,
+                    Created = DateTime.Today
+                };
+
+                totalOccupancy += snap.RoomOccupancyCount;
+                totalUsers += snap.UserCount;
+
+                _context.Snapshots.Add(snap);
+            }
+
+            _context.Snapshots.Add(
+                new Snapshot {
+                    Date = DateTime.Today,
+                    RoomOccupancyCount = totalOccupancy,
+                    UserCount = totalUsers,
+                    Location = "All",
+                    Created = DateTime.Today
+                }
+            );
         }
 
         /// <summary>
