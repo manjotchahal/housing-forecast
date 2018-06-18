@@ -28,6 +28,7 @@ namespace Housing.Forecast.Context
         private CancellationTokenSource cts = new CancellationTokenSource();
         private Task mainTask = null;
         private readonly TimeSpan _interval;
+        private ApiMethods api;
 
         /// <summary>
         /// Constructor for the Poller
@@ -38,10 +39,11 @@ namespace Housing.Forecast.Context
         /// since it's not running in the Service Project where
         /// we can register it with startup.
         /// </remarks>
-        public Poller(ForecastContext context, TimeSpan interval)
+        public Poller(ForecastContext context, TimeSpan interval, ApiMethods API)
         {
             _context = context;
             _interval = interval;
+            api = API;
         }
 
         /// <summary>
@@ -297,7 +299,6 @@ namespace Housing.Forecast.Context
         /// </remarks>
         public void Update()
         {
-            ApiMethods api = new ApiMethods();
             var libBatch = api.HttpGetFromApi<Library.Models.Batch>("9040", "Batches");
             var libUsers = api.HttpGetFromApi<Library.Models.User>("9050", "Users");
             var libRooms = api.HttpGetFromApi<Library.Models.Room>("9030", "Rooms");
