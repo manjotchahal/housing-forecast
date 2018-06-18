@@ -297,11 +297,11 @@ namespace Housing.Forecast.Context
         /// to update users, rooms, and batches
         /// and by extension names and addresses as well
         /// </remarks>
-        public void Update()
+        public async void Update()
         {
-            var libBatch = api.HttpGetFromApi<Library.Models.Batch>("9040", "Batches");
-            var libUsers = api.HttpGetFromApi<Library.Models.User>("9050", "Users");
-            var libRooms = api.HttpGetFromApi<Library.Models.Room>("9030", "Rooms");
+            var libBatch = await api.HttpGetFromApi<Library.Models.Batch>("9040", "Batches");
+            var libUsers = await api.HttpGetFromApi<Library.Models.User>("9050", "Users");
+            var libRooms = await api.HttpGetFromApi<Library.Models.Room>("9030", "Rooms");
 
             ICollection<Batch> Batch = new List<Batch>();
             foreach(var x in libBatch)
