@@ -1,6 +1,5 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
@@ -104,7 +103,7 @@ namespace Housing.Forecast.Service.Controllers
                     snapshots = CreateSnapshots(date);
                     if (snapshots == null)
                     {
-                        return NotFound("No snapshots found with the passed search critiea.");
+                        return NotFound("No snapshots found with the passed search criteria.");
                     }
                 }
 
@@ -152,7 +151,7 @@ namespace Housing.Forecast.Service.Controllers
                     snapshots = CreateSnapshots(null, null, missing);
                     if (snapshots == null)
                     {
-                        return NotFound("No snapshots found with the passed search critiea.");
+                        return NotFound("No snapshots found with the passed search criteria.");
                     }
                 }
 
@@ -179,7 +178,7 @@ namespace Housing.Forecast.Service.Controllers
                     {
                         snapshots.Add(snap);
                     }
-                    snapshots.OrderBy(s => s.Date); // Order the list by the date
+                    snapshots = snapshots.OrderBy(s => s.Date).ToList(); // Order the list by the date
                 }
 
                 return Ok(snapshots);
@@ -237,7 +236,7 @@ namespace Housing.Forecast.Service.Controllers
                     }
                     snapshots = CreateSnapshots(null, location, missing);
                     if (snapshots == null)
-                        return NotFound("No snapshots found with the passed search critiea.");
+                        return NotFound("No snapshots found with the passed search criteria.");
                 }
 
                 // Find which dates are missing a snapshot so we can make a new one for it
@@ -289,7 +288,7 @@ namespace Housing.Forecast.Service.Controllers
         {
             try
             {
-                // First let's find the earlist snapshot date
+                // First let's find the earliest snapshot date
                 var earlist = _snapshot.Get().Min(x => x.Date);
 
                 // The City locations that are supported for the search
