@@ -18,7 +18,8 @@ namespace Housing.Forecast.Context
     /// This class is used to update the database using the service endpoints.
     /// </summary>
     /// <remarks>
-    /// I have absolutely no clue what I'm doing here. I cannot stress that enough.
+    /// This class is used to update the database independently of the service
+    /// allowing us to poll the service endpoints on a regular interval.
     /// </remarks>
     public class Poller : IPoller
     {
@@ -33,7 +34,7 @@ namespace Housing.Forecast.Context
         /// </summary>
         /// <remarks>
         /// Passes in the forecast context and the interval. 
-        /// No clue how to inject the context from this project, 
+        /// Not sure how to inject the context from this project, 
         /// since it's not running in the Service Project where
         /// we can register it with startup.
         /// </remarks>
@@ -48,7 +49,6 @@ namespace Housing.Forecast.Context
         /// </summary>
         /// <remarks>
         /// Setting up a task to run asynchronously in the background. 
-        /// Needs a cancellation token, apparently?
         /// </remarks>
         public void OnStart()
         {
@@ -61,7 +61,7 @@ namespace Housing.Forecast.Context
         /// </summary>
         /// <remarks>
         /// Tell the cancellation token to cancel,
-        /// then wait and pray I guess?
+        /// then wait for the task to cancel.
         /// </remarks>
         public void OnStop()
         {
