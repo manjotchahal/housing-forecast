@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Repos;
@@ -12,14 +11,14 @@ using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Service.Controllers
 {
-    [Route("api/[controller]")]
-    public class ForecastController : BaseController
+  [Route("api/[controller]")]
+  public class ForecastController : BaseController
     {
         private readonly SnapshotRepo _snapshot;
         private readonly IRepo<Room> _room;
         private readonly IRepo<User> _user;
-        public ForecastController(ILoggerFactory loggerFactory, IQueueClient queueClientSingleton, IRepo<Snapshot> snapshot, IRepo<Room> rooms, IRepo<User> users)
-          : base(loggerFactory, queueClientSingleton) { _snapshot = (SnapshotRepo)snapshot; _room = rooms; _user = users; }
+        public ForecastController(ILoggerFactory loggerFactory, IRepo<Snapshot> snapshot, IRepo<Room> rooms, IRepo<User> users)
+          : base(loggerFactory) { _snapshot = (SnapshotRepo)snapshot; _room = rooms; _user = users; }
 
         /// <summary>
         /// This endpoint will return all unique locations of snapshots
@@ -465,23 +464,6 @@ namespace Housing.Forecast.Service.Controllers
                 logger.LogError(ex.Message);
                 return false;
             }
-        }
-
-        protected override void UseReceiver()
-        {
-            var messageHandlerOptions = new MessageHandlerOptions(ReceiverExceptionHandler)
-            {
-                AutoComplete = false
-            };
-
-            queueClient.RegisterMessageHandler(ReceiverMessageProcessAsync, messageHandlerOptions);
-        }
-
-        protected override void UseSender(Message message)
-        {
-            Task.Run(() =>
-              SenderMessageProcessAsync(message)
-            );
         }
     }
 }

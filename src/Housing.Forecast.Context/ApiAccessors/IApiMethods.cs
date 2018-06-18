@@ -6,6 +6,6 @@ namespace Housing.Forecast.Context.ApiAccessors
 {
     public interface IApiMethods
     {
-        ICollection<T> HttpGetFromApi<T>(string apiString);
+        ICollection<T> HttpGetFromApi<T>(string portNumber, string model);
     }
 }
