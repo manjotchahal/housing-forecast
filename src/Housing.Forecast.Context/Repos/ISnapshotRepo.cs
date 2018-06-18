@@ -10,5 +10,7 @@ namespace Housing.Forecast.Context.Repos
          IEnumerable<Snapshot> GetBetweenDates(DateTime Start, DateTime End);
 
          IEnumerable<Snapshot> GetBetweenDatesAtLocation(DateTime Start, DateTime End, string location);
+
+        bool AddSnapshots(IEnumerable<Snapshot> snapshots);
     }
 }
