@@ -186,7 +186,7 @@ namespace Housing.Forecast.Testing.Context
                 Id = Guid.NewGuid(),
                 Date = new DateTime(2018, 1, 1),
                 Location = "Reston",
-                RoomCount = 1,
+                RoomOccupancyCount = 1,
                 UserCount = 1
             };
             return result;

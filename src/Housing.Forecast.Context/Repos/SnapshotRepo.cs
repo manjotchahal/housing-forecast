@@ -123,7 +123,7 @@ namespace Housing.Forecast.Context.Repos
                 Date = snapshot.Date,
                 Created = snapshot.Created,
                 Location = snapshot.Location,
-                RoomCount = snapshot.RoomCount,
+                RoomOccupancyCount = snapshot.RoomOccupancyCount,
                 UserCount = snapshot.UserCount
             };
 

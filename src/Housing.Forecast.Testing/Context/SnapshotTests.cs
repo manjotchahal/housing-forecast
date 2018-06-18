@@ -89,7 +89,7 @@ namespace Housing.Forecast.Testing.Context
             Snapshot snap = TestDataGenerator.getTestSnapshot();
 
             // Act
-            snap.RoomCount = -1;
+            snap.RoomOccupancyCount = -1;
 
             // Assert
             Assert.False(snap.Validate());

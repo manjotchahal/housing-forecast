@@ -243,10 +243,42 @@ namespace Housing.Forecast.Context
                 Rooms.Add(Mapper.Map<Library.Models.Room, Room>(x));
             }
 
-
             UpdateUsers(Users);
             UpdateRooms(Rooms);
             UpdateBatches(Batch);
+
+            AddSnapshots(Users, Rooms);
+        }
+
+        public void AddSnapshots(ICollection<User> users, ICollection<Room> rooms) {
+            IEnumerable<string> locations = rooms.Select(x => x.Location).Distinct();
+
+            int totalOccupancy = 0;
+            int totalUsers = 0;
+            foreach (string location in locations) {
+                Snapshot snap = new Snapshot {
+                    Date = DateTime.Today,
+                    RoomOccupancyCount = rooms.Where(x => x.Location.Equals(location)).Select(x => x.Occupancy).Sum(),
+                    UserCount = users.Where(x => x.Location.Equals(location)).Count(),
+                    Location = location,
+                    Created = DateTime.Today
+                };
+
+                totalOccupancy += snap.RoomOccupancyCount;
+                totalUsers += snap.UserCount;
+
+                _context.Snapshots.Add(snap);
+            }
+
+            _context.Snapshots.Add(
+                new Snapshot {
+                    Date = DateTime.Today,
+                    RoomOccupancyCount = totalOccupancy,
+                    UserCount = totalUsers,
+                    Location = "All",
+                    Created = DateTime.Today
+                }
+            );
         }
 
         public void Poll()
