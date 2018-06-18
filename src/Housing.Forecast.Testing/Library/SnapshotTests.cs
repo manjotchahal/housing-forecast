@@ -1,10 +1,5 @@
 using System;
 using Xunit;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-
 using Housing.Forecast.Library.Models;
 using Housing.Forecast.Service;
 
