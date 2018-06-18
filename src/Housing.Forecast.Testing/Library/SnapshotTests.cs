@@ -12,7 +12,7 @@ namespace Housing.Forecast.Testing.Library
           Id = Guid.NewGuid(),
           Date = new DateTime(2018, 1, 1),
           Location = "Reston",
-          RoomCount = 1,
+          RoomOccupancyCount = 1,
           UserCount = 1
       };
       return result;
@@ -92,7 +92,7 @@ namespace Housing.Forecast.Testing.Library
       Snapshot snap = getTestSnapshot();
 
       // Act
-      snap.RoomCount = -1;
+      snap.RoomOccupancyCount = -1;
 
       // Assert
       Assert.False(snap.Validate());
