@@ -361,12 +361,12 @@ namespace Housing.Forecast.Service.Controllers
                         {
                             rooms = _room.GetByLocation(date, location).ToList();
                             users = _user.GetByLocation(date, location).ToList();
-                        }                        
+                        }
 
                         var snapshot = new Snapshot()
                         {
                             Date = start,
-                            RoomCount = rooms.Count,
+                            RoomOccupancyCount = rooms.Select(x => x.Occupancy).Sum(),
                             UserCount = users.Count,
                             Location = (String.IsNullOrEmpty(location)) ? "All":text.ToTitleCase(location),
                             Created = DateTime.Now
@@ -384,7 +384,7 @@ namespace Housing.Forecast.Service.Controllers
                     var snapshot = new Snapshot()
                     {
                         Date = start,
-                        RoomCount = rooms.Count,
+                        RoomOccupancyCount = rooms.Count,
                         UserCount = users.Count,
                         Location = (String.IsNullOrEmpty(location)) ? "All" : text.ToTitleCase(location),
                         Created = DateTime.Now
@@ -411,7 +411,7 @@ namespace Housing.Forecast.Service.Controllers
                         var snapshot = new Snapshot()
                         {
                             Date = start,
-                            RoomCount = rooms.Count,
+                            RoomOccupancyCount = rooms.Count,
                             UserCount = users.Count,
                             Location = (String.IsNullOrEmpty(location)) ? "All" : text.ToTitleCase(location),
                             Created = DateTime.Now
