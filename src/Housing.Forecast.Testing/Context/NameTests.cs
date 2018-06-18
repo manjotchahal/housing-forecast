@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Housing.Forecast.Context.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using Xunit;
-using Housing.Forecast.Library.Models;
-using Housing.Forecast.Service;
 
-namespace Housing.Forecast.Testing.Library
+namespace Housing.Forecast.Testing.Context
 {
     public class NameTests
     {

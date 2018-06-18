@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Housing.Forecast.Context.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using Xunit;
-using Housing.Forecast.Library.Models;
-using Housing.Forecast.Service;
 
-namespace Housing.Forecast.Testing.Library
+namespace Housing.Forecast.Testing.Context
 {
     public class UserTests
     {
@@ -24,30 +25,22 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserIdInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Id = Guid.Empty;
             Assert.False(test.Validate());
         }
         [Fact]
         public void UserUserIdInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.UserId = Guid.Empty;
-            Assert.False(test.Validate());
-        }
-
-        [Fact]
-        public void UserAddressInvalidTest()
-        {
-            User test = new User();
-            test.Address = null;
             Assert.False(test.Validate());
         }
 
         [Fact]
         public void UserGenderNullInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Gender = null;
             Assert.False(test.Validate());
         }
@@ -55,7 +48,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserGenderEmptyInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Gender = "";
             Assert.False(test.Validate());
         }
@@ -63,7 +56,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserLocationNullInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Location = null;
             Assert.False(test.Validate());
         }
@@ -71,7 +64,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserLocationEmptyInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Location = "";
             Assert.False(test.Validate());
         }
@@ -79,7 +72,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserNameInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Name = null;
             Assert.False(test.Validate());
         }
@@ -87,7 +80,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserBatchInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Batch = null;
             Assert.False(test.Validate());
         }
@@ -95,7 +88,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserEmailNullInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Email = null;
             Assert.False(test.Validate());
         }
@@ -103,7 +96,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserEmailEmptyInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Email = "";
             Assert.False(test.Validate());
         }
@@ -111,7 +104,7 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserTypeNullInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Type = null;
             Assert.False(test.Validate());
         }
@@ -119,10 +112,9 @@ namespace Housing.Forecast.Testing.Library
         [Fact]
         public void UserTypeEmptyInvalidTest()
         {
-            User test = new User();
+            User test = TestDataGenerator.getTestUser();
             test.Type = "";
             Assert.False(test.Validate());
         }
-
     }
 }
