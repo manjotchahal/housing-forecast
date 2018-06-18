@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Models;
 
@@ -17,22 +18,38 @@ namespace Housing.Forecast.Context.Repos
 
         public IEnumerable<string> GetLocations()
         {
-            return _context.Rooms.Select(r => r.Location).Where(r => r != null).Distinct();
+            var task = Task.Factory.StartNew(() => {
+                return _context.Rooms.Select(r => r.Location).Where(r => r != null).Distinct();
+            });
+            task.Wait();
+            return task.Result;
         }
 
         public IEnumerable<Room> Get()
         {
-            return _context.Rooms;
+            var task = Task.Factory.StartNew(() => {
+                return _context.Rooms;
+            });
+            task.Wait();
+            return task.Result;
         }
 
         public IEnumerable<Room> GetByLocation(DateTime datetime, string location)
         {
-            return _context.Rooms.Where(r => r.Created.Date <= datetime.Date && (r.Deleted.Value == null || r.Deleted.Value.Date > datetime.Date) && r.Location == location);
+            var task = Task.Factory.StartNew(() => {
+                return _context.Rooms.Where(r => r.Created.Date <= datetime.Date && (r.Deleted.Value == null || r.Deleted.Value.Date > datetime.Date) && r.Location == location);
+            });
+            task.Wait();
+            return task.Result;
         }
 
         public IEnumerable<Room> GetByDate(DateTime datetime)
         {
-            return _context.Rooms.Where(r => r.Created.Date <= datetime.Date && (r.Deleted.Value == null || r.Deleted.Value.Date > datetime.Date));
+            var task = Task.Factory.StartNew(() => {
+                return _context.Rooms.Where(r => r.Created.Date <= datetime.Date && (r.Deleted.Value == null || r.Deleted.Value.Date > datetime.Date));
+            });
+            task.Wait();
+            return task.Result;
         }
     }
 }
