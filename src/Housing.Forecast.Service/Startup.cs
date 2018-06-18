@@ -23,7 +23,7 @@ namespace Housing.Forecast.Service
         }
 
         public IConfiguration Configuration { get; }
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ForecastContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ForecastDB")));
