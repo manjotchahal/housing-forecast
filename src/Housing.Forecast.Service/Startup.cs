@@ -30,7 +30,7 @@ namespace Housing.Forecast.Service
             services.AddScoped<IForecastContext>(provider => provider.GetService<ForecastContext>());
             services.AddTransient<IRepo<User>, UserRepo>();
             services.AddTransient<IRepo<Room>, RoomRepo>();
-            services.AddTransient<IRepo<Snapshot>, SnapshotRepo>();
+            services.AddTransient<ISnapshotRepo, SnapshotRepo>();
             services.AddMvc();
         }
 

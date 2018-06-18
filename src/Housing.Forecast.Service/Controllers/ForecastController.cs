@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Housing.Forecast.Context;
@@ -28,22 +27,21 @@ namespace Housing.Forecast.Service.Controllers
         /// </return>
         // GET: api/forecast/Locations
         [HttpGet("Locations")]
-        public async Task<IActionResult> GetLocations()
+        public IActionResult GetLocations()
         {
             try
             {
                 List<string> locations = _snapshot.GetLocations().ToList();
                 if (locations == null || locations.Count == 0)
                 {
-                    return await Task.Run(() => NotFound("No locations found.")); // No snapshots found in the DB.
+                    return NotFound("No locations found."); // No snapshots found in the DB.
                 }
-                return await Task.Run(() => Ok(locations)); // Return all of the distinct locations the snapshots are tied to.
-
+                return Ok(locations); // Return all of the distinct locations the snapshots are tied to.
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message); // Log the error
-                return await Task.Run(() => BadRequest("Something went wrong while processing the request."));
+                return BadRequest("Something went wrong while processing the request.");
             }
         }
 
@@ -56,7 +54,7 @@ namespace Housing.Forecast.Service.Controllers
         // GET: api/forecast/Snapshots
         [Route("Snapshots")]
         [HttpGet]
-        public async Task<IActionResult> Get() // .NET Core doesn't have IHttpActionResult instead we use IActionResult
+        public IActionResult Get() // .NET Core doesn't have IHttpActionResult instead we use IActionResult
         {
             try
             {
@@ -64,15 +62,15 @@ namespace Housing.Forecast.Service.Controllers
 
                 if (snapshots == null || snapshots.Count == 0)
                 {
-                    return await Task.Run(() => NotFound("There are no snapshots in the database."));
+                    return NotFound("There are no snapshots in the database.");
                 }
 
-                return await Task.Run(() => Ok(snapshots));
+                return Ok(snapshots);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message);
-                return await Task.Run(() => BadRequest("Error occurred while processing request."));
+                return BadRequest("Error occurred while processing request.");
             }
         }
 
@@ -88,14 +86,14 @@ namespace Housing.Forecast.Service.Controllers
         /// </return>
         // GET: api/forecast/Snapshots/createdDate
         [HttpGet("Snapshots/{date:datetime}")]
-        public async Task<IActionResult> Get(DateTime date)
+        public IActionResult Get(DateTime date)
         {
             try
             {
                 // check if the models are correct?
                 if (!Validate(date))
                 {
-                    return await Task.Run(() => BadRequest("Not valid input"));
+                    return BadRequest("Not valid input");
                 }
 
                 List<Snapshot> snapshots = _snapshot.GetByDate(date).ToList();
@@ -105,17 +103,17 @@ namespace Housing.Forecast.Service.Controllers
                     snapshots = CreateSnapshots(date);
                     if (snapshots == null)
                     {
-                        return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
+                        return NotFound("No snapshots found with the passed search critiea.");
                     }
                 }
 
-                return await Task.Run(() => Ok(snapshots));
+                return Ok(snapshots);
 
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message);
-                return await Task.Run(() => BadRequest("Something went wrong while processing the request."));
+                return BadRequest("Something went wrong while processing the request.");
             }
         }
 
@@ -130,14 +128,14 @@ namespace Housing.Forecast.Service.Controllers
         /// </returns>
         // GET: api/forecast/Snapshots/start/end
         [HttpGet("SnapshotsRange/{startDate:datetime}/{endDate:datetime}")]
-        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate)
+        public IActionResult Get(DateTime startDate, DateTime endDate)
         {
             try
             {
                 // check if the models are correct?
                 if (!Validate(startDate, endDate))
                 {
-                    return await Task.Run(() => BadRequest("Not valid input"));
+                    return BadRequest("Not valid input");
                 }
 
                 List<Snapshot> snapshots = _snapshot.GetBetweenDates(startDate, endDate).ToList();
@@ -153,7 +151,7 @@ namespace Housing.Forecast.Service.Controllers
                     snapshots = CreateSnapshots(null, null, missing);
                     if (snapshots == null)
                     {
-                        return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
+                        return NotFound("No snapshots found with the passed search critiea.");
                     }
                 }
 
@@ -174,7 +172,7 @@ namespace Housing.Forecast.Service.Controllers
                     var missingSnapshots = CreateSnapshots(null, null, missingDates);
                     
                     if (missingSnapshots == null)
-                        return await Task.Run(() => BadRequest("Something went wrong while creating new snapshots for the missing dates."));
+                        return BadRequest("Something went wrong while creating new snapshots for the missing dates.");
 
                     foreach (var snap in missingSnapshots)
                     {
@@ -183,13 +181,13 @@ namespace Housing.Forecast.Service.Controllers
                     snapshots.OrderBy(s => s.Date); // Order the list by the date
                 }
 
-                return await Task.Run(() => Ok(snapshots));
+                return Ok(snapshots);
 
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message);
-                return await Task.Run(() => BadRequest("Something went wrong while processing the request."));
+                return BadRequest("Something went wrong while processing the request.");
             }
         }
 
@@ -205,7 +203,7 @@ namespace Housing.Forecast.Service.Controllers
         /// </returns>
         // GET: api/forecast/Snapshots/start/end/location
         [HttpGet("SnapshotsByLocation/{startDate:datetime}/{endDate:datetime}/{location:alpha}")]
-        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate, string location)
+        public IActionResult Get(DateTime startDate, DateTime endDate, string location)
         {
             try
             {
@@ -217,13 +215,13 @@ namespace Housing.Forecast.Service.Controllers
                 if (location == "all")
                 {
                     // Redirect the call to another endpoint
-                    return await Get(startDate, endDate);
+                    return Get(startDate, endDate);
                 }
 
                 // check if the models are correct?
                 if (!Validate(startDate, endDate, location))
                 {
-                    return await Task.Run(() => BadRequest("Not valid input"));
+                    return BadRequest("Not valid input");
                 }
 
                 TextInfo text = new CultureInfo("en-US", false).TextInfo;
@@ -238,7 +236,7 @@ namespace Housing.Forecast.Service.Controllers
                     }
                     snapshots = CreateSnapshots(null, location, missing);
                     if (snapshots == null)
-                        return await Task.Run(() => NotFound("No snapshots found with the passed search critiea."));
+                        return NotFound("No snapshots found with the passed search critiea.");
                 }
 
                 // Find which dates are missing a snapshot so we can make a new one for it
@@ -258,7 +256,7 @@ namespace Housing.Forecast.Service.Controllers
                     var missingSnapshots = CreateSnapshots(null, location, missingDates);
 
                     if (missingSnapshots == null)
-                        return await Task.Run(() => BadRequest("Something went wrong while creating new snapshots for the missing dates."));
+                        return BadRequest("Something went wrong while creating new snapshots for the missing dates.");
 
                     foreach (var snap in missingSnapshots)
                     {
@@ -267,13 +265,13 @@ namespace Housing.Forecast.Service.Controllers
                     snapshots.OrderBy(s => s.Date); // Order the list by the date
                 }
 
-                return await Task.Run(() => Ok(snapshots));
+                return Ok(snapshots);
 
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message);
-                return await Task.Run(() => BadRequest("Something went wrong while processing the request."));
+                return BadRequest("Something went wrong while processing the request.");
             }
         }
 
