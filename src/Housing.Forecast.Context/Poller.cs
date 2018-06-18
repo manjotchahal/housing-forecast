@@ -293,9 +293,11 @@ namespace Housing.Forecast.Context
         ///  Function Poller object uses to update database
         /// </summary>
         /// <remarks>
-        /// Calls the endpoints and then uses the collections
-        /// to update users, rooms, and batches
-        /// and by extension names and addresses as well
+        /// Calls the endpoints and then uses the collections,
+        /// and then maps them onto our models to
+        /// then update users, rooms, and batches
+        /// and by extension names and addresses as well.
+        /// Also adds Snapshots now.
         /// </remarks>
         public async void Update()
         {
@@ -326,6 +328,14 @@ namespace Housing.Forecast.Context
             AddSnapshots(Users, Rooms);
         }
 
+        /// <summary>
+        /// Function for the poller to add snapshots to the database
+        /// </summary>
+        /// <remarks>
+        /// Takes in the collections of users and rooms and then
+        /// creates a snapshot for the most recent data to
+        /// put in the database for the current date.
+        /// </remarks>
         public void AddSnapshots(ICollection<User> users, ICollection<Room> rooms) {
             IEnumerable<string> locations = rooms.Select(x => x.Location).Distinct();
 
