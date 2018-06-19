@@ -384,7 +384,7 @@ namespace Housing.Forecast.Context
         /// is requested. Exception for some logging.
         /// Potentially add retry pattern if db connection failed.
         /// </remarks>
-        public async void Poll()
+        public void Poll()
         {
             CancellationToken cancellation = cts.Token;
             TimeSpan interval = _interval;
@@ -392,7 +392,7 @@ namespace Housing.Forecast.Context
             {
                 try
                 {
-                    await Update();
+                    Update();
                     if (cancellation.IsCancellationRequested)
                     {
                         break;
