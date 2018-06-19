@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Housing.Forecast.Context;
 using Housing.Forecast.Context.Models;
+using Microsoft.EntityFrameworkCore;
 using l = Housing.Forecast.Library.Models;
 
 namespace Housing.Forecast.Context.Repos
@@ -23,15 +25,9 @@ namespace Housing.Forecast.Context.Repos
         /// <returns>
         /// This method will return a list of all distinct locations for the snapshots within the database.
         /// </returns>
-        public IEnumerable<string> GetLocations()
+        public async Task<IList<string>> GetLocationsAsync()
         {
-            var result = AsyncGetLocations();
-            return result.Result;
-        }
-        private async Task<IEnumerable<string>> AsyncGetLocations() {
-            return await Task.Factory.StartNew(() => {
-                return _context.Snapshots.Select(s => s.Location).Where(s => s != null).Distinct().ToList();
-            });
+            return await _context.Snapshots.Select(s => s.Location).Where(s => s != null).Distinct().ToListAsync();
         }
 
         /// <summary>
@@ -40,10 +36,9 @@ namespace Housing.Forecast.Context.Repos
         /// <returns>
         /// This method will return a list of the all snapshots that are stored within the database.
         /// </returns>
-        public IEnumerable<Snapshot> Get()
+        public async Task<IList<Snapshot>> GetAsync()
         {
-            var result = AsyncDBCall(x => x != null);
-            return result.Result;
+            return await _context.Snapshots.Where(s => s != null).ToListAsync();
         }
 
         /// <summary>
@@ -54,10 +49,9 @@ namespace Housing.Forecast.Context.Repos
         /// <returns>
         /// This method will return a list of snapshots that are within the specified range of dates.
         /// </returns>
-        public IEnumerable<Snapshot> GetBetweenDates(DateTime Start, DateTime End)
+        public async Task<IList<Snapshot>> GetBetweenDatesAsync(DateTime Start, DateTime End)
         {
-            var result = AsyncDBCall(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date);
-            return result.Result;
+            return await _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date).ToListAsync();
         }
 
         /// <summary>
@@ -68,10 +62,9 @@ namespace Housing.Forecast.Context.Repos
         /// <returns>
         /// This method should a list of all snapshots for the specified location that were craeted on the provided date that are stored in the database.
         /// </returns>
-        public IEnumerable<Snapshot> GetByLocation(DateTime datetime, string location)
+        public async Task<IList<Snapshot>> GetByLocationAsync(DateTime datetime, string location)
         {
-            var result = AsyncDBCall(s => s.Date.Date == datetime.Date && s.Location.Equals(location));
-            return result.Result;
+            return await _context.Snapshots.Where(s => s.Date.Date == datetime.Date && s.Location.Equals(location)).ToListAsync();
         }
 
         /// <summary>
@@ -83,10 +76,9 @@ namespace Housing.Forecast.Context.Repos
         /// <returns>
         /// This method should return a list of all snapshots that fall within the date range and tied to the location provided.
         /// </returns>
-        public IEnumerable<Snapshot> GetBetweenDatesAtLocation(DateTime Start, DateTime End, string location)
+        public async Task<IList<Snapshot>> GetBetweenDatesAtLocationAsync(DateTime Start, DateTime End, string location)
         {
-            var result = AsyncDBCall(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date && s.Location.Equals(location));
-            return result.Result;
+            return await _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date && s.Location.Equals(location)).ToListAsync();
         }
 
         /// <summary>
@@ -96,10 +88,9 @@ namespace Housing.Forecast.Context.Repos
         /// <returns>
         /// This method should return a list of all snapshots within the datebase that were created on the specified date.
         /// </returns>
-        public IEnumerable<Snapshot> GetByDate(DateTime datetime)
+        public async Task<IList<Snapshot>> GetByDateAsync(DateTime datetime)
         {
-            var result = AsyncDBCall(s => s.Date.Date == datetime.Date);
-            return result.Result;
+            return await _context.Snapshots.Where(s => s.Date.Date == datetime.Date).ToListAsync();
         }
 
         /// <summary>
@@ -128,7 +119,7 @@ namespace Housing.Forecast.Context.Repos
         /// <returns>
         /// Returns true if the snapshots are added successfully else return false.
         /// </returns>
-        public bool AddSnapshots(IEnumerable<Snapshot> snapshots)
+        public async Task<bool> AddSnapshotsAsync(IEnumerable<Snapshot> snapshots)
         {
             try
             {
@@ -136,7 +127,7 @@ namespace Housing.Forecast.Context.Repos
                 {
                     _context.Snapshots.Add(snap);
                 }
-                _context.SaveChanges();
+                await _context.SaveChangesAsync(default (CancellationToken));
 
                 return true;
             }
@@ -166,20 +157,6 @@ namespace Housing.Forecast.Context.Repos
             };
 
             return snap;
-        }
-
-        /// <summary>
-        /// Perform an asynchronous call to the database to retrieve data.
-        /// </summary>
-        /// <param name="lambda">The search condition in the form of a lambda expression.</param>
-        /// <returns>
-        /// A Task for the search result set.
-        /// </returns>
-        private async Task<IEnumerable<Snapshot>> AsyncDBCall(Func<Snapshot, bool> lamdba) {
-            var task = await Task.Factory.StartNew(() => {
-                return _context.Snapshots.Where(lamdba).ToList();
-            });
-            return task;
         }
     }
 }
