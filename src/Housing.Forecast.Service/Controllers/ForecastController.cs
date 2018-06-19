@@ -6,6 +6,7 @@ using Housing.Forecast.Context.Repos;
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
+using System.Threading.Tasks;
 using Housing.Forecast.Context.Models;
 
 namespace Housing.Forecast.Service.Controllers
@@ -35,11 +36,12 @@ namespace Housing.Forecast.Service.Controllers
         /// </return>
         // GET: api/forecast/Locations
         [HttpGet("Locations")]
-        public IActionResult GetLocations()
+        public async Task<IActionResult> GetLocations()
         {
             try
             {
-                List<string> locations = _room.GetLocations().ToList();
+                //List<string> locations = _room.GetLocations().ToList();
+                IList<string> locations = await _room.GetLocationsAsync();
                 if (locations == null || locations.Count == 0)
                 {
                     return NotFound("No locations found."); // No snapshots found in the DB.
@@ -62,11 +64,11 @@ namespace Housing.Forecast.Service.Controllers
         // GET: api/forecast/Snapshots
         [Route("Snapshots")]
         [HttpGet]
-        public IActionResult Get() // .NET Core doesn't have IHttpActionResult instead we use IActionResult
+        public async Task<IActionResult> Get() // .NET Core doesn't have IHttpActionResult instead we use IActionResult
         {
             try
             {
-                List<Snapshot> snapshots = _snapshot.Get().ToList();
+                IList<Snapshot> snapshots = await _snapshot.GetAsync();
 
                 if (snapshots == null || snapshots.Count == 0)
                 {
@@ -94,21 +96,21 @@ namespace Housing.Forecast.Service.Controllers
         /// </return>
         // GET: api/forecast/Snapshots/createdDate
         [HttpGet("Snapshots/{date:datetime}")]
-        public IActionResult Get(DateTime date)
+        public async Task<IActionResult> Get(DateTime date)
         {
             try
             {
                 // check if the models are correct?
-                if (!Validate(date))
+                if (!await Validate(date))
                 {
                     return BadRequest("Not valid input");
                 }
 
-                List<Snapshot> snapshots = _snapshot.GetByDate(date).ToList();
+                IList<Snapshot> snapshots = await _snapshot.GetByDateAsync(date);
                 if (snapshots == null || snapshots.Count == 0)
                 {
                     // Let's create a new snapshot for the requested date
-                    snapshots = CreateSnapshots(date);
+                    snapshots = await CreateSnapshots(date);
                     if (snapshots == null)
                     {
                         return NotFound("No snapshots found with the passed search criteria.");
@@ -136,17 +138,17 @@ namespace Housing.Forecast.Service.Controllers
         /// </returns>
         // GET: api/forecast/Snapshots/start/end
         [HttpGet("SnapshotsRange/{startDate:datetime}/{endDate:datetime}")]
-        public IActionResult Get(DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate)
         {
             try
             {
                 // check if the models are correct?
-                if (!Validate(startDate, endDate))
+                if (!(await Validate(startDate, endDate)))
                 {
                     return BadRequest("Not valid input");
                 }
 
-                List<Snapshot> snapshots = _snapshot.GetBetweenDates(startDate, endDate).ToList();
+                IList<Snapshot> snapshots = await _snapshot.GetBetweenDatesAsync(startDate, endDate);
 
                 if (snapshots == null || snapshots.Count == 0)
                 {
@@ -156,7 +158,7 @@ namespace Housing.Forecast.Service.Controllers
                     {
                         missing.Add(i);
                     }
-                    snapshots = CreateSnapshots(null, null, missing);
+                    snapshots = await CreateSnapshots(null, null, missing);
                     if (snapshots == null)
                     {
                         return NotFound("No snapshots found with the passed search criteria.");
@@ -164,7 +166,7 @@ namespace Housing.Forecast.Service.Controllers
                 }
 
                 // Find which dates are missing a snapshot so we can make a new one for it
-                List<DateTime> missingDates = new List<DateTime>();
+                IList<DateTime> missingDates = new List<DateTime>();
                 for (var i = startDate; i <= endDate; i = i.AddDays(1))
                 {
                     // Check if a snapshot was found for date i
@@ -177,7 +179,7 @@ namespace Housing.Forecast.Service.Controllers
                 // Lets add the missing snapshots
                 if (missingDates.Count > 0)
                 {
-                    var missingSnapshots = CreateSnapshots(null, null, missingDates);
+                    var missingSnapshots = await CreateSnapshots(null, null, missingDates);
 
                     if (missingSnapshots == null)
                         return BadRequest("Something went wrong while creating new snapshots for the missing dates.");
@@ -211,7 +213,7 @@ namespace Housing.Forecast.Service.Controllers
         /// </returns>
         // GET: api/forecast/Snapshots/start/end/location
         [HttpGet("SnapshotsByLocation/{startDate:datetime}/{endDate:datetime}/{location:alpha}")]
-        public IActionResult Get(DateTime startDate, DateTime endDate, string location)
+        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate, string location)
         {
             try
             {
@@ -223,17 +225,17 @@ namespace Housing.Forecast.Service.Controllers
                 if (location == "all")
                 {
                     // Redirect the call to another endpoint
-                    return Get(startDate, endDate);
+                    return await Get(startDate, endDate);
                 }
 
                 // check if the models are correct?
-                if (!Validate(startDate, endDate, location))
+                if (!await Validate(startDate, endDate, location))
                 {
                     return BadRequest("Not valid input");
                 }
 
                 TextInfo text = new CultureInfo("en-US", false).TextInfo;
-                List<Snapshot> snapshots = _snapshot.GetBetweenDatesAtLocation(startDate, endDate, text.ToTitleCase(location)).ToList();
+                IList<Snapshot> snapshots = await _snapshot.GetBetweenDatesAtLocationAsync(startDate, endDate, text.ToTitleCase(location));
                 if (snapshots == null || snapshots.Count == 0)
                 {
                     // Let's create a new snapshot for the requested dates
@@ -242,7 +244,7 @@ namespace Housing.Forecast.Service.Controllers
                     {
                         missing.Add(i);
                     }
-                    snapshots = CreateSnapshots(null, location, missing);
+                    snapshots = await CreateSnapshots(null, location, missing);
                     if (snapshots == null)
                         return NotFound("No snapshots found with the passed search criteria.");
                 }
@@ -261,7 +263,7 @@ namespace Housing.Forecast.Service.Controllers
                 // Let's add the missing snapshots
                 if (missingDates.Count > 0)
                 {
-                    var missingSnapshots = CreateSnapshots(null, location, missingDates);
+                    var missingSnapshots = await CreateSnapshots(null, location, missingDates);
 
                     if (missingSnapshots == null)
                         return BadRequest("Something went wrong while creating new snapshots for the missing dates.");
@@ -292,15 +294,15 @@ namespace Housing.Forecast.Service.Controllers
         /// <returns>
         /// Returns true if all inputs are valid otherwise returns false if any input fails
         /// </returns>
-        private bool Validate(DateTime start, DateTime? end = null, string location = null)
+        private async Task<bool> Validate(DateTime start, DateTime? end = null, string location = null)
         {
             try
             {
                 // First let's find the earliest snapshot date
-                var earliest = _snapshot.Get().Min(x => x.Date);
+                var earliest = (await _snapshot.GetAsync()).Min(x => x.Date);
 
                 // The City locations that are supported for the search
-                var cities = _room.GetLocations().ToList();
+                var cities = await _room.GetLocationsAsync();
 
                 // Remove 'All' from the cities list
                 cities.Remove("All");
@@ -353,20 +355,20 @@ namespace Housing.Forecast.Service.Controllers
         /// <returns>
         /// Returns a list of the newly created snapshots.
         /// </returns>
-        private List<Snapshot> CreateSnapshots(DateTime? date, string location = null, List<DateTime> missingDates = null)
+        private async Task<List<Snapshot>> CreateSnapshots(DateTime? date, string location = null, IList<DateTime> missingDates = null)
         {
             try
             {
-                List<Room> rooms = new List<Room>();
-                List<User> users = new List<User>();
+                IList<Room> rooms = new List<Room>();
+                IList<User> users = new List<User>();
                 TextInfo text = new CultureInfo("en-US", false).TextInfo;
                 List<Snapshot> snapshots = new List<Snapshot>();
 
                 if (date != null)
                 {
                     // Create the only missing snapshot
-                    rooms = _room.GetByDate(date.Value).ToList();
-                    users = _user.GetByDate(date.Value).ToList();
+                    rooms = await _room.GetByDateAsync(date.Value);
+                    users = await _user.GetByDateAsync(date.Value);
 
                     var snapshot = CreateSnapshot(date.Value, rooms.Select(x => x.Occupancy).Sum(), users.Count, (String.IsNullOrEmpty(location)) ? "All" : text.ToTitleCase(location));
 
@@ -378,13 +380,13 @@ namespace Housing.Forecast.Service.Controllers
                     {
                         if (String.IsNullOrEmpty(location))
                         {
-                            rooms = _room.GetByDate(d).ToList();
-                            users = _user.GetByDate(d).ToList();
+                            rooms = await _room.GetByDateAsync(d);
+                            users = await _user.GetByDateAsync(d);
                         }
                         else
                         {
-                            rooms = _room.GetByLocation(d, location).ToList();
-                            users = _user.GetByLocation(d, location).ToList();
+                            rooms = await _room.GetByLocationAsync(d, location);
+                            users = await _user.GetByLocationAsync(d, location);
                         }
 
                         var snapshot = CreateSnapshot(d, rooms.Select(x => x.Occupancy).Sum(), users.Count, (String.IsNullOrEmpty(location)) ? "All" : text.ToTitleCase(location));
@@ -395,7 +397,7 @@ namespace Housing.Forecast.Service.Controllers
 
                 try
                 {
-                    _snapshot.AddSnapshots(snapshots);
+                    await _snapshot.AddSnapshotsAsync(snapshots);
                 }
                 catch (Exception ex)
                 {
@@ -445,7 +447,7 @@ namespace Housing.Forecast.Service.Controllers
         /// <returns>
         /// Returns true if the snapshot for the provided date was found otherwise returns false.
         /// </returns>
-        private bool FoundSnapshot(DateTime date, List<Snapshot> snapshots)
+        private bool FoundSnapshot(DateTime date, IList<Snapshot> snapshots)
         {
             try
             {
