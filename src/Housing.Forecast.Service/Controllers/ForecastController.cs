@@ -39,7 +39,7 @@ namespace Housing.Forecast.Service.Controllers
         {
             try
             {
-                List<string> locations = _snapshot.GetLocations().ToList();
+                List<string> locations = _room.GetLocations().ToList();
                 if (locations == null || locations.Count == 0)
                 {
                     return NotFound("No locations found."); // No snapshots found in the DB.
