@@ -25,11 +25,13 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<string> GetLocations()
         {
-            var task = Task.Factory.StartNew(() => {
-                return _context.Snapshots.Select(s => s.Location).Where(s => s != null).Distinct();
+            var result = AsyncGetLocations();
+            return result.Result;
+        }
+        private async Task<IEnumerable<string>> AsyncGetLocations() {
+            return await Task.Factory.StartNew(() => {
+                return _context.Snapshots.Select(s => s.Location).Where(s => s != null).Distinct().ToList();
             });
-            task.Wait();
-            return task.Result;
         }
 
         /// <summary>
@@ -40,11 +42,8 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> Get()
         {
-            var task = Task.Factory.StartNew(() => {
-                return _context.Snapshots;
-            });
-            task.Wait();
-            return task.Result;
+            var result = AsyncDBCall(x => x != null);
+            return result.Result;
         }
 
         /// <summary>
@@ -57,11 +56,8 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetBetweenDates(DateTime Start, DateTime End)
         {
-            var task = Task.Factory.StartNew(() => {
-                return _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date);
-            });
-            task.Wait();
-            return task.Result;
+            var result = AsyncDBCall(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date);
+            return result.Result;
         }
 
         /// <summary>
@@ -74,11 +70,8 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetByLocation(DateTime datetime, string location)
         {
-            var task = Task.Factory.StartNew(() => {
-                return _context.Snapshots.Where(s => s.Date.Date == datetime.Date && s.Location.Equals(location));
-            });
-            task.Wait();
-            return task.Result;
+            var result = AsyncDBCall(s => s.Date.Date == datetime.Date && s.Location.Equals(location));
+            return result.Result;
         }
 
         /// <summary>
@@ -92,11 +85,8 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetBetweenDatesAtLocation(DateTime Start, DateTime End, string location)
         {
-            var task = Task.Factory.StartNew(() => {
-                return _context.Snapshots.Where(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date && s.Location.Equals(location));
-            });
-            task.Wait();
-            return task.Result;
+            var result = AsyncDBCall(s => s.Date.Date >= Start.Date && s.Date.Date <= End.Date && s.Location.Equals(location));
+            return result.Result;
         }
 
         /// <summary>
@@ -108,11 +98,8 @@ namespace Housing.Forecast.Context.Repos
         /// </returns>
         public IEnumerable<Snapshot> GetByDate(DateTime datetime)
         {
-            var task = Task.Factory.StartNew(() => {
-                return _context.Snapshots.Where(s => s.Date.Date == datetime.Date);
-            });
-            task.Wait();
-            return task.Result;
+            var result = AsyncDBCall(s => s.Date.Date == datetime.Date);
+            return result.Result;
         }
 
         /// <summary>
@@ -153,6 +140,20 @@ namespace Housing.Forecast.Context.Repos
             };
 
             return snap;
+        }
+
+        /// <summary>
+        /// Perform an asynchronous call to the database to retrieve data.
+        /// </summary>
+        /// <param name="lambda">The search condition in the form of a lambda expression.</param>
+        /// <returns>
+        /// A Task for the search result set.
+        /// </returns>
+        private async Task<IEnumerable<Snapshot>> AsyncDBCall(Func<Snapshot, bool> lamdba) {
+            var task = await Task.Factory.StartNew(() => {
+                return _context.Snapshots.Where(lamdba).ToList();
+            });
+            return task;
         }
 
         /// <summary>
