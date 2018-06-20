@@ -7,7 +7,6 @@ namespace Housing.Forecast.Context
 {
     public interface IPoller
     {
-        void OnStart();
         void OnStop();
         Task Update();
         void Poll();
