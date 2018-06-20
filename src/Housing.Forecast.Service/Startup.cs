@@ -33,6 +33,7 @@ namespace Housing.Forecast.Service
             services.AddTransient<IRepo<Room>, RoomRepo>();
             services.AddTransient<ISnapshotRepo, SnapshotRepo>();
             services.AddMvc();
+            services.AddCors();
 
             services.AddSwaggerGen(c =>
             {
